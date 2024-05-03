@@ -1,7 +1,9 @@
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactUs extends StatelessWidget {
   const ContactUs({super.key});
@@ -18,8 +20,13 @@ class ContactUs extends StatelessWidget {
               fontFamily: 'Poppins-Bold',
               fontWeight: FontWeight.bold),
         ),
-        leading: SvgPicture.asset('lib/assets/images/back.svg',
-            height: 20, width: 20, fit: BoxFit.scaleDown),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: SvgPicture.asset('lib/assets/images/back.svg',
+              height: 20, width: 20, fit: BoxFit.scaleDown),
+        ),
         centerTitle: true,
       ),
       body: Container(
@@ -43,6 +50,7 @@ class ContactUs extends StatelessWidget {
               height: 20,
             ),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SvgPicture.asset(
                   "lib/assets/images/mapPinLine.svg",
@@ -51,11 +59,13 @@ class ContactUs extends StatelessWidget {
                 const SizedBox(
                   width: 10,
                 ),
-                const Text(
-                  "Kochi, Kerala",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
+                const Expanded(
+                  child: Text(
+                    "Airo Track Technologies PVT LTD Building NO. 2/407, Kommady po, Alappuzha, Kerala\nPin code-688007",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],
@@ -80,12 +90,15 @@ class ContactUs extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "customercare@gmail.com",
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-                fontFamily: 'Poppins-Bold',
+            InkWell(
+              onTap: () => _launchUrl("mailto:info@airotrack.in"),
+              child: const Text(
+                "info@airotrack.in",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.black,
+                  fontFamily: 'Poppins-Bold',
+                ),
               ),
             ),
             const SizedBox(
@@ -102,17 +115,26 @@ class ContactUs extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "+91 1234567890",
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-                fontFamily: 'Poppins-Bold',
+            InkWell(
+              onTap: () => _launchUrl("tel: 91 9745192384"),
+              child: const Text(
+                "+91 9745192384",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.black,
+                  fontFamily: 'Poppins-Bold',
+                ),
               ),
             )
           ],
         ),
       ),
     );
+  }
+
+  Future<void> _launchUrl(String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      throw Exception('Could not launch $url');
+    }
   }
 }
