@@ -1,7 +1,9 @@
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
+import 'package:airotrackgit/ui/home/scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:simple_barcode_scanner/enum.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 class Home extends StatelessWidget {
@@ -23,7 +25,7 @@ class Home extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               const DrawerHeader(
@@ -52,7 +54,7 @@ class Home extends StatelessWidget {
                 },
               ),
               Container(
-                margin: EdgeInsets.only(left: 20, right: 35, top: 20),
+                margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
                 height: 1,
                 color: greyline,
               ),
@@ -73,7 +75,7 @@ class Home extends StatelessWidget {
                 },
               ),
               Container(
-                margin: EdgeInsets.only(left: 20, right: 35, top: 20),
+                margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
                 height: 1,
                 color: greyline,
               ),
@@ -94,7 +96,7 @@ class Home extends StatelessWidget {
                 },
               ),
               Container(
-                margin: EdgeInsets.only(left: 20, right: 35, top: 20),
+                margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
                 height: 1,
                 color: greyline,
               ),
@@ -115,7 +117,7 @@ class Home extends StatelessWidget {
                 },
               ),
               Container(
-                margin: EdgeInsets.only(left: 20, right: 35, top: 20),
+                margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
                 height: 1,
                 color: greyline,
               ),
@@ -145,7 +147,7 @@ class Home extends StatelessWidget {
             Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.2,
-                margin: EdgeInsets.only(top: 30, left: 20, right: 20),
+                margin: const EdgeInsets.only(top: 30, left: 20, right: 20),
                 child: Container(
                   decoration: BoxDecoration(
                     color: colorPrimary,
@@ -157,8 +159,8 @@ class Home extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                          margin: EdgeInsets.only(left: 15, top: 25),
-                          child: Text(
+                          margin: const EdgeInsets.only(left: 15, top: 25),
+                          child: const Text(
                             Strings.welcome,
                             style: TextStyle(
                                 color: Colors.white,
@@ -166,8 +168,8 @@ class Home extends StatelessWidget {
                                 fontFamily: 'Poppins-Regular'),
                           )),
                       Container(
-                          margin: EdgeInsets.only(left: 15, top: 15),
-                          child: Text(
+                          margin: const EdgeInsets.only(left: 15, top: 15),
+                          child: const Text(
                             "Jobin",
                             style: TextStyle(
                                 color: Colors.white,
@@ -176,7 +178,7 @@ class Home extends StatelessWidget {
                                 fontFamily: 'Poppins-Bold'),
                           )),
                       Container(
-                        margin: EdgeInsets.only(top: 25, left: 15),
+                        margin: const EdgeInsets.only(top: 25, left: 15),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,10 +192,10 @@ class Home extends StatelessWidget {
                                   width: 20,
                                   height: 20,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 5,
                                 ),
-                                Text(
+                                const Text(
                                   "05 Jun 2023",
                                   style: TextStyle(
                                       fontFamily: 'Poppins-Regular',
@@ -211,17 +213,17 @@ class Home extends StatelessWidget {
                                   width: 20,
                                   height: 20,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 5,
                                 ),
-                                Text(
+                                const Text(
                                   "8:22:11 AM",
                                   style: TextStyle(
                                       fontFamily: 'Poppins-Regular',
                                       fontSize: 15,
                                       color: Colors.white),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 15,
                                 )
                               ],
@@ -233,8 +235,8 @@ class Home extends StatelessWidget {
                   ),
                 )),
             Container(
-              margin: EdgeInsets.only(left: 20, right: 20, top: 25),
-              child: Text(
+              margin: const EdgeInsets.only(left: 20, right: 20, top: 25),
+              child: const Text(
                 Strings.scanDevice,
                 style: TextStyle(
                     color: Colors.black,
@@ -244,7 +246,7 @@ class Home extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 20, right: 20, top: 10),
+              margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
               height: 55,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -254,10 +256,15 @@ class Home extends StatelessWidget {
                   ),
                 ),
                 onPressed: () async {
-                  var res = await Navigator.push(
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SimpleBarcodeScannerPage(),
+                        builder: (context) => const SimpleBarcodeScannerPage(
+                          isShowFlashIcon: true,
+                          scanType: ScanType.barcode,
+                          cancelButtonText: "Cancel",
+                          appBarTitle: "Scanner",
+                        ),
                       ));
                 },
                 child: Row(
@@ -268,10 +275,10 @@ class Home extends StatelessWidget {
                       width: 27,
                       height: 27,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
-                    Text(
+                    const Text(
                       Strings.openScanner,
                       style: TextStyle(
                           color: Colors.white,
@@ -284,8 +291,8 @@ class Home extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 20, right: 20, top: 25),
-              child: Text(
+              margin: const EdgeInsets.only(left: 20, right: 20, top: 25),
+              child: const Text(
                 Strings.deviceID,
                 style: TextStyle(
                     color: Colors.black,
@@ -295,11 +302,11 @@ class Home extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 20, right: 20, top: 15),
+              margin: const EdgeInsets.only(left: 20, right: 20, top: 15),
               height: 50,
               child: TextField(
                 decoration: InputDecoration(
-                    suffixIcon: Material(
+                    suffixIcon: const Material(
                       elevation: 2.0,
                       color: colorPrimary,
                       borderRadius: BorderRadius.all(Radius.circular(4)),
@@ -311,10 +318,11 @@ class Home extends StatelessWidget {
                     fillColor: greybg,
                     filled: true,
                     enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: blacklite, width: 1.0),
+                        borderSide:
+                            const BorderSide(color: blacklite, width: 1.0),
                         borderRadius: BorderRadius.circular(4)),
                     hintText: "Enter Device ID",
-                    hintStyle: TextStyle(color: blacklite)),
+                    hintStyle: const TextStyle(color: blacklite)),
               ),
             )
           ],
