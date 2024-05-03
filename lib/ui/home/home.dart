@@ -1,6 +1,10 @@
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
+import 'package:airotrackgit/ui/about/About.dart';
+import 'package:airotrackgit/ui/contactus/contactus.dart';
 import 'package:airotrackgit/ui/home/scanner.dart';
+import 'package:airotrackgit/ui/privacy/privacy.dart';
+import 'package:airotrackgit/ui/terms/terms_condition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:simple_barcode_scanner/enum.dart';
@@ -20,126 +24,7 @@ class Home extends StatelessWidget {
             height: 60,
           ),
         ),
-        drawer: Drawer(
-          backgroundColor: Colors.white,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const SizedBox(
-                height: 50,
-              ),
-              const DrawerHeader(
-                // decoration: BoxDecoration(
-                // ),
-                child: Align(
-                    alignment: Alignment.topRight,
-                    child: Icon(
-                      Icons.close,
-                    )),
-              ),
-              ListTile(
-                leading: SvgPicture.asset(
-                  'lib/assets/images/contactus.svg',
-                  width: 20,
-                  height: 20,
-                ),
-                trailing: SvgPicture.asset(
-                  'lib/assets/images/arrow.svg',
-                  width: 15,
-                  height: 15,
-                ),
-                title: const Text(Strings.contactus),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
-                height: 1,
-                color: greyline,
-              ),
-              ListTile(
-                leading: SvgPicture.asset(
-                  'lib/assets/images/privacy.svg',
-                  width: 20,
-                  height: 20,
-                ),
-                trailing: SvgPicture.asset(
-                  'lib/assets/images/arrow.svg',
-                  width: 15,
-                  height: 15,
-                ),
-                title: const Text(Strings.privacyPolicy),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
-                height: 1,
-                color: greyline,
-              ),
-              ListTile(
-                leading: SvgPicture.asset(
-                  'lib/assets/images/aboutus.svg',
-                  width: 20,
-                  height: 20,
-                ),
-                trailing: SvgPicture.asset(
-                  'lib/assets/images/arrow.svg',
-                  width: 15,
-                  height: 15,
-                ),
-                title: const Text(Strings.aboutUs),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
-                height: 1,
-                color: greyline,
-              ),
-              ListTile(
-                leading: SvgPicture.asset(
-                  'lib/assets/images/terms.svg',
-                  width: 20,
-                  height: 20,
-                ),
-                title: const Text(Strings.terms),
-                trailing: SvgPicture.asset(
-                  'lib/assets/images/arrow.svg',
-                  width: 15,
-                  height: 15,
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
-                height: 1,
-                color: greyline,
-              ),
-              ListTile(
-                leading: SvgPicture.asset(
-                  'lib/assets/images/logout.svg',
-                  width: 20,
-                  height: 20,
-                ),
-                trailing: SvgPicture.asset(
-                  'lib/assets/images/arrowred.svg',
-                  width: 15,
-                  height: 15,
-                ),
-                title: const Text('LogOut'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
+        drawer: const UserDrawer(),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -327,5 +212,144 @@ class Home extends StatelessWidget {
             )
           ],
         ));
+  }
+}
+
+class UserDrawer extends StatefulWidget {
+  const UserDrawer({super.key});
+
+  @override
+  State<UserDrawer> createState() => _UserDrawerState();
+}
+
+class _UserDrawerState extends State<UserDrawer> {
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: Colors.white,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          const SizedBox(
+            height: 50,
+          ),
+          const DrawerHeader(
+            child: Align(
+                alignment: Alignment.topRight,
+                child: Icon(
+                  Icons.close,
+                )),
+          ),
+          ListTile(
+            leading: SvgPicture.asset(
+              'lib/assets/images/contactus.svg',
+              width: 20,
+              height: 20,
+            ),
+            trailing: SvgPicture.asset(
+              'lib/assets/images/arrow.svg',
+              width: 15,
+              height: 15,
+            ),
+            title: const Text(Strings.contactus),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const ContactUs()));
+            },
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
+            height: 1,
+            color: greyline,
+          ),
+          ListTile(
+            leading: SvgPicture.asset(
+              'lib/assets/images/privacy.svg',
+              width: 20,
+              height: 20,
+            ),
+            trailing: SvgPicture.asset(
+              'lib/assets/images/arrow.svg',
+              width: 15,
+              height: 15,
+            ),
+            title: const Text(Strings.privacyPolicy),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Privacy()));
+            },
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
+            height: 1,
+            color: greyline,
+          ),
+          ListTile(
+            leading: SvgPicture.asset(
+              'lib/assets/images/aboutus.svg',
+              width: 20,
+              height: 20,
+            ),
+            trailing: SvgPicture.asset(
+              'lib/assets/images/arrow.svg',
+              width: 15,
+              height: 15,
+            ),
+            title: const Text(Strings.aboutUs),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => AboutUs()));
+            },
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
+            height: 1,
+            color: greyline,
+          ),
+          ListTile(
+            leading: SvgPicture.asset(
+              'lib/assets/images/terms.svg',
+              width: 20,
+              height: 20,
+            ),
+            title: const Text(Strings.terms),
+            trailing: SvgPicture.asset(
+              'lib/assets/images/arrow.svg',
+              width: 15,
+              height: 15,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => TermsCondition()));
+            },
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
+            height: 1,
+            color: greyline,
+          ),
+          ListTile(
+            leading: SvgPicture.asset(
+              'lib/assets/images/logout.svg',
+              width: 20,
+              height: 20,
+            ),
+            trailing: SvgPicture.asset(
+              'lib/assets/images/arrowred.svg',
+              width: 15,
+              height: 15,
+            ),
+            title: const Text('LogOut'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

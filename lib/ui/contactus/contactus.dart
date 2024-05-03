@@ -18,8 +18,13 @@ class ContactUs extends StatelessWidget {
               fontFamily: 'Poppins-Bold',
               fontWeight: FontWeight.bold),
         ),
-        leading: SvgPicture.asset('lib/assets/images/back.svg',
-            height: 20, width: 20, fit: BoxFit.scaleDown),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: SvgPicture.asset('lib/assets/images/back.svg',
+              height: 20, width: 20, fit: BoxFit.scaleDown),
+        ),
         centerTitle: true,
       ),
       body: Container(
