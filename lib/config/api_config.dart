@@ -3,10 +3,11 @@ class APIConfig {
 }
 
 class APIEndpoints {
-  static const String login = "login";
-  static const String deviceDetails = "deviceDetails";
   static const String command = "commands";
-  static const String sendCommand = "sendCommand";
   static const String contactUs = "contactUs";
+  static const String deviceDetails = "deviceDetails";
   static const String home = "home";
+  static const String login = "login";
+  static const String logout = "logout";
+  static const String sendCommand = "sendCommand";
 }
