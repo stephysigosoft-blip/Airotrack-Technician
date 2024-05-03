@@ -9,9 +9,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:simple_barcode_scanner/enum.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  PackageInfo? packageInfo;
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      packageInfo = await PackageInfo.fromPlatform();
+      setState(() {});
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +40,9 @@ class Home extends StatelessWidget {
             height: 60,
           ),
         ),
-        drawer: const UserDrawer(),
+        drawer: UserDrawer(
+          packageInfo: packageInfo,
+        ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,7 +234,8 @@ class Home extends StatelessWidget {
 }
 
 class UserDrawer extends StatefulWidget {
-  const UserDrawer({super.key});
+  final PackageInfo? packageInfo;
+  const UserDrawer({super.key, this.packageInfo});
 
   @override
   State<UserDrawer> createState() => _UserDrawerState();
@@ -227,17 +246,18 @@ class _UserDrawerState extends State<UserDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: Colors.white,
-      child: ListView(
-        padding: EdgeInsets.zero,
+      child: Column(
         children: [
-          const SizedBox(
-            height: 50,
-          ),
-          const DrawerHeader(
+          DrawerHeader(
             child: Align(
                 alignment: Alignment.topRight,
-                child: Icon(
-                  Icons.close,
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.close,
+                  ),
                 )),
           ),
           ListTile(
@@ -251,7 +271,10 @@ class _UserDrawerState extends State<UserDrawer> {
               width: 15,
               height: 15,
             ),
-            title: const Text(Strings.contactus),
+            title: Text(Strings.contactus,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    )),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context,
@@ -274,7 +297,10 @@ class _UserDrawerState extends State<UserDrawer> {
               width: 15,
               height: 15,
             ),
-            title: const Text(Strings.privacyPolicy),
+            title: Text(Strings.privacyPolicy,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    )),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
@@ -297,7 +323,10 @@ class _UserDrawerState extends State<UserDrawer> {
               width: 15,
               height: 15,
             ),
-            title: const Text(Strings.aboutUs),
+            title: Text(Strings.aboutUs,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    )),
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
@@ -315,7 +344,10 @@ class _UserDrawerState extends State<UserDrawer> {
               width: 20,
               height: 20,
             ),
-            title: const Text(Strings.terms),
+            title: Text(Strings.terms,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w600,
+                    )),
             trailing: SvgPicture.asset(
               'lib/assets/images/arrow.svg',
               width: 15,
@@ -343,11 +375,83 @@ class _UserDrawerState extends State<UserDrawer> {
               width: 15,
               height: 15,
             ),
-            title: const Text('LogOut'),
+            title: Text(
+              'Logout',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge!
+                  .copyWith(fontWeight: FontWeight.w600, color: Colors.red),
+            ),
             onTap: () {
               Navigator.pop(context);
+              showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        title: SvgPicture.asset(
+                          "lib/assets/images/logout.svg",
+                          color: Colors.black,
+                          height: 80,
+                        ),
+                        content: Text(
+                          "Are you sure you want to logout?",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        actionsAlignment: MainAxisAlignment.spaceEvenly,
+                        actions: [
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size(100, 50),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "No",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(100, 50),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              backgroundColor: colorPrimary,
+                            ),
+                            onPressed: () {},
+                            child: Text(
+                              "Yes",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ));
             },
           ),
+          const Spacer(),
+          Text(
+            "V${widget.packageInfo?.version}",
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          TextButton(
+              onPressed: () {},
+              child: Text(
+                "Check for updates",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(decoration: TextDecoration.underline),
+              )),
+          SizedBox(height: 15),
         ],
       ),
     );

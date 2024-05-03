@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'ui/splash/splash.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   runApp(const MyApp());
 }
