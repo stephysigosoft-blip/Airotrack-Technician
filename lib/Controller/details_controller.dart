@@ -115,9 +115,11 @@ class DetailsController extends GetxController {
       dio.options.headers["Authorization"] = "Bearer $token";
       var response = await dio.post(url, data: data);
       if (response.statusCode == 200) {
+        Get.back();
         showFlushBar(response.data['message']);
       }
     } catch (error) {
+      Get.back();
       if (error is DioException) {
         if (error.response?.data['message'] is Map) {
           Map<String, dynamic> message = error.response?.data['message'];
@@ -128,9 +130,7 @@ class DetailsController extends GetxController {
       } else {
         showFlushBar(error.toString());
       }
-    } finally {
-      Get.back();
-    }
+    } 
   }
 
   // Future<void> getCommands(String modelName) async {

@@ -34,9 +34,7 @@ class LoginController extends GetxController {
           'password': passwordController.text.trim(),
         });
         Response response = await dio.post(url, data: formData);
-        print(response.data);
         if (response.statusCode == 200) {
-          showFlushBar(response.data['message'].toString());
           saveObject('token', response.data['data']['details']['token']);
           Get.offAll(() => const Home());
         }
