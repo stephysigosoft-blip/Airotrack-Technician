@@ -1,17 +1,22 @@
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
+import 'package:airotrackgit/controller/home_controller.dart';
 import 'package:airotrackgit/ui/about/About.dart';
 import 'package:airotrackgit/ui/contactus/contactus.dart';
+import 'package:airotrackgit/ui/devices/qrview.dart';
 import 'package:airotrackgit/ui/home/scanner.dart';
 import 'package:airotrackgit/ui/privacy/privacy.dart';
 import 'package:airotrackgit/ui/terms/terms_condition.dart';
+import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:simple_barcode_scanner/enum.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../devices/qrview.dart';
+import 'widget/clock_widget.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -33,200 +38,221 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          centerTitle: true,
-          title: SvgPicture.asset(
-            'lib/assets/images/logosplash.svg',
-            height: 60,
-          ),
-        ),
-        drawer: UserDrawer(
-          packageInfo: packageInfo,
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.2,
-                margin: const EdgeInsets.only(top: 30, left: 20, right: 20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: colorPrimary,
-                    border: Border.all(color: colorPrimary),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Column(
+    return GetBuilder<HomeController>(
+      init: HomeController(),
+      initState: (_) {},
+      builder: (controller) {
+        return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              centerTitle: true,
+              title: SvgPicture.asset(
+                'lib/assets/images/logosplash.svg',
+                height: 60,
+              ),
+            ),
+            drawer: UserDrawer(
+              packageInfo: packageInfo,
+            ),
+            body: controller.isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                          margin: const EdgeInsets.only(left: 15, top: 25),
-                          child: const Text(
-                            Strings.welcome,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontFamily: 'Poppins-Regular'),
-                          )),
-                      Container(
-                          margin: const EdgeInsets.only(left: 15, top: 15),
-                          child: const Text(
-                            "Jobin",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Poppins-Bold'),
-                          )),
-                      Container(
-                        margin: const EdgeInsets.only(top: 25, left: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          margin: const EdgeInsets.only(
+                              top: 30, left: 20, right: 20),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: colorPrimary,
+                              border: Border.all(color: colorPrimary),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SvgPicture.asset(
-                                  'lib/assets/images/calendar.svg',
-                                  width: 20,
-                                  height: 20,
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                const Text(
-                                  "05 Jun 2023",
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins-Regular',
-                                      fontSize: 15,
-                                      color: Colors.white),
+                                Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 15, top: 25),
+                                    child: const Text(
+                                      Strings.welcome,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontFamily: 'Poppins-Regular'),
+                                    )),
+                                Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 15, top: 15),
+                                    child: Text(
+                                      controller.homeData?.firstName ??
+                                          "user name",
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Poppins-Bold'),
+                                    )),
+                                Container(
+                                  margin:
+                                      const EdgeInsets.only(top: 25, left: 15),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SvgPicture.asset(
+                                            'lib/assets/images/calendar.svg',
+                                            width: 20,
+                                            height: 20,
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            DateFormat('dd MMM yyyy')
+                                                .format(DateTime.now()),
+                                            style: const TextStyle(
+                                                fontFamily: 'Poppins-Regular',
+                                                fontSize: 15,
+                                                color: Colors.white),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SvgPicture.asset(
+                                            'lib/assets/images/schedulewhite.svg',
+                                            width: 20,
+                                            height: 20,
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          const ClockWidget(),
+                                          const SizedBox(
+                                            width: 15,
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 )
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SvgPicture.asset(
-                                  'lib/assets/images/schedulewhite.svg',
-                                  width: 20,
-                                  height: 20,
+                          )),
+                      Container(
+                        margin:
+                            const EdgeInsets.only(left: 20, right: 20, top: 25),
+                        child: const Text(
+                          Strings.scanDevice,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Poppins-Bold'),
+                        ),
+                      ),
+                      Container(
+                        margin:
+                            const EdgeInsets.only(left: 20, right: 20, top: 10),
+                        height: 55,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: colorPrimary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                          ),
+                          onPressed: () async {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const QRViewExample(),
+                                ));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                "lib/assets/images/barwhite.svg",
+                                width: 27,
+                                height: 27,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text(
+                                Strings.openScanner,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontFamily: 'Poppins-Bold',
+                                    fontWeight: FontWeight.w600),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin:
+                            const EdgeInsets.only(left: 20, right: 20, top: 25),
+                        child: const Text(
+                          Strings.deviceID,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Poppins-Bold'),
+                        ),
+                      ),
+                      Container(
+                        margin:
+                            const EdgeInsets.only(left: 20, right: 20, top: 15),
+                        height: 50,
+                        child: TextField(
+                          decoration: InputDecoration(
+                              suffixIcon: const Material(
+                                elevation: 2.0,
+                                color: colorPrimary,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(4)),
+                                child: Icon(
+                                  Icons.search,
+                                  color: Colors.white,
                                 ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                const Text(
-                                  "8:22:11 AM",
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins-Regular',
-                                      fontSize: 15,
-                                      color: Colors.white),
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                )
-                              ],
-                            )
-                          ],
+                              ),
+                              fillColor: greybg,
+                              filled: true,
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: blacklite, width: 1.0),
+                                  borderRadius: BorderRadius.circular(4)),
+                              hintText: "Enter Device ID",
+                              hintStyle: const TextStyle(color: blacklite)),
                         ),
                       )
                     ],
-                  ),
-                )),
-            Container(
-              margin: const EdgeInsets.only(left: 20, right: 20, top: 25),
-              child: const Text(
-                Strings.scanDevice,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Poppins-Bold'),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
-              height: 55,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                ),
-                onPressed: () async {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const QRViewExample(),
-                      ));
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      "lib/assets/images/barwhite.svg",
-                      width: 27,
-                      height: 27,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      Strings.openScanner,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontFamily: 'Poppins-Bold',
-                          fontWeight: FontWeight.w600),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 20, right: 20, top: 25),
-              child: const Text(
-                Strings.deviceID,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Poppins-Bold'),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 20, right: 20, top: 15),
-              height: 50,
-              child: TextField(
-                decoration: InputDecoration(
-                    suffixIcon: const Material(
-                      elevation: 2.0,
-                      color: colorPrimary,
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
-                      child: Icon(
-                        Icons.search,
-                        color: Colors.white,
-                      ),
-                    ),
-                    fillColor: greybg,
-                    filled: true,
-                    enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(color: blacklite, width: 1.0),
-                        borderRadius: BorderRadius.circular(4)),
-                    hintText: "Enter Device ID",
-                    hintStyle: const TextStyle(color: blacklite)),
-              ),
-            )
-          ],
-        ));
+                  ));
+      },
+    );
   }
 }
 
@@ -253,6 +279,7 @@ class _UserDrawerState extends State<UserDrawer> {
                     Navigator.pop(context);
                   },
                   icon: const Icon(
+                    size: 30,
                     Icons.close,
                   ),
                 )),
