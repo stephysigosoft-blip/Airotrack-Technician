@@ -36,7 +36,7 @@ class LoginController extends GetxController {
         Response response = await dio.post(url, data: formData);
         print(response.data);
         if (response.statusCode == 200) {
-          showToast(response.data['message'].toString());
+          showFlushBar(response.data['message'].toString());
           saveObject('token', response.data['data']['details']['token']);
           Get.offAll(() => const Home());
         }
@@ -44,6 +44,7 @@ class LoginController extends GetxController {
         Get.to(const NoInternet());
       }
     } catch (error) {
+      Get.back();
       if (error is DioException) {
         DioException e = error;
         print("Error is c:" + error.response!.data.toString());
@@ -51,26 +52,23 @@ class LoginController extends GetxController {
         var msg = e.response!.data["message"];
         if (msg == null) {
           message = e.response!.data["message"];
-          showToast(message);
+          showFlushBar(message);
           if (msg == null) {
             message = Strings.oopsSomethingWentWrong;
-            showToast(message);
+            showFlushBar(message);
           }
         } else {
           msg = e.response!.data["message"];
           if (msg.toString().contains("username")) {
-            showToast(msg["username"][0]);
+            showFlushBar(msg["username"][0]);
           } else if (msg.toString().contains("password")) {
-            showToast(msg["password"][0]);
+            showFlushBar(msg["password"][0]);
           } else {
             message = Strings.oopsSomethingWentWrong;
-            showToast(message);
+            showFlushBar(message);
           }
         }
-        Get.back();
       }
-    } finally {
-      Get.back();
     }
   }
 }
