@@ -28,6 +28,7 @@ class DetailsController extends GetxController {
         if (response.data['data']['device_details'] != null) {
           deviceDetails =
               DeviceDetails.fromJson(response.data['data']['device_details']);
+          commands.clear();
           response.data['data']['commands']
               .map((e) => commands.add(Command.fromJson(e)))
               .toList();
@@ -68,6 +69,7 @@ class DetailsController extends GetxController {
         if (response.data['data']['device_details'] != null) {
           deviceDetails =
               DeviceDetails.fromJson(response.data['data']['device_details']);
+          commands.clear();
           response.data['data']['commands']
               .map((e) => commands.add(Command.fromJson(e)))
               .toList();
