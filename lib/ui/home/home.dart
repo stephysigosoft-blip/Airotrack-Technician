@@ -11,6 +11,8 @@ import 'package:simple_barcode_scanner/enum.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../devices/qrview.dart';
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -162,12 +164,7 @@ class _HomeState extends State<Home> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SimpleBarcodeScannerPage(
-                          isShowFlashIcon: true,
-                          scanType: ScanType.barcode,
-                          cancelButtonText: "Cancel",
-                          appBarTitle: "Scanner",
-                        ),
+                        builder: (context) => const QRViewExample(),
                       ));
                 },
                 child: Row(
