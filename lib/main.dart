@@ -1,3 +1,4 @@
+import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Airotack',
       theme: ThemeData(
         fontFamily: "Poppins",
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: colorPrimary),
         useMaterial3: true,
       ),
       home: const Splash(),

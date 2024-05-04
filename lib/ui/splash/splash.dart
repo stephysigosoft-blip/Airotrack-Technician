@@ -26,11 +26,11 @@ class _SplashState extends State<Splash> {
   }
 
   loginCheck() async {
-    var token = await getSavedObject("token");
-    if (token != null) {
-      Timer(const Duration(seconds: 3), () => Get.offAll( DeviceDetail(imei: '',)));
+    var token = getSavedObject("token") ?? '';
+    if (token == null) {
+      Timer(const Duration(seconds: 3), () => Get.offAll(const Login()));
     } else {
-      Get.offAll(const Home());
+      Timer(const Duration(seconds: 3), () => Get.offAll(const Home()));
     }
   }
 
@@ -50,44 +50,44 @@ class _SplashState extends State<Splash> {
                 'lib/assets/images/logosplash.svg',
               ),
             ),
-            Container(
-                height: 50,
-                margin: const EdgeInsets.only(left: 20, right: 20),
-                child: SizedBox(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        backgroundColor: colorPrimary),
-                    onPressed: () {
-                      var token = getSavedObject('token');
-                      // if (token == null || token.isEmpty) {
-                      //   Get.offAll(() => const Login());
-                      // } else {
-                      Get.offAll(() => const Home());
-                      // }
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) => const Home()));
-                    },
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          Strings.getStart,
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Icon(
-                          Icons.arrow_forward,
-                          color: Colors.white,
-                        )
-                      ],
-                    ),
-                  ),
-                ))
+            // Container(
+            //     height: 50,
+            //     margin: const EdgeInsets.only(left: 20, right: 20),
+            //     child: SizedBox(
+            //       child: ElevatedButton(
+            //         style: ElevatedButton.styleFrom(
+            //             shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(12),
+            //             ),
+            //             backgroundColor: colorPrimary),
+            //         onPressed: () {
+            //           var token = getSavedObject('token');
+            //           // if (token == null || token.isEmpty) {
+            //           //   Get.offAll(() => const Login());
+            //           // } else {
+            //           Get.offAll(() => const Home());
+            //           // }
+            //           // Navigator.of(context).push(MaterialPageRoute(
+            //           //     builder: (context) => const Home()));
+            //         },
+            //         child: const Row(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           children: [
+            //             Text(
+            //               Strings.getStart,
+            //               style: TextStyle(color: Colors.white, fontSize: 16),
+            //             ),
+            //             SizedBox(
+            //               width: 5,
+            //             ),
+            //             Icon(
+            //               Icons.arrow_forward,
+            //               color: Colors.white,
+            //             )
+            //           ],
+            //         ),
+            //       ),
+            //     ))
           ],
         ),
       ),

@@ -1,3 +1,23 @@
+class Command {
+  int id;
+  String command;
+
+  Command({
+    required this.id,
+    required this.command,
+  });
+
+  factory Command.fromJson(Map<String, dynamic> json) => Command(
+        id: json["id"],
+        command: json["command"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "command": command,
+      };
+}
+
 class DeviceDetails {
   int id;
   String imei;
@@ -15,6 +35,7 @@ class DeviceDetails {
   String latitude;
   String longitude;
   String alertId;
+  String deviceModel;
 
   DeviceDetails({
     required this.id,
@@ -33,6 +54,7 @@ class DeviceDetails {
     required this.latitude,
     required this.longitude,
     required this.alertId,
+    required this.deviceModel,
   });
 
   factory DeviceDetails.fromJson(Map<String, dynamic> json) => DeviceDetails(
@@ -63,6 +85,7 @@ class DeviceDetails {
         latitude: json["latitude"],
         longitude: json["longitude"],
         alertId: json["alert_id"],
+        deviceModel: json["device_model"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -82,5 +105,6 @@ class DeviceDetails {
         "latitude": latitude,
         "longitude": longitude,
         "alert_id": alertId,
+        "device_model": deviceModel,
       };
 }
