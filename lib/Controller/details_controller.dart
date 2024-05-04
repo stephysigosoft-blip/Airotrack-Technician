@@ -15,7 +15,7 @@ class DetailsController extends GetxController {
       FormData data = FormData.fromMap({"imei": imei, "command_id": commandId});
       Dio dio = Dio();
       dio.options.headers["Authorization"] = "Bearer $token";
-      var response = await dio.get(url);
+      var response = await dio.get(url, data: data);
       if (response.statusCode == 200) {}
     } catch (error) {
       isLoading = false;
