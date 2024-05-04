@@ -17,6 +17,7 @@ class DeviceDetail extends StatefulWidget {
   final String? imei;
   final String? deviceId;
 
+
   @override
   State<DeviceDetail> createState() => _DeviceDetailState();
 }
@@ -29,6 +30,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
       init: DetailsController(),
       initState: (_) {},
       didChangeDependencies: (state) {
+        print("IMEI: " + widget.imei.toString());
         print('insie');
         if (widget.imei != null) {
           print('imeme insie');
