@@ -12,8 +12,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/instance_manager.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:google_ml_kit/google_ml_kit.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart' as cameraBarCode;
 
 class QRViewExample extends StatefulWidget {
@@ -146,7 +146,7 @@ class _QRViewExampleState extends State<QRViewExample> {
 
                             ),
                             onPressed: () async {
-                              getImage(ImageSource.gallery);
+                              // getImage(ImageSource.gallery);
 
                             },
                             child: FutureBuilder(
@@ -248,7 +248,7 @@ class _QRViewExampleState extends State<QRViewExample> {
     }
   }
 
-  getImage(ImageSource imageSource) async{
+  /*getImage(ImageSource imageSource) async{
     final pickedFile= await ImagePicker().pickImage(source: ImageSource.gallery);
     if(pickedFile!=null){
       selectedImagePath=pickedFile.path;
@@ -301,7 +301,7 @@ class _QRViewExampleState extends State<QRViewExample> {
             backgroundColor: Colors.red);
       }
     }
-  }
+  }*/
 
   @override
   void dispose() {
