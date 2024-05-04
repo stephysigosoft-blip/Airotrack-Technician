@@ -6,6 +6,8 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/controller/details_controller.dart';
+import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DeviceDetail extends StatefulWidget {
   const DeviceDetail({super.key, this.imei, this.deviceId})
@@ -372,7 +374,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                       const SizedBox(
                                         width: 2,
                                       ),
-                                      const Column(
+                                      Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         crossAxisAlignment:
@@ -384,8 +386,8 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                "${Strings.date}:",
+                                              const Text(
+                                                "${Strings.date}: ",
                                                 style: TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black,
@@ -393,8 +395,9 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                 ),
                                               ),
                                               Text(
-                                                "20 Dec 2023",
-                                                style: TextStyle(
+                                                DateFormat("dd MMM yyyy")
+                                                    .format(DateTime.now()),
+                                                style: const TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black,
                                                   fontFamily: 'Poppins-Light',
@@ -408,8 +411,8 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                "${Strings.time}:",
+                                              const Text(
+                                                "${Strings.time}: ",
                                                 style: TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black,
@@ -417,8 +420,8 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                 ),
                                               ),
                                               Text(
-                                                "08:20:21 AM",
-                                                style: TextStyle(
+                                                TimeOfDay.now().format(context),
+                                                style: const TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black,
                                                   fontFamily: 'Poppins-Light',
@@ -744,9 +747,16 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.3,
-                                        child: const Text(
-                                          "03 Nov 2023",
-                                          style: TextStyle(
+                                        child: Text(
+                                          controller.deviceDetails!
+                                                      .simActivationDate ==
+                                                  null
+                                              ? ""
+                                              : DateFormat('dd MMM yyyy')
+                                                  .format(controller
+                                                      .deviceDetails!
+                                                      .simActivationDate!),
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             color: Colors.black,
                                             fontFamily: 'Poppins-Light',
@@ -806,9 +816,16 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.3,
-                                        child: const Text(
-                                          "03 Nov 2023",
-                                          style: TextStyle(
+                                        child: Text(
+                                          controller.deviceDetails!
+                                                      .expirationtime ==
+                                                  null
+                                              ? ""
+                                              : DateFormat('dd MMM yyyy')
+                                                  .format(controller
+                                                      .deviceDetails!
+                                                      .expirationtime!),
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             color: Colors.black,
                                             fontFamily: 'Poppins-Light',
@@ -869,25 +886,31 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                   .size
                                                   .width *
                                               0.3,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              SvgPicture.asset(
-                                                "lib/assets/images/googlemap.svg",
-                                                width: 20,
-                                                height: 20,
-                                              ),
-                                              const Text(
-                                                "Googke Map",
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.black,
-                                                  fontFamily: 'Poppins-Light',
+                                          child: InkWell(
+                                            onTap: () async {
+                                              await launchUrl(Uri.parse(
+                                                  'https://maps.google.com/?q=${controller.deviceDetails!.latitude},${controller.deviceDetails!.longitude}'));
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  "lib/assets/images/googlemap.svg",
+                                                  width: 20,
+                                                  height: 20,
                                                 ),
-                                                maxLines: 3,
-                                              ),
-                                            ],
+                                                const Text(
+                                                  "Googke Map",
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.black,
+                                                    fontFamily: 'Poppins-Light',
+                                                  ),
+                                                  maxLines: 3,
+                                                ),
+                                              ],
+                                            ),
                                           ))
                                     ],
                                   ),
