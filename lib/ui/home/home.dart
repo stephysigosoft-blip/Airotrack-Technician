@@ -1,8 +1,11 @@
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
+import 'package:airotrackgit/ui/devices/qrview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
+
+import '../devices/scan_details.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -257,7 +260,7 @@ class Home extends StatelessWidget {
                   var res = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SimpleBarcodeScannerPage(),
+                        builder: (context) => const QRViewExample(),
                       ));
                 },
                 child: Row(
