@@ -30,8 +30,8 @@ class DeviceDetails {
   String secondaryMobileNumber;
   String networkProvider;
   String simProvider;
-  String simActivationDate;
-  String expirationtime;
+  DateTime? simActivationDate;
+  DateTime? expirationtime;
   String latitude;
   String longitude;
   String alertId;
@@ -77,15 +77,15 @@ class DeviceDetails {
         simProvider:
             json["sim_provider"] == null ? "" : json["sim_provider"].toString(),
         simActivationDate: json["sim_activation_date"] == null
-            ? ""
-            : json["sim_activation_date"].toString(),
+            ? null
+            : DateTime.parse(json["sim_activation_date"]),
         expirationtime: json["expirationtime"] == null
-            ? ""
-            : json["expirationtime"].toString(),
-        latitude: json["latitude"],
-        longitude: json["longitude"],
-        alertId: json["alert_id"],
-        deviceModel: json["device_model"],
+            ? null
+            : DateTime.parse(json["expirationtime"]),
+        latitude: json["latitude"] ?? "",
+        longitude: json["longitude"] ?? "",
+        alertId: json["alert_id"] ?? "",
+        deviceModel: json["device_model"] ?? "",
       );
 
   Map<String, dynamic> toJson() => {

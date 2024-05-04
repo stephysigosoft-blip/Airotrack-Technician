@@ -227,9 +227,8 @@ class _HomeState extends State<Home> {
                       Form(
                         key: formKey,
                         child: Container(
-                          margin: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
                               horizontal: 15, vertical: 20),
-                          height: 75,
                           child: TextFormField(
                             validator: (value) {
                               if (value!.isEmpty) {
@@ -251,10 +250,12 @@ class _HomeState extends State<Home> {
                                 Get.to(DeviceDetail(
                                   deviceId: value,
                                 ));
+                                deviceIdController.clear();
                               }
                             },
                             decoration: InputDecoration(
-                                constraints: BoxConstraints(minHeight: 55),
+                                constraints:
+                                    const BoxConstraints(minHeight: 55),
                                 suffixIcon: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: colorPrimary,
@@ -267,9 +268,10 @@ class _HomeState extends State<Home> {
                                         deviceId:
                                             deviceIdController.text.trim(),
                                       ));
+                                      deviceIdController.clear();
                                     }
                                   },
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.search,
                                     color: Colors.white,
                                   ),
