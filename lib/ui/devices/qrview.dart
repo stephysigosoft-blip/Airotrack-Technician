@@ -2,11 +2,13 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:airotrackgit/assets/resources/colors.dart';
+import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRViewExample extends StatefulWidget {
@@ -53,6 +55,9 @@ class _QRViewExampleState extends State<QRViewExample> {
           ),
           Container(
               margin: EdgeInsets.only(left: 20,right: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10)
+              ),
               height: 450, child: _buildQrView(context)),
           Container(
             child: FittedBox(
@@ -60,15 +65,18 @@ class _QRViewExampleState extends State<QRViewExample> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  if (result != null)
+                /*  if (result != null)
                     Text(
                         'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
                   else
-                    const Text('Scan a code'),
+                    const Text('Scan a code'),*/
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
+                      SizedBox(
+                        width: 20,
+                      ),
                       Container(
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
@@ -90,7 +98,10 @@ class _QRViewExampleState extends State<QRViewExample> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     SvgPicture.asset('lib/assets/images/flash.svg',width: 15,height: 15,),
-                                Text('Flash: ${snapshot.data}',
+                                SizedBox(
+                                  width: 7,
+                                ),
+                                Text('Flash',
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 15
@@ -165,6 +176,7 @@ class _QRViewExampleState extends State<QRViewExample> {
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
+
       });
     });
   }
