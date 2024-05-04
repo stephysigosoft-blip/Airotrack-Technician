@@ -1,5 +1,7 @@
 import 'package:airotrackgit/assets/resources/colors.dart';
+import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/config/api_config.dart';
+import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:airotrackgit/ui/home/home.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:dio/dio.dart';
@@ -30,12 +32,11 @@ class LoginController extends GetxController {
         'password': passwordController.text.trim(),
       });
       Response response = await dio.post(url, data: formData);
-
+      print(response.data);
       if (response.statusCode == 200) {
         showToast(response.data['message'].toString());
-        saveObject('userData', response.data['data']['details']);
         saveObject('token', response.data['data']['details']['token']);
-        Get.to(const Home());
+        Get.offAll(const DeviceDetail());
       }
     } catch (error) {
       if (error is DioException) {
@@ -46,30 +47,27 @@ class LoginController extends GetxController {
         if (msg == null) {
           message = e.response!.data["message"];
           showToast(message);
-          //   if (msg == null) {
-          //     message = Strings.oopsSomethingWentWrong;
-          //     showToast(message);
-          //   }
-          // } else {
-          //   msg = e.response!.data["message"];
-          //   if (msg.toString().contains("mobile")) {
-          //     message = Strings.mobileNotRegistered;
-          //     //  showToast(msg["mobile"]);
-          //     mobileErrorText.value = message;
-          //     errorFound.value = true;
-          //   } else if (msg.toString().contains("blocked")) {
-          //     message = Strings.blockedByAdmin;
-          //     // showToast(msg["mobile"]);
-          //     mobileErrorText.value = message;
-          //     errorFound.value = true;
-          //   } else {
-          //     message = Strings.oopsSomethingWentWrong;
-          //     showToast(message);
-          //   }
-          // }
-          // Get.back();
+          if (msg == null) {
+            message = Strings.oopsSomethingWentWrong;
+            showToast(message);
+          }
+        } else {
+          msg = e.response!.data["message"];
+          if (msg.toString().contains("username")) {
+              showToast(msg["username"][0]);
+          
+          } else if (msg.toString().contains("password")) {
+             showToast(msg["password"][0]);
+       
+          } else {
+            message = Strings.oopsSomethingWentWrong;
+            showToast(message);
+          }
         }
+        Get.back();
       }
+    } finally {
+      Get.back();
     }
   }
 }
