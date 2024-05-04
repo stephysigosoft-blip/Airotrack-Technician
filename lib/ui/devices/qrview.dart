@@ -2,11 +2,14 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:airotrackgit/assets/resources/colors.dart';
+import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/instance_manager.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QRViewExample extends StatefulWidget {
@@ -42,11 +45,16 @@ class _QRViewExampleState extends State<QRViewExample> {
           SizedBox(
             height: 80,
           ),
-          Container(
-            margin: EdgeInsets.only(left: 20),
-            child: SvgPicture.asset('lib/assets/images/close.svg',
-            width: 25,
-            height: 25,),
+          InkWell(
+            onTap: () {
+              Get.back();
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 20),
+              child: SvgPicture.asset('lib/assets/images/close.svg',
+                width: 25,
+                height: 25,),
+            ),
           ),
           SizedBox(
             height: 30,
@@ -63,11 +71,14 @@ class _QRViewExampleState extends State<QRViewExample> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  if (result != null)
+                  /*if (result != null)
                     Text(
                         'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
                   else
-                    const Text('Scan a code'),
+                    const Text('Scan a code'),*/
+                  SizedBox(
+                    height: 30,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -174,6 +185,7 @@ class _QRViewExampleState extends State<QRViewExample> {
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
+        Get.to(DeviceDetail(imei: result!.code!));
       });
     });
   }

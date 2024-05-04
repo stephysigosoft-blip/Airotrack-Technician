@@ -28,7 +28,7 @@ class _SplashState extends State<Splash> {
   loginCheck() async {
     var token = await getSavedObject("token");
     if (token != null) {
-      Timer(const Duration(seconds: 3), () => Get.offAll(const DeviceDetail()));
+      Timer(const Duration(seconds: 3), () => Get.offAll( DeviceDetail(imei: '',)));
     } else {
       Get.offAll(const Home());
     }

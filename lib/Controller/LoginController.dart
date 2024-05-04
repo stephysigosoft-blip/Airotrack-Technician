@@ -36,7 +36,7 @@ class LoginController extends GetxController {
       if (response.statusCode == 200) {
         showToast(response.data['message'].toString());
         saveObject('token', response.data['data']['details']['token']);
-        Get.offAll(const DeviceDetail());
+        Get.offAll(const DeviceDetail(imei: '',));
       }
     } catch (error) {
       if (error is DioException) {

@@ -14,7 +14,7 @@ class DetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getCommands();
+    getCommands("");
   }
 
   getDeatils(
