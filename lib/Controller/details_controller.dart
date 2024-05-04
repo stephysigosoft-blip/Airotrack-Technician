@@ -42,10 +42,10 @@ class DetailsController extends GetxController {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
         } else {
-          showToast(error.response?.data['message']);
+          showFlushBar(error.response?.data['message']);
         }
       } else {
-        showToast(error.toString());
+        showFlushBar(error.toString());
       }
     } finally {
       isLoading = false;
@@ -83,10 +83,10 @@ class DetailsController extends GetxController {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
         } else {
-          showToast(error.response?.data['message']);
+          showFlushBar(error.response?.data['message']);
         }
       } else {
-        showToast(error.toString());
+        showFlushBar(error.toString());
       }
     } finally {
       isLoading = false;
@@ -115,7 +115,7 @@ class DetailsController extends GetxController {
       dio.options.headers["Authorization"] = "Bearer $token";
       var response = await dio.post(url, data: data);
       if (response.statusCode == 200) {
-        showToast(response.data['message']);
+        showFlushBar(response.data['message']);
       }
     } catch (error) {
       if (error is DioException) {
@@ -123,10 +123,10 @@ class DetailsController extends GetxController {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
         } else {
-          showToast(error.response?.data['message']);
+          showFlushBar(error.response?.data['message']);
         }
       } else {
-        showToast(error.toString());
+        showFlushBar(error.toString());
       }
     } finally {
       Get.back();
@@ -158,7 +158,7 @@ class DetailsController extends GetxController {
   //       // Map<String, dynamic> message = e.response?.data['message'];
   //       // showErrorToast(message);
   //     } else {
-  //       showToast(e.toString());
+  //       showFlushBar(e.toString());
   //     }
   //   }
   // }
