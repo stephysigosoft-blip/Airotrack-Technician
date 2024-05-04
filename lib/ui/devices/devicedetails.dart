@@ -305,17 +305,18 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                       const SizedBox(
                                         width: 12,
                                       ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: controller.deviceDetails!
-                                                        .gnssFix ==
-                                                    1
-                                                ? Colors.green
-                                                : Colors.red),
-                                        width: 20,
-                                        height: 20,
-                                      ),
+                                      Icon(Icons.visibility)
+                                      // Container(
+                                      //   decoration: BoxDecoration(
+                                      //       shape: BoxShape.circle,
+                                      //       color: controller.deviceDetails!
+                                      //                   .gnssFix ==
+                                      //               1
+                                      //           ? Colors.green
+                                      //           : Colors.red),
+                                      //   width: 20,
+                                      //   height: 20,
+                                      // ),
                                     ],
                                   ),
                                 ),

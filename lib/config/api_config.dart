@@ -11,4 +11,5 @@ class APIEndpoints {
   static const String login = "login";
   static const String logout = "logout";
   static const String sendCommand = "sendCommand";
+  static const String setting = "settings";
 }
