@@ -25,15 +25,19 @@ class DetailsController extends GetxController {
         "imei": imei,
       });
       if (response.statusCode == 200) {
-        deviceDetails =
-            DeviceDetails.fromJson(response.data['data']['device_details']);
-        response.data['data']['commands']
-            .map((e) => commands.add(Command.fromJson(e)))
-            .toList();
+        if (response.data['data']['device_details'] != null) {
+          deviceDetails =
+              DeviceDetails.fromJson(response.data['data']['device_details']);
+          commands.clear();
+          response.data['data']['commands']
+              .map((e) => commands.add(Command.fromJson(e)))
+              .toList();
+        }
         update();
       }
     } catch (error) {
       if (error is DioException) {
+        print(error.response?.data);
         if (error.response?.data['message'] is Map) {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
@@ -58,17 +62,18 @@ class DetailsController extends GetxController {
       var token = getSavedObject('token') ?? "";
       var url = APIConfig.BASE_URL + APIEndpoints.deviceDetailswithId;
       dio.options.headers["Authorization"] = "Bearer $token";
-      print(id);
       var response = await dio.get(url, queryParameters: {
         "device_id": id,
       });
       if (response.statusCode == 200) {
-        print(response.data);
-        deviceDetails =
-            DeviceDetails.fromJson(response.data['data']['device_details']);
-        response.data['data']['commands']
-            .map((e) => commands.add(Command.fromJson(e)))
-            .toList();
+        if (response.data['data']['device_details'] != null) {
+          deviceDetails =
+              DeviceDetails.fromJson(response.data['data']['device_details']);
+          commands.clear();
+          response.data['data']['commands']
+              .map((e) => commands.add(Command.fromJson(e)))
+              .toList();
+        }
         update();
       }
     } catch (error) {

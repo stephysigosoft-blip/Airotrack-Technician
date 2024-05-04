@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class ClockWidget extends StatefulWidget {
-  const ClockWidget({super.key});
+  const ClockWidget({Key? key}) : super(key: key);
 
   @override
   State<ClockWidget> createState() => _ClockWidgetState();
@@ -31,7 +31,9 @@ class _ClockWidgetState extends State<ClockWidget> {
 
   String _getCurrentTime() {
     DateTime now = DateTime.now();
-    return '${now.hour}:${now.minute}:${now.second < 10 ? "0${now.second}" : now.second} ';
+    int hour = now.hour % 12;
+    hour = hour == 0 ? 12 : hour;
+    return '${hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')} ';
   }
 
   String _getCurrentPeriod() {

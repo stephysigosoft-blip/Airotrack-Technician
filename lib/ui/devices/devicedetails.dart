@@ -17,6 +17,7 @@ class DeviceDetail extends StatefulWidget {
   final String? imei;
   final String? deviceId;
 
+
   @override
   State<DeviceDetail> createState() => _DeviceDetailState();
 }
@@ -29,6 +30,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
       init: DetailsController(),
       initState: (_) {},
       didChangeDependencies: (state) {
+        print("IMEI: " + widget.imei.toString());
         print('insie');
         if (widget.imei != null) {
           print('imeme insie');
@@ -66,10 +68,21 @@ class _DeviceDetailState extends State<DeviceDetail> {
                 )
               : controller.deviceDetails == null
                   ? Center(
-                      child: Text(
-                          "Opps, some errors occurred while retrieving device details. Please try again later.",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset("lib/assets/images/device_error_id.png"),
+                          const SizedBox(height: 7),
+                          Text(
+                              "Oops! We couldn't find a device ID. \nPlease enter the ID associated with your device to proceed.",
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(letterSpacing: .5)),
+                        ],
+                      ),
                     )
                   : SingleChildScrollView(
                       child: Column(
@@ -305,17 +318,18 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                       const SizedBox(
                                         width: 12,
                                       ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: controller.deviceDetails!
-                                                        .gnssFix ==
-                                                    1
-                                                ? Colors.green
-                                                : Colors.red),
-                                        width: 20,
-                                        height: 20,
-                                      ),
+                                      const Icon(Icons.visibility)
+                                      // Container(
+                                      //   decoration: BoxDecoration(
+                                      //       shape: BoxShape.circle,
+                                      //       color: controller.deviceDetails!
+                                      //                   .gnssFix ==
+                                      //               1
+                                      //           ? Colors.green
+                                      //           : Colors.red),
+                                      //   width: 20,
+                                      //   height: 20,
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -1064,7 +1078,8 @@ class _DeviceDetailState extends State<DeviceDetail> {
                         Container(
                             height: 55,
                             width: width,
-                            margin: const EdgeInsets.only(left: 20, right: 20),
+                            margin: const EdgeInsets.only(
+                                left: 20, right: 20, bottom: 20),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
@@ -1072,10 +1087,12 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                             BorderRadius.circular(12)),
                                     backgroundColor: colorPrimary),
                                 onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => DeviceDetail(
-                                            imei: widget.imei,
-                                          )));
+                                  if (widget.imei != null) {
+                                    controller.getDeatils(widget.imei!);
+                                  } else if (widget.deviceId != null) {
+                                    controller
+                                        .getDeatilsWithId(widget.deviceId!);
+                                  }
                                 },
                                 child: const Text(
                                   Strings.refresh,
