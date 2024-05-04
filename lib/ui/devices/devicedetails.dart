@@ -66,10 +66,24 @@ class _DeviceDetailState extends State<DeviceDetail> {
                 )
               : controller.deviceDetails == null
                   ? Center(
-                      child: Text(
-                          "Opps, some errors occurred while retrieving device details. Please try again later.",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.car_crash_outlined,
+                            size: 49,
+                          ),
+                          const SizedBox(height: 14),
+                          Text(
+                              "Oops! We couldn't find a device ID. \nPlease enter the ID associated with your device to proceed.",
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(letterSpacing: .5)),
+                        ],
+                      ),
                     )
                   : SingleChildScrollView(
                       child: Column(
@@ -305,7 +319,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                       const SizedBox(
                                         width: 12,
                                       ),
-                                      Icon(Icons.visibility)
+                                      const Icon(Icons.visibility)
                                       // Container(
                                       //   decoration: BoxDecoration(
                                       //       shape: BoxShape.circle,
@@ -1065,7 +1079,8 @@ class _DeviceDetailState extends State<DeviceDetail> {
                         Container(
                             height: 55,
                             width: width,
-                            margin: const EdgeInsets.only(left: 20, right: 20),
+                            margin: const EdgeInsets.only(
+                                left: 20, right: 20, bottom: 20),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
@@ -1073,10 +1088,12 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                             BorderRadius.circular(12)),
                                     backgroundColor: colorPrimary),
                                 onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => DeviceDetail(
-                                            imei: widget.imei,
-                                          )));
+                                  if (widget.imei != null) {
+                                    controller.getDeatils(widget.imei!);
+                                  } else if (widget.deviceId != null) {
+                                    controller
+                                        .getDeatilsWithId(widget.deviceId!);
+                                  }
                                 },
                                 child: const Text(
                                   Strings.refresh,
