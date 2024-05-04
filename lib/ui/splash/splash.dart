@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:airotrackgit/ui/login/view/login.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +21,17 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   @override
   void initState() {
+    loginCheck();
     super.initState();
+  }
+
+  loginCheck() async {
+    var token = await getSavedObject("token");
+    if (token != null) {
+      Timer(const Duration(seconds: 3), () => Get.offAll(const DeviceDetail()));
+    } else {
+      Get.offAll(const Home());
+    }
   }
 
   @override
