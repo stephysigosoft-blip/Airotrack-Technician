@@ -47,7 +47,8 @@ class Strings{
   static const String time = "Time";
   static const String scanDevice = "Scan Device";
   static const String openScanner = "Open Scanner";
-
+  static const String oopsSomethingWentWrong =
+      "Oops Something went wrong try again !!";
 
 
 }

@@ -7,8 +7,7 @@ import 'package:get/get.dart' hide FormData;
 class DetailsController extends GetxController {
   bool isLoading = false;
   Dio dio = Dio();
-      List<Command> commands=[];
-
+  List<Command> commands = [];
 
   sendCommands(String imei, String commandId) async {
     try {
@@ -31,12 +30,18 @@ class DetailsController extends GetxController {
     }
   }
 
-  getCommands() async {
+  Future<void> getCommands(String modelName) async {
     try {
+      isLoading = true;
       var token = getSavedObject('token') ?? "";
       var url = APIConfig.BASE_URL + APIEndpoints.command;
       dio.options.headers["Authorization"] = "Bearer $token";
-      var response = await dio.get(url);
+      print(url);
+      FormData body = FormData.fromMap({
+        "model_name": modelName,
+      });
+      var response = await dio.get(url, data: body);
+      print(response.data);
       if (response.statusCode == 200) {
         response.data['data']['commands']
             .map((e) => commands.add(Command.fromJson(e)))
@@ -46,8 +51,9 @@ class DetailsController extends GetxController {
       }
     } catch (e) {
       if (e is DioException) {
-        Map<String, dynamic> message = e.response?.data['message'];
-        showErrorToast(message);
+        print(e.response!.data);
+        // Map<String, dynamic> message = e.response?.data['message'];
+        // showErrorToast(message);
       } else {
         showToast(e.toString());
       }
