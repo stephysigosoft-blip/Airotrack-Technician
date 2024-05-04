@@ -888,8 +888,29 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                               0.3,
                                           child: InkWell(
                                             onTap: () async {
+                                              showDialog(
+                                                  context: Get.context!,
+                                                  barrierDismissible: false,
+                                                  builder: (context) {
+                                                    return Center(
+                                                      child: Container(
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color: Colors
+                                                                    .white),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10),
+                                                        child:
+                                                            const CircularProgressIndicator(),
+                                                      ),
+                                                    );
+                                                  });
                                               await launchUrl(Uri.parse(
                                                   'https://maps.google.com/?q=${controller.deviceDetails!.latitude},${controller.deviceDetails!.longitude}'));
+                                              Get.back();
                                             },
                                             child: Row(
                                               mainAxisAlignment:
@@ -901,7 +922,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                   height: 20,
                                                 ),
                                                 const Text(
-                                                  "Googke Map",
+                                                  "Google Map",
                                                   style: TextStyle(
                                                     fontSize: 15,
                                                     color: Colors.black,
