@@ -42,10 +42,10 @@ class DetailsController extends GetxController {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
         } else {
-          showToast(error.response?.data['message']);
+          showFlushBar(error.response?.data['message']);
         }
       } else {
-        showToast(error.toString());
+        showFlushBar(error.toString());
       }
     } finally {
       isLoading = false;
@@ -83,10 +83,10 @@ class DetailsController extends GetxController {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
         } else {
-          showToast(error.response?.data['message']);
+          showFlushBar(error.response?.data['message']);
         }
       } else {
-        showToast(error.toString());
+        showFlushBar(error.toString());
       }
     } finally {
       isLoading = false;
@@ -115,22 +115,22 @@ class DetailsController extends GetxController {
       dio.options.headers["Authorization"] = "Bearer $token";
       var response = await dio.post(url, data: data);
       if (response.statusCode == 200) {
-        showToast(response.data['message']);
+        Get.back();
+        showFlushBar(response.data['message']);
       }
     } catch (error) {
+      Get.back();
       if (error is DioException) {
         if (error.response?.data['message'] is Map) {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
         } else {
-          showToast(error.response?.data['message']);
+          showFlushBar(error.response?.data['message']);
         }
       } else {
-        showToast(error.toString());
+        showFlushBar(error.toString());
       }
-    } finally {
-      Get.back();
-    }
+    } 
   }
 
   // Future<void> getCommands(String modelName) async {
@@ -158,7 +158,7 @@ class DetailsController extends GetxController {
   //       // Map<String, dynamic> message = e.response?.data['message'];
   //       // showErrorToast(message);
   //     } else {
-  //       showToast(e.toString());
+  //       showFlushBar(e.toString());
   //     }
   //   }
   // }
