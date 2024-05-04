@@ -3,6 +3,7 @@ import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class Login extends StatefulWidget {
@@ -71,6 +72,10 @@ class _LoginState extends State<Login> {
                     ),
                     child: TextFormField(
                       controller: controller.usernameController,
+                      keyboardType: TextInputType.name,
+                        inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]+')),
+              ],
                       decoration: InputDecoration(
                         hintText: Strings.enterUserName,
                         hintStyle:

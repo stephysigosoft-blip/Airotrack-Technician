@@ -59,259 +59,261 @@ class _HomeState extends State<Home> {
                 ? const Center(
                     child: CircularProgressIndicator(),
                   )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.2,
+                : SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            margin: const EdgeInsets.only(
+                                top: 30, left: 20, right: 20),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: colorPrimary,
+                                border: Border.all(color: colorPrimary),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 15, top: 25),
+                                      child: const Text(
+                                        Strings.welcome,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontFamily: 'Poppins-Regular'),
+                                      )),
+                                  Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 15, top: 15),
+                                      child: Text(
+                                        controller.homeData?.firstName ??
+                                            "user name",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Poppins-Bold'),
+                                      )),
+                                  Container(
+                                    margin: const EdgeInsets.only(
+                                        top: 25, left: 15),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SvgPicture.asset(
+                                              'lib/assets/images/calendar.svg',
+                                              width: 20,
+                                              height: 20,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              DateFormat('dd MMM yyyy')
+                                                  .format(DateTime.now()),
+                                              style: const TextStyle(
+                                                  fontFamily: 'Poppins-Regular',
+                                                  fontSize: 15,
+                                                  color: Colors.white),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SvgPicture.asset(
+                                              'lib/assets/images/schedulewhite.svg',
+                                              width: 20,
+                                              height: 20,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            const ClockWidget(),
+                                            const SizedBox(
+                                              width: 15,
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )),
+                        Container(
                           margin: const EdgeInsets.only(
-                              top: 30, left: 20, right: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: colorPrimary,
-                              border: Border.all(color: colorPrimary),
-                              borderRadius: BorderRadius.circular(5),
+                              left: 20, right: 20, top: 25),
+                          child: const Text(
+                            Strings.scanDevice,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Poppins-Bold'),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 20, right: 20, top: 10),
+                          height: 55,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: colorPrimary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7),
+                              ),
                             ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            onPressed: () async {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const QRViewExample(),
+                                  ));
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 15, top: 25),
-                                    child: const Text(
-                                      Strings.welcome,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontFamily: 'Poppins-Regular'),
-                                    )),
-                                Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 15, top: 15),
-                                    child: Text(
-                                      controller.homeData?.firstName ??
-                                          "user name",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Poppins-Bold'),
-                                    )),
-                                Container(
-                                  margin:
-                                      const EdgeInsets.only(top: 25, left: 15),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SvgPicture.asset(
-                                            'lib/assets/images/calendar.svg',
-                                            width: 20,
-                                            height: 20,
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            DateFormat('dd MMM yyyy')
-                                                .format(DateTime.now()),
-                                            style: const TextStyle(
-                                                fontFamily: 'Poppins-Regular',
-                                                fontSize: 15,
-                                                color: Colors.white),
-                                          )
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SvgPicture.asset(
-                                            'lib/assets/images/schedulewhite.svg',
-                                            width: 20,
-                                            height: 20,
-                                          ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          const ClockWidget(),
-                                          const SizedBox(
-                                            width: 15,
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
+                                SvgPicture.asset(
+                                  "lib/assets/images/barwhite.svg",
+                                  width: 27,
+                                  height: 27,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                const Text(
+                                  Strings.openScanner,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 17,
+                                      fontFamily: 'Poppins-Bold',
+                                      fontWeight: FontWeight.w600),
                                 )
                               ],
                             ),
-                          )),
-                      Container(
-                        margin:
-                            const EdgeInsets.only(left: 20, right: 20, top: 25),
-                        child: const Text(
-                          Strings.scanDevice,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'Poppins-Bold'),
+                          ),
                         ),
-                      ),
-                      Container(
-                        margin:
-                            const EdgeInsets.only(left: 20, right: 20, top: 10),
-                        height: 55,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: colorPrimary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7),
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 20, right: 20, top: 25),
+                          child: const Text(
+                            Strings.deviceID,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Poppins-Bold'),
+                          ),
+                        ),
+                        Form(
+                          key: formKey,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 20),
+                            child: TextFormField(
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "Enter a device id";
+                                }
+                                // if (value.length > 10) {
+                                //   return "Enter a valid device id";
+                                // }
+                                return null;
+                              },
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              controller: deviceIdController,
+                              keyboardType: TextInputType.number,
+                              textInputAction: TextInputAction.done,
+                              onFieldSubmitted: (value) {
+                                if (formKey.currentState!.validate()) {
+                                  Get.to(DeviceDetail(
+                                    deviceId: value,
+                                  ));
+                                  deviceIdController.clear();
+                                }
+                              },
+                              decoration: InputDecoration(
+                                  constraints:
+                                      const BoxConstraints(minHeight: 55),
+                                  suffixIcon: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: colorPrimary,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(4))),
+                                    onPressed: () {
+                                      if (formKey.currentState!.validate()) {
+                                        Get.to(DeviceDetail(
+                                          deviceId:
+                                              deviceIdController.text.trim(),
+                                        ));
+                                        deviceIdController.clear();
+                                      }
+                                    },
+                                    child: const Icon(
+                                      Icons.search,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+
+                                  //  InkWell(
+
+                                  //  In
+                                  //   child: Container(
+                                  //     height: 55, width: 55,
+                                  //     color: colorPrimary,
+                                  //     // borderRadius:
+                                  //     //     BorderRadius.all(Radius.circular(4)),
+                                  //     child:
+                                  //   ),
+                                  // ),
+                                  fillColor: greybg,
+                                  filled: true,
+                                  errorBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: blacklite, width: 1.0),
+                                      borderRadius: BorderRadius.circular(4)),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: blacklite, width: 1.0),
+                                      borderRadius: BorderRadius.circular(4)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: blacklite, width: 1.0),
+                                      borderRadius: BorderRadius.circular(4)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          color: blacklite, width: 1.0),
+                                      borderRadius: BorderRadius.circular(4)),
+                                  hintText: "Enter Device ID",
+                                  hintStyle: const TextStyle(color: blacklite)),
                             ),
                           ),
-                          onPressed: () async {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const QRViewExample(),
-                                ));
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                "lib/assets/images/barwhite.svg",
-                                width: 27,
-                                height: 27,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              const Text(
-                                Strings.openScanner,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontFamily: 'Poppins-Bold',
-                                    fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin:
-                            const EdgeInsets.only(left: 20, right: 20, top: 25),
-                        child: const Text(
-                          Strings.deviceID,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'Poppins-Bold'),
-                        ),
-                      ),
-                      Form(
-                        key: formKey,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 20),
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Enter a device id";
-                              }
-                              if (value.length > 10) {
-                                return "Enter a valid device id";
-                              }
-                              return null;
-                            },
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            controller: deviceIdController,
-                            keyboardType: TextInputType.number,
-                            textInputAction: TextInputAction.done,
-                            onFieldSubmitted: (value) {
-                              if (formKey.currentState!.validate()) {
-                                Get.to(DeviceDetail(
-                                  deviceId: value,
-                                ));
-                                deviceIdController.clear();
-                              }
-                            },
-                            decoration: InputDecoration(
-                                constraints:
-                                    const BoxConstraints(minHeight: 55),
-                                suffixIcon: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: colorPrimary,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4))),
-                                  onPressed: () {
-                                    if (formKey.currentState!.validate()) {
-                                      Get.to(DeviceDetail(
-                                        deviceId:
-                                            deviceIdController.text.trim(),
-                                      ));
-                                      deviceIdController.clear();
-                                    }
-                                  },
-                                  child: const Icon(
-                                    Icons.search,
-                                    color: Colors.white,
-                                  ),
-                                ),
-
-                                //  InkWell(
-
-                                //  In
-                                //   child: Container(
-                                //     height: 55, width: 55,
-                                //     color: colorPrimary,
-                                //     // borderRadius:
-                                //     //     BorderRadius.all(Radius.circular(4)),
-                                //     child:
-                                //   ),
-                                // ),
-                                fillColor: greybg,
-                                filled: true,
-                                errorBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color: blacklite, width: 1.0),
-                                    borderRadius: BorderRadius.circular(4)),
-                                focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color: blacklite, width: 1.0),
-                                    borderRadius: BorderRadius.circular(4)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color: blacklite, width: 1.0),
-                                    borderRadius: BorderRadius.circular(4)),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        color: blacklite, width: 1.0),
-                                    borderRadius: BorderRadius.circular(4)),
-                                hintText: "Enter Device ID",
-                                hintStyle: const TextStyle(color: blacklite)),
-                          ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ));
       },
     );

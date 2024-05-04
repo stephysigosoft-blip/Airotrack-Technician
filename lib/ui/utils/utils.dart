@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -124,3 +126,23 @@ showErrorToast(Map<String, dynamic> message) {
     }
   }
 }
+ Future<bool> checkNetwork() async {
+  try {
+    List<ConnectivityResult> connectivityResult = await Connectivity().checkConnectivity();
+    print(connectivityResult);
+    print(connectivityResult.contains(ConnectivityResult.wifi)); // Check if wifi is in the list
+    if (connectivityResult.contains(ConnectivityResult.wifi) ||
+        connectivityResult.contains(ConnectivityResult.mobile)) {
+      final result = await InternetAddress.lookup('google.com');
+      print("Result: ${result}");
+  if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      }
+    }
+  } on SocketException catch (_) {
+    return false;
+  }
+  return false;
+}
+
+

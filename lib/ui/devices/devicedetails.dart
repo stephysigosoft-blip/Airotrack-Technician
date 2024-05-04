@@ -6,6 +6,8 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/controller/details_controller.dart';
+import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DeviceDetail extends StatefulWidget {
   const DeviceDetail({super.key, this.imei, this.deviceId})
@@ -66,10 +68,24 @@ class _DeviceDetailState extends State<DeviceDetail> {
                 )
               : controller.deviceDetails == null
                   ? Center(
-                      child: Text(
-                          "Opps, some errors occurred while retrieving device details. Please try again later.",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyLarge),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.car_crash_outlined,
+                            size: 49,
+                          ),
+                          const SizedBox(height: 14),
+                          Text(
+                              "Oops! We couldn't find a device ID. \nPlease enter the ID associated with your device to proceed.",
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(letterSpacing: .5)),
+                        ],
+                      ),
                     )
                   : SingleChildScrollView(
                       child: Column(
@@ -305,17 +321,18 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                       const SizedBox(
                                         width: 12,
                                       ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: controller.deviceDetails!
-                                                        .gnssFix ==
-                                                    1
-                                                ? Colors.green
-                                                : Colors.red),
-                                        width: 20,
-                                        height: 20,
-                                      ),
+                                      const Icon(Icons.visibility)
+                                      // Container(
+                                      //   decoration: BoxDecoration(
+                                      //       shape: BoxShape.circle,
+                                      //       color: controller.deviceDetails!
+                                      //                   .gnssFix ==
+                                      //               1
+                                      //           ? Colors.green
+                                      //           : Colors.red),
+                                      //   width: 20,
+                                      //   height: 20,
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -374,7 +391,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                       const SizedBox(
                                         width: 2,
                                       ),
-                                      const Column(
+                                      Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         crossAxisAlignment:
@@ -386,8 +403,8 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                "${Strings.date}:",
+                                              const Text(
+                                                "${Strings.date}: ",
                                                 style: TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black,
@@ -395,8 +412,9 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                 ),
                                               ),
                                               Text(
-                                                "20 Dec 2023",
-                                                style: TextStyle(
+                                                DateFormat("dd MMM yyyy")
+                                                    .format(DateTime.now()),
+                                                style: const TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black,
                                                   fontFamily: 'Poppins-Light',
@@ -410,8 +428,8 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                "${Strings.time}:",
+                                              const Text(
+                                                "${Strings.time}: ",
                                                 style: TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black,
@@ -419,8 +437,8 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                 ),
                                               ),
                                               Text(
-                                                "08:20:21 AM",
-                                                style: TextStyle(
+                                                TimeOfDay.now().format(context),
+                                                style: const TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black,
                                                   fontFamily: 'Poppins-Light',
@@ -746,9 +764,16 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.3,
-                                        child: const Text(
-                                          "03 Nov 2023",
-                                          style: TextStyle(
+                                        child: Text(
+                                          controller.deviceDetails!
+                                                      .simActivationDate ==
+                                                  null
+                                              ? ""
+                                              : DateFormat('dd MMM yyyy')
+                                                  .format(controller
+                                                      .deviceDetails!
+                                                      .simActivationDate!),
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             color: Colors.black,
                                             fontFamily: 'Poppins-Light',
@@ -808,9 +833,16 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.3,
-                                        child: const Text(
-                                          "03 Nov 2023",
-                                          style: TextStyle(
+                                        child: Text(
+                                          controller.deviceDetails!
+                                                      .expirationtime ==
+                                                  null
+                                              ? ""
+                                              : DateFormat('dd MMM yyyy')
+                                                  .format(controller
+                                                      .deviceDetails!
+                                                      .expirationtime!),
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             color: Colors.black,
                                             fontFamily: 'Poppins-Light',
@@ -871,25 +903,52 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                   .size
                                                   .width *
                                               0.3,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              SvgPicture.asset(
-                                                "lib/assets/images/googlemap.svg",
-                                                width: 20,
-                                                height: 20,
-                                              ),
-                                              const Text(
-                                                "Googke Map",
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.black,
-                                                  fontFamily: 'Poppins-Light',
+                                          child: InkWell(
+                                            onTap: () async {
+                                              showDialog(
+                                                  context: Get.context!,
+                                                  barrierDismissible: false,
+                                                  builder: (context) {
+                                                    return Center(
+                                                      child: Container(
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color: Colors
+                                                                    .white),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(10),
+                                                        child:
+                                                            const CircularProgressIndicator(),
+                                                      ),
+                                                    );
+                                                  });
+                                              await launchUrl(Uri.parse(
+                                                  'https://maps.google.com/?q=${controller.deviceDetails!.latitude},${controller.deviceDetails!.longitude}'));
+                                              Get.back();
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  "lib/assets/images/googlemap.svg",
+                                                  width: 20,
+                                                  height: 20,
                                                 ),
-                                                maxLines: 3,
-                                              ),
-                                            ],
+                                                const Text(
+                                                  "Google Map",
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.black,
+                                                    fontFamily: 'Poppins-Light',
+                                                  ),
+                                                  maxLines: 3,
+                                                ),
+                                              ],
+                                            ),
                                           ))
                                     ],
                                   ),
@@ -1022,7 +1081,8 @@ class _DeviceDetailState extends State<DeviceDetail> {
                         Container(
                             height: 55,
                             width: width,
-                            margin: const EdgeInsets.only(left: 20, right: 20),
+                            margin: const EdgeInsets.only(
+                                left: 20, right: 20, bottom: 20),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
@@ -1030,10 +1090,12 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                             BorderRadius.circular(12)),
                                     backgroundColor: colorPrimary),
                                 onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => DeviceDetail(
-                                            imei: widget.imei,
-                                          )));
+                                  if (widget.imei != null) {
+                                    controller.getDeatils(widget.imei!);
+                                  } else if (widget.deviceId != null) {
+                                    controller
+                                        .getDeatilsWithId(widget.deviceId!);
+                                  }
                                 },
                                 child: const Text(
                                   Strings.refresh,

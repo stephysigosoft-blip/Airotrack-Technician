@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:airotrackgit/ui/login/view/login.dart';
+import 'package:airotrackgit/ui/utils/no_internet.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -26,11 +27,15 @@ class _SplashState extends State<Splash> {
   }
 
   loginCheck() async {
-    var token = getSavedObject("token") ?? '';
-    if (token == null) {
-      Timer(const Duration(seconds: 3), () => Get.offAll(const Login()));
+    if (await checkNetwork()) {
+      var token = await getSavedObject("token");
+      if (token != null) {
+        Timer(const Duration(seconds: 3), () => Get.offAll(const Home()));
+      } else {
+        Timer(const Duration(seconds: 3), () => Get.offAll(const Login()));
+      }
     } else {
-      Timer(const Duration(seconds: 3), () => Get.offAll(const Home()));
+      Get.to(const NoInternet());
     }
   }
 

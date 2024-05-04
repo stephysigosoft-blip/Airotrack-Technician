@@ -3,6 +3,7 @@ import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/config/api_config.dart';
 import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:airotrackgit/ui/home/home.dart';
+import 'package:airotrackgit/ui/utils/no_internet.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -26,17 +27,21 @@ class LoginController extends GetxController {
           ));
         });
     try {
-      var url = APIConfig.BASE_URL + APIEndpoints.login;
-      FormData formData = FormData.fromMap({
-        'username': usernameController.text.trim(),
-        'password': passwordController.text.trim(),
-      });
-      Response response = await dio.post(url, data: formData);
-      print(response.data);
-      if (response.statusCode == 200) {
-        showToast(response.data['message'].toString());
-        saveObject('token', response.data['data']['details']['token']);
-        Get.offAll(() => const Home());
+      if (await checkNetwork()) {
+        var url = APIConfig.BASE_URL + APIEndpoints.login;
+        FormData formData = FormData.fromMap({
+          'username': usernameController.text.trim(),
+          'password': passwordController.text.trim(),
+        });
+        Response response = await dio.post(url, data: formData);
+        print(response.data);
+        if (response.statusCode == 200) {
+          showToast(response.data['message'].toString());
+          saveObject('token', response.data['data']['details']['token']);
+          Get.offAll(() => const Home());
+        }
+      } else {
+        Get.to(const NoInternet());
       }
     } catch (error) {
       if (error is DioException) {
