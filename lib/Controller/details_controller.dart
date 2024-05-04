@@ -49,6 +49,46 @@ class DetailsController extends GetxController {
     }
   }
 
+  getDeatilsWithId(
+    String id,
+  ) async {
+    try {
+      isLoading = true;
+      update();
+      var token = getSavedObject('token') ?? "";
+      var url = APIConfig.BASE_URL + APIEndpoints.deviceDetailswithId;
+      dio.options.headers["Authorization"] = "Bearer $token";
+      print(id);
+      var response = await dio.get(url, queryParameters: {
+        "device_id": id,
+      });
+      if (response.statusCode == 200) {
+        print(response.data);
+        deviceDetails =
+            DeviceDetails.fromJson(response.data['data']['device_details']);
+        response.data['data']['commands']
+            .map((e) => commands.add(Command.fromJson(e)))
+            .toList();
+        update();
+      }
+    } catch (error) {
+      if (error is DioException) {
+        print(error.response?.data);
+        if (error.response?.data['message'] is Map) {
+          Map<String, dynamic> message = error.response?.data['message'];
+          showErrorToast(message);
+        } else {
+          showToast(error.response?.data['message']);
+        }
+      } else {
+        showToast(error.toString());
+      }
+    } finally {
+      isLoading = false;
+      update();
+    }
+  }
+
   sendCommands(String imei, String commandId) async {
     try {
       showDialog(

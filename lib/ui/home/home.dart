@@ -1,4 +1,6 @@
+import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -33,6 +35,8 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
+  TextEditingController deviceIdController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(
@@ -220,30 +224,89 @@ class _HomeState extends State<Home> {
                               fontFamily: 'Poppins-Bold'),
                         ),
                       ),
-                      Container(
-                        margin:
-                            const EdgeInsets.only(left: 20, right: 20, top: 15),
-                        height: 50,
-                        child: TextField(
-                          decoration: InputDecoration(
-                              suffixIcon: const Material(
-                                elevation: 2.0,
-                                color: colorPrimary,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(4)),
-                                child: Icon(
-                                  Icons.search,
-                                  color: Colors.white,
+                      Form(
+                        key: formKey,
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 20),
+                          height: 75,
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Enter a device id";
+                              }
+                              if (value.length > 10) {
+                                return "Enter a valid device id";
+                              }
+                              return null;
+                            },
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            controller: deviceIdController,
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (value) {
+                              if (formKey.currentState!.validate()) {
+                                Get.to(DeviceDetail(
+                                  deviceId: value,
+                                ));
+                              }
+                            },
+                            decoration: InputDecoration(
+                                constraints: BoxConstraints(minHeight: 55),
+                                suffixIcon: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: colorPrimary,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(4))),
+                                  onPressed: () {
+                                    if (formKey.currentState!.validate()) {
+                                      Get.to(DeviceDetail(
+                                        deviceId:
+                                            deviceIdController.text.trim(),
+                                      ));
+                                    }
+                                  },
+                                  child: Icon(
+                                    Icons.search,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                              fillColor: greybg,
-                              filled: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: blacklite, width: 1.0),
-                                  borderRadius: BorderRadius.circular(4)),
-                              hintText: "Enter Device ID",
-                              hintStyle: const TextStyle(color: blacklite)),
+
+                                //  InkWell(
+
+                                //  In
+                                //   child: Container(
+                                //     height: 55, width: 55,
+                                //     color: colorPrimary,
+                                //     // borderRadius:
+                                //     //     BorderRadius.all(Radius.circular(4)),
+                                //     child:
+                                //   ),
+                                // ),
+                                fillColor: greybg,
+                                filled: true,
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: blacklite, width: 1.0),
+                                    borderRadius: BorderRadius.circular(4)),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: blacklite, width: 1.0),
+                                    borderRadius: BorderRadius.circular(4)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: blacklite, width: 1.0),
+                                    borderRadius: BorderRadius.circular(4)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: blacklite, width: 1.0),
+                                    borderRadius: BorderRadius.circular(4)),
+                                hintText: "Enter Device ID",
+                                hintStyle: const TextStyle(color: blacklite)),
+                          ),
                         ),
                       )
                     ],
