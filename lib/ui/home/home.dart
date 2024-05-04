@@ -1,20 +1,17 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/controller/home_controller.dart';
 import 'package:airotrackgit/ui/about/About.dart';
 import 'package:airotrackgit/ui/contactus/contactus.dart';
 import 'package:airotrackgit/ui/devices/qrview.dart';
-import 'package:airotrackgit/ui/home/scanner.dart';
 import 'package:airotrackgit/ui/privacy/privacy.dart';
 import 'package:airotrackgit/ui/terms/terms_condition.dart';
-import 'package:airotrackgit/ui/utils/utils.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:simple_barcode_scanner/enum.dart';
-import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 import 'widget/clock_widget.dart';
 
@@ -272,33 +269,32 @@ class _UserDrawerState extends State<UserDrawer> {
       child: Column(
         children: [
           DrawerHeader(
-            child: Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    size: 30,
-                    Icons.close,
-                  ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: SvgPicture.asset('lib/assets/images/logosplash.svg'),
                 )),
-          ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'lib/assets/images/contactus.svg',
-              width: 20,
-              height: 20,
-            ),
-            trailing: SvgPicture.asset(
-              'lib/assets/images/arrow.svg',
-              width: 15,
-              height: 15,
-            ),
-            title: Text(Strings.contactus,
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
+                Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(
+                        size: 30,
+                        Icons.close,
+                      ),
                     )),
+              ],
+            ),
+          ),
+          TitleTile(
+            img: 'lib/assets/images/contactus.svg',
+            title: Strings.contactus,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context,
@@ -306,51 +302,13 @@ class _UserDrawerState extends State<UserDrawer> {
             },
           ),
           Container(
-            margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
+            margin: const EdgeInsets.all(10),
             height: 1,
             color: greyline,
           ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'lib/assets/images/privacy.svg',
-              width: 20,
-              height: 20,
-            ),
-            trailing: SvgPicture.asset(
-              'lib/assets/images/arrow.svg',
-              width: 15,
-              height: 15,
-            ),
-            title: Text(Strings.privacyPolicy,
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                    )),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Privacy()));
-            },
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
-            height: 1,
-            color: greyline,
-          ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'lib/assets/images/aboutus.svg',
-              width: 20,
-              height: 20,
-            ),
-            trailing: SvgPicture.asset(
-              'lib/assets/images/arrow.svg',
-              width: 15,
-              height: 15,
-            ),
-            title: Text(Strings.aboutUs,
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                    )),
+          TitleTile(
+            img: 'lib/assets/images/aboutus.svg',
+            title: Strings.aboutUs,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
@@ -358,25 +316,27 @@ class _UserDrawerState extends State<UserDrawer> {
             },
           ),
           Container(
-            margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
+            margin: const EdgeInsets.all(10),
             height: 1,
             color: greyline,
           ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'lib/assets/images/terms.svg',
-              width: 20,
-              height: 20,
-            ),
-            title: Text(Strings.terms,
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600,
-                    )),
-            trailing: SvgPicture.asset(
-              'lib/assets/images/arrow.svg',
-              width: 15,
-              height: 15,
-            ),
+          TitleTile(
+            img: 'lib/assets/images/privacy.svg',
+            title: Strings.privacyPolicy,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Privacy()));
+            },
+          ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            height: 1,
+            color: greyline,
+          ),
+          TitleTile(
+            img: 'lib/assets/images/terms.svg',
+            title: Strings.terms,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context,
@@ -384,28 +344,18 @@ class _UserDrawerState extends State<UserDrawer> {
             },
           ),
           Container(
-            margin: const EdgeInsets.only(left: 20, right: 35, top: 20),
+            margin: const EdgeInsets.all(10),
             height: 1,
             color: greyline,
           ),
-          ListTile(
-            leading: SvgPicture.asset(
-              'lib/assets/images/logout.svg',
-              width: 20,
-              height: 20,
-            ),
-            trailing: SvgPicture.asset(
-              'lib/assets/images/arrowred.svg',
-              width: 15,
-              height: 15,
-            ),
-            title: Text(
-              'Logout',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(fontWeight: FontWeight.w600, color: Colors.red),
-            ),
+          TitleTile(
+            img: 'lib/assets/images/logout.svg',
+            title: 'Logout',
+            trailImg: 'lib/assets/images/arrowred.svg',
+            titlestyle: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(fontWeight: FontWeight.w600, color: Colors.red),
             onTap: () {
               Navigator.pop(context);
               showDialog(
@@ -446,7 +396,9 @@ class _UserDrawerState extends State<UserDrawer> {
                                   borderRadius: BorderRadius.circular(10)),
                               backgroundColor: colorPrimary,
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              await Get.find<HomeController>().logoutAPI();
+                            },
                             child: Text(
                               "Yes",
                               style: Theme.of(context)
@@ -475,9 +427,51 @@ class _UserDrawerState extends State<UserDrawer> {
                     .bodyLarge!
                     .copyWith(decoration: TextDecoration.underline),
               )),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
         ],
       ),
+    );
+  }
+}
+
+class TitleTile extends StatelessWidget {
+  final String title;
+  final String img;
+  final String trailImg;
+  final TextStyle? titlestyle;
+  final void Function()? onTap;
+  const TitleTile({
+    super.key,
+    required this.title,
+    required this.img,
+    this.titlestyle,
+    this.trailImg = 'lib/assets/images/arrow.svg',
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: SvgPicture.asset(
+        img,
+        width: 36,
+        height: 36,
+      ),
+      trailing: SvgPicture.asset(
+        trailImg,
+        width: 15,
+        height: 15,
+      ),
+      title: Text(title,
+          style: titlestyle ??
+              Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(fontWeight: FontWeight.w600, letterSpacing: 1)),
+      onTap: onTap ??
+          () {
+            Navigator.pop(context);
+          },
     );
   }
 }
