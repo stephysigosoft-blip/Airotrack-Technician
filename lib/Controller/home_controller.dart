@@ -33,10 +33,10 @@ class HomeController extends GetxController {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
         } else {
-          showToast(error.response?.data['message']);
+          showFlushBar(error.response?.data['message']);
         }
       } else {
-        showToast(error.toString());
+        showFlushBar(error.toString());
       }
     } finally {
       isLoading = false;
@@ -62,10 +62,10 @@ class HomeController extends GetxController {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
         } else {
-          showToast(error.response?.data['message']);
+          showFlushBar(error.response?.data['message']);
         }
       } else {
-        showToast(error.toString());
+        showFlushBar(error.toString());
       }
     } finally {
       isLoading = false;
@@ -94,7 +94,7 @@ class HomeController extends GetxController {
       var response = await dio.get(url);
       if (response.statusCode == 200) {
         Get.back();
-        showToast(response.data['message']);
+        showFlushBar(response.data['message']);
         removename('token');
         Get.offAll(() => const Login());
       }
@@ -105,10 +105,10 @@ class HomeController extends GetxController {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
         } else {
-          showToast(error.response?.data['message']);
+          showFlushBar(error.response?.data['message']);
         }
       } else {
-        showToast(error.toString());
+        showFlushBar(error.toString());
       }
     }
   }
