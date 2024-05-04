@@ -1,7 +1,10 @@
 import 'package:airotrackgit/Model/home_model.dart';
 import 'package:airotrackgit/config/api_config.dart';
+import 'package:airotrackgit/ui/login/view/login.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
@@ -40,6 +43,47 @@ class HomeController extends GetxController {
     } finally {
       isLoading = false;
       update();
+    }
+  }
+
+  logoutAPI() async {
+    try {
+      showDialog(
+          context: Get.context!,
+          barrierDismissible: false,
+          builder: (context) {
+            return Center(
+              child: Container(
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle, color: Colors.white),
+                padding: const EdgeInsets.all(10),
+                child: const CircularProgressIndicator(),
+              ),
+            );
+          });
+      var url = APIConfig.BASE_URL + APIEndpoints.logout;
+      var token = getSavedObject('token') ?? "";
+      Dio dio = Dio();
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var response = await dio.get(url);
+      if (response.statusCode == 200) {
+        Get.back();
+        showToast(response.data['message']);
+        removename('token');
+        Get.offAll(() => const Login());
+      }
+    } catch (error) {
+      Get.back();
+      if (error is DioException) {
+        if (error.response?.data['message'] is Map) {
+          Map<String, dynamic> message = error.response?.data['message'];
+          showErrorToast(message);
+        } else {
+          showToast(error.response?.data['message']);
+        }
+      } else {
+        showToast(error.toString());
+      }
     }
   }
 }
