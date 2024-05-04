@@ -528,7 +528,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                     child: Text(
                                       controller
                                           .deviceDetails!.primaryMobileNumber,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 15,
                                         color: Colors.black,
                                         fontFamily: 'Poppins-Light',
@@ -869,66 +869,77 @@ class _DeviceDetailState extends State<DeviceDetail> {
                             const SizedBox(
                               height: 15,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(left: 20),
-                                  child: const Text(
-                                    "SET TESTMON",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15),
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(right: 10),
-                                  child: Row(
+                            ListView.separated(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 20),
+                                separatorBuilder: (_, i) => const Divider(
+                                      color: Colors.grey,
+                                      thickness: 1,
+                                    ),
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: controller.commands.length,
+                                itemBuilder: (_, i) {
+                                  var command = controller.commands[i];
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const SizedBox(
-                                        height: 35,
-                                        child: VerticalDivider(
-                                          color: Colors.grey,
-                                          thickness: 1,
+                                      Expanded(
+                                        child: Text(
+                                          command.command,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15),
                                         ),
                                       ),
-                                      const SizedBox(
-                                        width: 10,
+                                      Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 10),
+                                        child: Row(
+                                          children: [
+                                            const SizedBox(
+                                              height: 35,
+                                              child: VerticalDivider(
+                                                color: Colors.grey,
+                                                thickness: 3,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12)),
+                                                    backgroundColor:
+                                                        colorPrimary),
+                                                onPressed: () async {
+                                                  await controller.sendCommands(
+                                                      widget.imei,
+                                                      command.id.toString());
+                                                },
+                                                child: const Text(
+                                                  "Send",
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: Colors.white,
+                                                      fontFamily:
+                                                          'Poppins-Bold'),
+                                                ))
+                                          ],
+                                        ),
                                       ),
-                                      ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12)),
-                                              backgroundColor: colorPrimary),
-                                          onPressed: () {},
-                                          child: const Text(
-                                            "Send",
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.white,
-                                                fontFamily: 'Poppins-Bold'),
-                                          ))
                                     ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(
-                                  left: 15, right: 20, top: 5),
-                              width: MediaQuery.of(context).size.width,
-                              height: 1,
-                              color: greylight,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            )
+                                  );
+                                })
                           ],
                         ),
                       ),

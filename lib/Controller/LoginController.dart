@@ -36,7 +36,7 @@ class LoginController extends GetxController {
       if (response.statusCode == 200) {
         showToast(response.data['message'].toString());
         saveObject('token', response.data['data']['details']['token']);
-        Get.offAll(const DeviceDetail());
+        Get.offAll(() => const Home());
       }
     } catch (error) {
       if (error is DioException) {
@@ -54,11 +54,9 @@ class LoginController extends GetxController {
         } else {
           msg = e.response!.data["message"];
           if (msg.toString().contains("username")) {
-              showToast(msg["username"][0]);
-          
+            showToast(msg["username"][0]);
           } else if (msg.toString().contains("password")) {
-             showToast(msg["password"][0]);
-       
+            showToast(msg["password"][0]);
           } else {
             message = Strings.oopsSomethingWentWrong;
             showToast(message);
