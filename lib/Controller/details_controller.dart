@@ -7,8 +7,38 @@ import 'package:get/get.dart' hide FormData;
 class DetailsController extends GetxController {
   bool isLoading = false;
   Dio dio = Dio();
-      List<Command> commands=[];
+  List<Command> commands = [];
 
+  getDeatils(
+    String imei,
+  ) async {
+    try {
+      isLoading = true;
+      update();
+      var token = getSavedObject('token') ?? "";
+      var url = APIConfig.BASE_URL + APIEndpoints.deviceDetails;
+      FormData data = FormData.fromMap({
+        "imei": imei,
+      });
+      dio.options.headers["Authorization"] = "Bearer $token";
+      var response = await dio.get(url, data: data);
+      if (response.statusCode == 200) {}
+    } catch (error) {
+      if (error is DioException) {
+        if (error.response?.data['message'] is Map) {
+          Map<String, dynamic> message = error.response?.data['message'];
+          showErrorToast(message);
+        } else {
+          showToast(error.response?.data['message']);
+        }
+      } else {
+        showToast(error.toString());
+      }
+    } finally {
+      isLoading = false;
+      update();
+    }
+  }
 
   sendCommands(String imei, String commandId) async {
     try {
@@ -21,12 +51,18 @@ class DetailsController extends GetxController {
       var response = await dio.get(url, data: data);
       if (response.statusCode == 200) {}
     } catch (error) {
-      isLoading = false;
       if (error is DioException) {
-        print(error.response?.data);
+        if (error.response?.data['message'] is Map) {
+          Map<String, dynamic> message = error.response?.data['message'];
+          showErrorToast(message);
+        } else {
+          showToast(error.response?.data['message']);
+        }
       } else {
-        print(error.toString());
+        showToast(error.toString());
       }
+    } finally {
+      isLoading = false;
       update();
     }
   }
