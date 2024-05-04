@@ -70,11 +70,8 @@ class _DeviceDetailState extends State<DeviceDetail> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
-                            Icons.car_crash_outlined,
-                            size: 49,
-                          ),
-                          const SizedBox(height: 14),
+                          Image.asset("lib/assets/images/device_error_id.png"),
+                          const SizedBox(height: 7),
                           Text(
                               "Oops! We couldn't find a device ID. \nPlease enter the ID associated with your device to proceed.",
                               textAlign: TextAlign.center,
