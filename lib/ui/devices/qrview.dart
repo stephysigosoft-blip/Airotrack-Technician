@@ -135,40 +135,40 @@ class _QRViewExampleState extends State<QRViewExample> {
                               },
                             )),
                       ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: colorPrimary,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)
-                                )
-
-                            ),
-                            onPressed: () async {
-                              // getImage(ImageSource.gallery);
-
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
-                              builder: (context, snapshot) {
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SvgPicture.asset('lib/assets/images/gallery.svg',width: 15,height: 15,),
-                                    SizedBox(
-                                      width: 7,
-                                    ),
-                                    Text('Upload from gallery',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15
-                                        ))
-                                  ],
-                                );
-                              },
-                            )),
-                      ),
+                      // Container(
+                      //   margin: const EdgeInsets.all(8),
+                      //   child: ElevatedButton(
+                      //       style: ElevatedButton.styleFrom(
+                      //           backgroundColor: colorPrimary,
+                      //           shape: RoundedRectangleBorder(
+                      //               borderRadius: BorderRadius.circular(12)
+                      //           )
+                      //
+                      //       ),
+                      //       onPressed: () async {
+                      //         // getImage(ImageSource.gallery);
+                      //
+                      //       },
+                      //       child: FutureBuilder(
+                      //         future: controller?.getFlashStatus(),
+                      //         builder: (context, snapshot) {
+                      //           return Row(
+                      //             mainAxisAlignment: MainAxisAlignment.start,
+                      //             children: [
+                      //               SvgPicture.asset('lib/assets/images/gallery.svg',width: 15,height: 15,),
+                      //               SizedBox(
+                      //                 width: 7,
+                      //               ),
+                      //               Text('Upload from gallery',
+                      //                   style: TextStyle(
+                      //                       color: Colors.white,
+                      //                       fontSize: 15
+                      //                   ))
+                      //             ],
+                      //           );
+                      //         },
+                      //       )),
+                      // ),
                     ],
                   ),
                 /*  Row(
