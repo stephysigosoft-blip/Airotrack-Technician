@@ -61,7 +61,7 @@ class ContactUs extends StatelessWidget {
                 ),
                 const Expanded(
                   child: Text(
-                    "Airo Track Technologies PVT LTD Building NO. 2/407, Kommady po, Alappuzha, Kerala\nPin code-688007",
+                    "Airo Track Technologies PVT LTD Building NO. 2/407, Kommady po, Alappuzha, Kerala\nPincode-688007",
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.black,

@@ -130,7 +130,7 @@ class DetailsController extends GetxController {
       } else {
         showFlushBar(error.toString());
       }
-    } 
+    }
   }
 
   // Future<void> getCommands(String modelName) async {
