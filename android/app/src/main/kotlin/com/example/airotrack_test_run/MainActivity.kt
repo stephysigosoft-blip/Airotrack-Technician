@@ -1,4 +1,4 @@
-package com.example.airotrack_test_run
+package airotrack.technician
 
 import io.flutter.embedding.android.FlutterActivity
 
