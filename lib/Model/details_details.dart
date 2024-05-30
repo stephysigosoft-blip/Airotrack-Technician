@@ -61,10 +61,10 @@ class DeviceDetails {
         id: json["id"],
         imei: json["imei"],
         firmwareVersion: json["firmware_version"],
-        power: json["power"],
-        gnssFix: json["gnss_fix"],
-        gsmSignalStrength: json["gsm_signal_strength"],
-        ignition: json["ignition"],
+        power: json["power"] ?? 0,
+        gnssFix: json["gnss_fix"] ?? 0,
+        gsmSignalStrength: json["gsm_signal_strength"] ?? 0,
+        ignition: json["ignition"] ?? 0,
         primaryMobileNumber: json["primary_mobile_number"] == null
             ? ""
             : json["primary_mobile_number"].toString(),
