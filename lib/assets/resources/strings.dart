@@ -1,7 +1,6 @@
-
-class Strings{
+class Strings {
   static const String getStart = "Get Start";
-  static const String welcome ="Welcome";
+  static const String welcome = "Welcome";
   static const String loginWithUserName = "Login with username";
   static const String username = "Username";
   static const String password = "Password";
@@ -9,6 +8,7 @@ class Strings{
   static const String enterPassword = "Enter Password";
   static const String continueButton = "Continue";
   static const String devices = "Devices";
+  static const String imei = "IMEI";
   static const String deviceID = "Device ID";
   static const String refresh = "Refresh";
   static const String power = "Power";
@@ -32,14 +32,16 @@ class Strings{
   static const String accountTerms = "Account Terms";
   static const String copyright = "Copyright and Licenses";
   static const String noIntenet = "No Internet Connection";
-  static const String checkInternet = "Please check your Internet connection and try";
+  static const String checkInternet =
+      "Please check your Internet connection and try";
   static const String again = "again";
   static const String backsoon = "We'll Be Back Soon";
   static const String maintenance = "Sorry, we're down for maintenance";
   static const String backup = "We'll be back up shortly";
   static const String serverDown = "Server Down";
   static const String updateMsg = "Airo Track Needs An Update";
-  static const String updateAvailable = "A new update is available for this app";
+  static const String updateAvailable =
+      "A new update is available for this app";
   static const String downloadLatest = "Please download the latest version to";
   static const String continueApp = "continue using the app";
   static const String update = "UPDATE";
@@ -49,6 +51,4 @@ class Strings{
   static const String openScanner = "Open Scanner";
   static const String oopsSomethingWentWrong =
       "Oops Something went wrong try again !!";
-
-
 }

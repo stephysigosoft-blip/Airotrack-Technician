@@ -1,7 +1,7 @@
+import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
@@ -17,7 +17,6 @@ class DeviceDetail extends StatefulWidget {
   final String? imei;
   final String? deviceId;
 
-
   @override
   State<DeviceDetail> createState() => _DeviceDetailState();
 }
@@ -30,14 +29,10 @@ class _DeviceDetailState extends State<DeviceDetail> {
       init: DetailsController(),
       initState: (_) {},
       didChangeDependencies: (state) {
-        print("IMEI: " + widget.imei.toString());
-        print('insie');
         if (widget.imei != null) {
-          print('imeme insie');
           state.controller?.getDeatils(widget.imei!);
         }
         if (widget.deviceId != null) {
-          print('deivice idinsie');
           state.controller?.getDeatilsWithId(widget.deviceId!);
         }
       },
@@ -922,8 +917,24 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                       ),
                                                     );
                                                   });
-                                              await launchUrl(Uri.parse(
-                                                  'https://maps.google.com/?q=${controller.deviceDetails!.latitude},${controller.deviceDetails!.longitude}'));
+
+                                              if (double.parse(controller
+                                                          .deviceDetails!
+                                                          .latitude) ==
+                                                      0.0 ||
+                                                  double.parse(controller
+                                                          .deviceDetails!
+                                                          .longitude) ==
+                                                      0.0) {
+                                                if (context.mounted) {
+                                                  showToast(
+                                                    "We couldn't find a location based on the latitude and longitude",
+                                                  );
+                                                }
+                                              } else {
+                                                await launchUrl(Uri.parse(
+                                                    'https://maps.google.com/?q=${controller.deviceDetails!.latitude},${controller.deviceDetails!.longitude}'));
+                                              }
                                               Get.back();
                                             },
                                             child: Row(

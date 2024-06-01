@@ -82,8 +82,8 @@ class DeviceDetails {
         expirationtime: json["expirationtime"] == null
             ? null
             : DateTime.parse(json["expirationtime"]),
-        latitude: json["latitude"] ?? "",
-        longitude: json["longitude"] ?? "",
+        latitude: json["latitude"] ?? "0.00",
+        longitude: json["longitude"] ?? "0.00",
         alertId: json["alert_id"] ?? "",
         deviceModel: json["device_model"] ?? "",
       );

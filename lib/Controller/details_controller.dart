@@ -63,7 +63,7 @@ class DetailsController extends GetxController {
       var url = APIConfig.BASE_URL + APIEndpoints.deviceDetailswithId;
       dio.options.headers["Authorization"] = "Bearer $token";
       var response = await dio.get(url, queryParameters: {
-        "device_id": id,
+        "imei": id,
       });
       if (response.statusCode == 200) {
         if (response.data['data']['device_details'] != null) {

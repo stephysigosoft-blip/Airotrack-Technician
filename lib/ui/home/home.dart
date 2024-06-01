@@ -217,7 +217,7 @@ class _HomeState extends State<Home> {
                           margin: const EdgeInsets.only(
                               left: 20, right: 20, top: 25),
                           child: const Text(
-                            Strings.deviceID,
+                            Strings.imei,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18,
@@ -226,92 +226,85 @@ class _HomeState extends State<Home> {
                           ),
                         ),
                         Form(
-                          key: formKey,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 20),
-                            child: TextFormField(
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Enter a device id";
-                                }
-                                // if (value.length > 10) {
-                                //   return "Enter a valid device id";
-                                // }
-                                return null;
-                              },
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                              controller: deviceIdController,
-                              keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.done,
-                              onFieldSubmitted: (value) {
-                                if (formKey.currentState!.validate()) {
-                                  Get.to(DeviceDetail(
-                                    deviceId: value,
-                                  ));
-                                  deviceIdController.clear();
-                                }
-                              },
-                              decoration: InputDecoration(
-                                  constraints:
-                                      const BoxConstraints(minHeight: 55),
-                                  suffixIcon: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: colorPrimary,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(4))),
-                                    onPressed: () {
-                                      if (formKey.currentState!.validate()) {
-                                        Get.to(DeviceDetail(
-                                          deviceId:
-                                              deviceIdController.text.trim(),
-                                        ));
-                                        deviceIdController.clear();
-                                      }
-                                    },
-                                    child: const Icon(
-                                      Icons.search,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-
-                                  //  InkWell(
-
-                                  //  In
-                                  //   child: Container(
-                                  //     height: 55, width: 55,
-                                  //     color: colorPrimary,
-                                  //     // borderRadius:
-                                  //     //     BorderRadius.all(Radius.circular(4)),
-                                  //     child:
-                                  //   ),
-                                  // ),
-                                  fillColor: greybg,
-                                  filled: true,
-                                  errorBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: blacklite, width: 1.0),
-                                      borderRadius: BorderRadius.circular(4)),
-                                  focusedErrorBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: blacklite, width: 1.0),
-                                      borderRadius: BorderRadius.circular(4)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: blacklite, width: 1.0),
-                                      borderRadius: BorderRadius.circular(4)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: blacklite, width: 1.0),
-                                      borderRadius: BorderRadius.circular(4)),
-                                  hintText: "Enter Device ID",
-                                  hintStyle: const TextStyle(color: blacklite)),
-                            ),
-                          ),
-                        )
+                            key: formKey,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 20),
+                              child: TextFormField(
+                                controller: deviceIdController,
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.done,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Enter a IMEI";
+                                  }
+                                  // if (value.length > 10) {
+                                  //   return "Enter a valid device id";
+                                  // }
+                                  return null;
+                                },
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                onFieldSubmitted: (value) {
+                                  if (formKey.currentState!.validate()) {
+                                    Get.to(DeviceDetail(
+                                      deviceId: value,
+                                    ));
+                                    deviceIdController.clear();
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                    constraints:
+                                        const BoxConstraints(minHeight: 50),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 10),
+                                    fillColor: greybg,
+                                    filled: true,
+                                    errorBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: blacklite, width: 1.0),
+                                        borderRadius: BorderRadius.circular(4)),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: blacklite, width: 1.0),
+                                        borderRadius: BorderRadius.circular(4)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: blacklite, width: 1.0),
+                                        borderRadius: BorderRadius.circular(4)),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: const BorderSide(
+                                            color: blacklite, width: 1.0),
+                                        borderRadius: BorderRadius.circular(4)),
+                                    hintText: "Enter IMEI",
+                                    hintStyle:
+                                        const TextStyle(color: blacklite),
+                                    suffixIcon: InkWell(
+                                      onTap: () {
+                                        if (formKey.currentState!.validate()) {
+                                          Get.to(DeviceDetail(
+                                            deviceId:
+                                                deviceIdController.text.trim(),
+                                          ));
+                                          deviceIdController.clear();
+                                        }
+                                      },
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                            color: colorPrimary,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(5),
+                                                bottomRight:
+                                                    Radius.circular(5))),
+                                        child: const Icon(
+                                          Icons.search,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    )),
+                              ),
+                            )),
                       ],
                     ),
                   ));
