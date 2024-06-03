@@ -1,5 +1,7 @@
 import 'package:airotrackgit/Model/details_details.dart';
 import 'package:airotrackgit/config/api_config.dart';
+import 'package:airotrackgit/ui/no_internet/no_internet.dart';
+import 'package:airotrackgit/ui/server/serverdown.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -21,19 +23,23 @@ class DetailsController extends GetxController {
       var url = APIConfig.BASE_URL + APIEndpoints.deviceDetails;
 
       dio.options.headers["Authorization"] = "Bearer $token";
-      var response = await dio.get(url, queryParameters: {
-        "imei": imei,
-      });
-      if (response.statusCode == 200) {
-        if (response.data['data']['device_details'] != null) {
-          deviceDetails =
-              DeviceDetails.fromJson(response.data['data']['device_details']);
-          commands.clear();
-          response.data['data']['commands']
-              .map((e) => commands.add(Command.fromJson(e)))
-              .toList();
+      if (await checkNetwork()) {
+        var response = await dio.get(url, queryParameters: {
+          "imei": imei,
+        });
+        if (response.statusCode == 200) {
+          if (response.data['data']['device_details'] != null) {
+            deviceDetails =
+                DeviceDetails.fromJson(response.data['data']['device_details']);
+            commands.clear();
+            response.data['data']['commands']
+                .map((e) => commands.add(Command.fromJson(e)))
+                .toList();
+          }
+          update();
         }
-        update();
+      } else {
+        Get.to(const NoInternet());
       }
     } catch (error) {
       if (error is DioException) {
@@ -41,6 +47,8 @@ class DetailsController extends GetxController {
         if (error.response?.data['message'] is Map) {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
+        } else if (error.response?.statusCode == 500) {
+          Get.offAll(() => const ServerDown());
         } else {
           showFlushBar(error.response?.data['message']);
         }
@@ -62,19 +70,23 @@ class DetailsController extends GetxController {
       var token = getSavedObject('token') ?? "";
       var url = APIConfig.BASE_URL + APIEndpoints.deviceDetailswithId;
       dio.options.headers["Authorization"] = "Bearer $token";
-      var response = await dio.get(url, queryParameters: {
-        "imei": id,
-      });
-      if (response.statusCode == 200) {
-        if (response.data['data']['device_details'] != null) {
-          deviceDetails =
-              DeviceDetails.fromJson(response.data['data']['device_details']);
-          commands.clear();
-          response.data['data']['commands']
-              .map((e) => commands.add(Command.fromJson(e)))
-              .toList();
+      if (await checkNetwork()) {
+        var response = await dio.get(url, queryParameters: {
+          "imei": id,
+        });
+        if (response.statusCode == 200) {
+          if (response.data['data']['device_details'] != null) {
+            deviceDetails =
+                DeviceDetails.fromJson(response.data['data']['device_details']);
+            commands.clear();
+            response.data['data']['commands']
+                .map((e) => commands.add(Command.fromJson(e)))
+                .toList();
+          }
+          update();
         }
-        update();
+      } else {
+        Get.to(const NoInternet());
       }
     } catch (error) {
       if (error is DioException) {
@@ -82,6 +94,8 @@ class DetailsController extends GetxController {
         if (error.response?.data['message'] is Map) {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
+        } else if (error.response?.statusCode == 500) {
+          Get.offAll(() => const ServerDown());
         } else {
           showFlushBar(error.response?.data['message']);
         }
@@ -113,10 +127,14 @@ class DetailsController extends GetxController {
       var url = APIConfig.BASE_URL + APIEndpoints.sendCommand;
       FormData data = FormData.fromMap({"imei": imei, "command_id": commandId});
       dio.options.headers["Authorization"] = "Bearer $token";
-      var response = await dio.post(url, data: data);
-      if (response.statusCode == 200) {
-        Get.back();
-        showFlushBar(response.data['message']);
+      if (await checkNetwork()) {
+        var response = await dio.post(url, data: data);
+        if (response.statusCode == 200) {
+          Get.back();
+          showFlushBar(response.data['message']);
+        }
+      } else {
+        Get.to(const NoInternet());
       }
     } catch (error) {
       Get.back();
@@ -124,6 +142,8 @@ class DetailsController extends GetxController {
         if (error.response?.data['message'] is Map) {
           Map<String, dynamic> message = error.response?.data['message'];
           showErrorToast(message);
+        } else if (error.response?.statusCode == 500) {
+          Get.offAll(() => const ServerDown());
         } else {
           showFlushBar(error.response?.data['message']);
         }

@@ -1,6 +1,6 @@
 class MaintenanceData {
   int maintenance;
-  dynamic maintenanceReason;
+  String maintenanceReason;
   String androidVersion;
   int androidUpdate;
 
@@ -11,11 +11,12 @@ class MaintenanceData {
     required this.androidUpdate,
   });
 
-  factory MaintenanceData.fromJson(Map<String, dynamic> json) => MaintenanceData(
-        maintenance: json["maintenance"],
-        maintenanceReason: json["maintenance_reason"],
-        androidVersion: json["android_version"],
-        androidUpdate: json["android_update"],
+  factory MaintenanceData.fromJson(Map<String, dynamic> json) =>
+      MaintenanceData(
+        maintenance: json["maintenance"] ?? 0,
+        maintenanceReason: json["maintenance_reason"] ?? "",
+        androidVersion: json["android_version"] ?? "1.0.0",
+        androidUpdate: json["android_update"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {

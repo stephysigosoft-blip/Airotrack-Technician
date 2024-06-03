@@ -18,10 +18,10 @@ class NoInternet extends StatelessWidget {
               'lib/assets/images/nointernet.svg',
               fit: BoxFit.scaleDown,
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Text(
+            const Text(
               Strings.noIntenet,
               style: TextStyle(
                   fontSize: 18,
@@ -29,17 +29,17 @@ class NoInternet extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Poppins-Bold'),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Text(
+            const Text(
               Strings.checkInternet,
               style: TextStyle(
                   fontSize: 15,
                   color: Colors.black,
                   fontFamily: 'Poppins-Regular'),
             ),
-            Text(
+            const Text(
               Strings.again,
               style: TextStyle(
                   fontSize: 15,

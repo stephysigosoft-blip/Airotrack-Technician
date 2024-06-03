@@ -1,8 +1,8 @@
-import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -11,6 +11,7 @@ import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/controller/home_controller.dart';
 import 'package:airotrackgit/ui/about/About.dart';
 import 'package:airotrackgit/ui/contactus/contactus.dart';
+import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:airotrackgit/ui/devices/qrview.dart';
 import 'package:airotrackgit/ui/privacy/privacy.dart';
 import 'package:airotrackgit/ui/terms/terms_condition.dart';
@@ -26,6 +27,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   PackageInfo? packageInfo;
+  GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -44,6 +46,7 @@ class _HomeState extends State<Home> {
       initState: (_) {},
       builder: (controller) {
         return Scaffold(
+            key: scaffoldKey,
             appBar: AppBar(
               backgroundColor: Colors.white,
               centerTitle: true,
@@ -54,6 +57,7 @@ class _HomeState extends State<Home> {
             ),
             drawer: UserDrawer(
               packageInfo: packageInfo,
+              scaffoldKey: scaffoldKey,
             ),
             body: controller.isLoading
                 ? const Center(
@@ -315,13 +319,31 @@ class _HomeState extends State<Home> {
 
 class UserDrawer extends StatefulWidget {
   final PackageInfo? packageInfo;
-  const UserDrawer({super.key, this.packageInfo});
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  const UserDrawer({
+    Key? key,
+    this.packageInfo,
+    required this.scaffoldKey,
+  }) : super(key: key);
 
   @override
   State<UserDrawer> createState() => _UserDrawerState();
 }
 
 class _UserDrawerState extends State<UserDrawer> {
+  Future<void> checkForUpdate() async {
+    InAppUpdate.checkForUpdate().then((info) {}).catchError((e) {
+      showSnack(e.toString());
+    });
+  }
+
+  void showSnack(String text) {
+    if (widget.scaffoldKey.currentContext != null) {
+      ScaffoldMessenger.of(widget.scaffoldKey.currentContext!)
+          .showSnackBar(SnackBar(content: Text(text)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -479,7 +501,7 @@ class _UserDrawerState extends State<UserDrawer> {
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           TextButton(
-              onPressed: () {},
+              onPressed: () => checkForUpdate(),
               child: Text(
                 "Check for updates",
                 style: Theme.of(context)

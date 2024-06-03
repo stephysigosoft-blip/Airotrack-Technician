@@ -33,7 +33,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
           state.controller?.getDeatils(widget.imei!);
         }
         if (widget.deviceId != null) {
-          state.controller?.getDeatilsWithId(widget.deviceId!);
+          state.controller?.getDeatils(widget.deviceId!);
         }
       },
       builder: (controller) {
@@ -890,74 +890,83 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                           maxLines: 3,
                                         ),
                                       ),
-                                      SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.3,
-                                          child: InkWell(
-                                            onTap: () async {
-                                              showDialog(
-                                                  context: Get.context!,
-                                                  barrierDismissible: false,
-                                                  builder: (context) {
-                                                    return Center(
-                                                      child: Container(
-                                                        decoration:
-                                                            const BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                color: Colors
-                                                                    .white),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(10),
-                                                        child:
-                                                            const CircularProgressIndicator(),
-                                                      ),
-                                                    );
-                                                  });
+                                      double.parse(controller.deviceDetails!
+                                                      .latitude) ==
+                                                  0.0 ||
+                                              double.parse(controller
+                                                      .deviceDetails!
+                                                      .longitude) ==
+                                                  0.0
+                                          ? const SizedBox()
+                                          : SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.3,
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  showDialog(
+                                                      context: Get.context!,
+                                                      barrierDismissible: false,
+                                                      builder: (context) {
+                                                        return Center(
+                                                          child: Container(
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                                    shape: BoxShape
+                                                                        .circle,
+                                                                    color: Colors
+                                                                        .white),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            child:
+                                                                const CircularProgressIndicator(),
+                                                          ),
+                                                        );
+                                                      });
 
-                                              if (double.parse(controller
-                                                          .deviceDetails!
-                                                          .latitude) ==
-                                                      0.0 ||
-                                                  double.parse(controller
-                                                          .deviceDetails!
-                                                          .longitude) ==
-                                                      0.0) {
-                                                if (context.mounted) {
-                                                  showToast(
-                                                    "We couldn't find a location based on the latitude and longitude",
-                                                  );
-                                                }
-                                              } else {
-                                                await launchUrl(Uri.parse(
-                                                    'https://maps.google.com/?q=${controller.deviceDetails!.latitude},${controller.deviceDetails!.longitude}'));
-                                              }
-                                              Get.back();
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  "lib/assets/images/googlemap.svg",
-                                                  width: 20,
-                                                  height: 20,
+                                                  if (double.parse(controller
+                                                              .deviceDetails!
+                                                              .latitude) ==
+                                                          0.0 ||
+                                                      double.parse(controller
+                                                              .deviceDetails!
+                                                              .longitude) ==
+                                                          0.0) {
+                                                    if (context.mounted) {
+                                                      showToast(
+                                                        "We couldn't find a location based on the latitude and longitude",
+                                                      );
+                                                    }
+                                                  } else {
+                                                    await launchUrl(Uri.parse(
+                                                        'https://maps.google.com/?q=${controller.deviceDetails!.latitude},${controller.deviceDetails!.longitude}'));
+                                                  }
+                                                  Get.back();
+                                                },
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "lib/assets/images/googlemap.svg",
+                                                      width: 20,
+                                                      height: 20,
+                                                    ),
+                                                    const Text(
+                                                      "Google Map",
+                                                      style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Colors.black,
+                                                        fontFamily:
+                                                            'Poppins-Light',
+                                                      ),
+                                                      maxLines: 3,
+                                                    ),
+                                                  ],
                                                 ),
-                                                const Text(
-                                                  "Google Map",
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                    color: Colors.black,
-                                                    fontFamily: 'Poppins-Light',
-                                                  ),
-                                                  maxLines: 3,
-                                                ),
-                                              ],
-                                            ),
-                                          ))
+                                              ))
                                     ],
                                   ),
                                 ),

@@ -1,16 +1,13 @@
 import 'dart:async';
 
-import 'package:airotrackgit/ui/devices/devicedetails.dart';
-import 'package:airotrackgit/ui/login/view/login.dart';
-import 'package:airotrackgit/ui/utils/no_internet.dart';
-import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
-import 'package:airotrackgit/assets/resources/colors.dart';
-import 'package:airotrackgit/assets/resources/strings.dart';
-import 'package:airotrackgit/ui/home/home.dart';
 import 'package:get/get.dart';
+
+import 'package:airotrackgit/ui/home/home.dart';
+import 'package:airotrackgit/ui/login/view/login.dart';
+import 'package:airotrackgit/ui/no_internet/no_internet.dart';
+import 'package:airotrackgit/ui/utils/utils.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});

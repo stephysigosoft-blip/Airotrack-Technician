@@ -3,7 +3,7 @@ import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/config/api_config.dart';
 import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:airotrackgit/ui/home/home.dart';
-import 'package:airotrackgit/ui/utils/no_internet.dart';
+import 'package:airotrackgit/ui/no_internet/no_internet.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
