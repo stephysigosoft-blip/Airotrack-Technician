@@ -19,10 +19,10 @@ class ServerDown extends StatelessWidget {
               'lib/assets/images/serverdown.svg',
               fit: BoxFit.scaleDown,
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Text(
+            const Text(
               Strings.serverDown,
               style: TextStyle(
                   fontSize: 20,
