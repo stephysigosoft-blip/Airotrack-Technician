@@ -936,7 +936,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                           0.0) {
                                                     if (context.mounted) {
                                                       showToast(
-                                                        "We couldn't find a location based on the latitude and longitude",
+                                                        "Data not receiving from the device to show the location.",
                                                       );
                                                     }
                                                   } else {
