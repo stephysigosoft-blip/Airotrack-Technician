@@ -27,7 +27,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   PackageInfo? packageInfo;
-  GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey();
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -98,7 +98,7 @@ class _HomeState extends State<Home> {
                                           left: 15, top: 15),
                                       child: Text(
                                         controller.homeData?.firstName ??
-                                            "user name",
+                                            "username",
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 18,
@@ -337,9 +337,9 @@ class _UserDrawerState extends State<UserDrawer> {
   Future<void> checkForUpdate() async {
     Navigator.pop(context);
     InAppUpdate.checkForUpdate().then((info) {
-      setState(() {
-        updateInfo = info;
-      });
+      // setState(() {
+      //   updateInfo = info;
+      // });
     }).catchError((e) {
       showSnack(e.toString());
     });

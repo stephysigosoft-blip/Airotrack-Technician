@@ -936,7 +936,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                           0.0) {
                                                     if (context.mounted) {
                                                       showToast(
-                                                        "Data not receiving from the device to show the location.",
+                                                        "Data was not received from the device.",
                                                       );
                                                     }
                                                   } else {
