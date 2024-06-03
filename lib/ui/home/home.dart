@@ -239,12 +239,14 @@ class _HomeState extends State<Home> {
                                 keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.done,
                                 validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Enter a IMEI";
+                                  if (value == null || value.isEmpty) {
+                                    return 'IMEI number is required';
+                                  } else if (value.length != 15) {
+                                    return 'IMEI number must be 15 digits';
+                                  } else if (!RegExp(r'^\d{15}$')
+                                      .hasMatch(value)) {
+                                    return 'IMEI number must contain only digits';
                                   }
-                                  // if (value.length > 10) {
-                                  //   return "Enter a valid device id";
-                                  // }
                                   return null;
                                 },
                                 inputFormatters: [
@@ -321,18 +323,24 @@ class UserDrawer extends StatefulWidget {
   final PackageInfo? packageInfo;
   final GlobalKey<ScaffoldState> scaffoldKey;
   const UserDrawer({
-    Key? key,
+    super.key,
     this.packageInfo,
     required this.scaffoldKey,
-  }) : super(key: key);
+  });
 
   @override
   State<UserDrawer> createState() => _UserDrawerState();
 }
 
 class _UserDrawerState extends State<UserDrawer> {
+  AppUpdateInfo? updateInfo;
   Future<void> checkForUpdate() async {
-    InAppUpdate.checkForUpdate().then((info) {}).catchError((e) {
+    Navigator.pop(context);
+    InAppUpdate.checkForUpdate().then((info) {
+      setState(() {
+        updateInfo = info;
+      });
+    }).catchError((e) {
       showSnack(e.toString());
     });
   }
@@ -340,7 +348,16 @@ class _UserDrawerState extends State<UserDrawer> {
   void showSnack(String text) {
     if (widget.scaffoldKey.currentContext != null) {
       ScaffoldMessenger.of(widget.scaffoldKey.currentContext!)
-          .showSnackBar(SnackBar(content: Text(text)));
+          .showSnackBar(SnackBar(
+              content: Text(
+        text,
+        style: Theme.of(context)
+            .textTheme
+            .bodyLarge!
+            .copyWith(color: Colors.white),
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+      )));
     }
   }
 
@@ -393,8 +410,8 @@ class _UserDrawerState extends State<UserDrawer> {
             title: Strings.aboutUs,
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => AboutUs()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AboutUs()));
             },
           ),
           Container(
@@ -407,8 +424,8 @@ class _UserDrawerState extends State<UserDrawer> {
             title: Strings.privacyPolicy,
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Privacy()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Privacy()));
             },
           ),
           Container(
@@ -421,8 +438,10 @@ class _UserDrawerState extends State<UserDrawer> {
             title: Strings.terms,
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => TermsCondition()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const TermsCondition()));
             },
           ),
           Container(
