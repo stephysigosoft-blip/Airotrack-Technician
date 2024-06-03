@@ -6,8 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import '../../assets/resources/strings.dart';
 
 class TermsCondition extends StatelessWidget {
-  TermsCondition({super.key});
-  var terms = '''
+  const TermsCondition({super.key});
+  final terms = '''
 <h1>Terms and Conditions</h1>
 <p>By accessing or using the mobile application provided by <a href="https://airotrack.in/">airotrack.in</a> ("us", "we", or "our"), you agree to abide by the following terms and conditions:</p>
 <ol>

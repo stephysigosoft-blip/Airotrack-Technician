@@ -6,9 +6,9 @@ import '../../assets/resources/colors.dart';
 import '../../assets/resources/strings.dart';
 
 class AboutUs extends StatelessWidget {
-  AboutUs({super.key});
+  const AboutUs({super.key});
 
-  var aboutUs = '''
+  final aboutUs = '''
 <h1>About Us</h1>
 <p>We are the manufacturer of the premium quality vehicle location tracking system (VLTS) IRNSS & GPS. Speed Tech Solution is the old name of Airo Track Technologies PVT LTD. We assure timely delivery of these Speed Governors to the clientele from our end. We have well-experienced and trained engineers to process Manufacture of IRNSS Device And GPS Vehicle Track Device. Our Installation Services are cost-effective and technically sound so that the customer can have very good performance of the installed vehicle tracking device.</p>
 <ul>

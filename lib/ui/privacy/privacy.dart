@@ -6,9 +6,9 @@ import '../../assets/resources/colors.dart';
 import '../../assets/resources/strings.dart';
 
 class Privacy extends StatelessWidget {
-  Privacy({super.key});
+  const Privacy({super.key});
 
-  var privacyData = '''
+  final privacyData = '''
 <div class="row mt-12 pt-3">
             <div class="col-lg-12 col-md-12">
                       <div class="policy">
