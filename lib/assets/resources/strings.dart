@@ -4,7 +4,7 @@ class Strings {
   static const String loginWithUserName = "Login with username";
   static const String username = "Username";
   static const String password = "Password";
-  static const String enterUserName = "Enter username";
+  static const String enterUserName = "Enter Username";
   static const String enterPassword = "Enter Password";
   static const String continueButton = "Continue";
   static const String devices = "Devices";

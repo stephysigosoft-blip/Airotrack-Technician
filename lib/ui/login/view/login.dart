@@ -93,7 +93,10 @@ class _LoginState extends State<Login> {
                       ),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return "Please enter password";
+                          return "Please enter your username";
+                        }
+                        if (value.length < 3) {
+                          return "Enter a valid username";
                         }
                         return null;
                       },
@@ -137,6 +140,9 @@ class _LoginState extends State<Login> {
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "Please enter password";
+                        }
+                        if (value.length < 6) {
+                          return "Password must contain atleast 6 charaters";
                         }
                         return null;
                       },
