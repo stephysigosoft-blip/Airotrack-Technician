@@ -39,10 +39,10 @@ class _HomeState extends State<Home> {
 
   TextEditingController deviceIdController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  final homeCOntroller = Get.lazyPut(() => HomeController());
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(
-      init: HomeController(),
       initState: (_) {},
       builder: (controller) {
         return Scaffold(

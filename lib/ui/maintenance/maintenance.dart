@@ -1,4 +1,4 @@
-import 'package:airotrackgit/Controller/home_controller.dart';
+import 'package:airotrackgit/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -34,7 +34,7 @@ class MMaintenanceScreenState extends State<MaintenanceScreen> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  (controller.settings!.maintenanceReason.isEmpty)
+                  (controller.settings?.maintenanceReason ?? "").isEmpty
                       ? "Sorry, we're down for maintenance \nWe'll be back up shortly"
                       : controller.settings!.maintenanceReason,
                   textAlign: TextAlign.center,
