@@ -39,11 +39,11 @@ class Strings {
   static const String maintenance = "Sorry, we're down for maintenance";
   static const String backup = "We'll be back up shortly";
   static const String serverDown = "Server Down";
-  static const String updateMsg = "Airo Track Needs An Update";
+  static const String updateMsg = "Airotrack Needs An Update";
   static const String updateAvailable =
       "A new update is available for this app";
   static const String downloadLatest = "Please download the latest version to";
-  static const String continueApp = "continue using the app";
+  static const String continueApp = "continue using the app.";
   static const String update = "UPDATE";
   static const String date = "Date";
   static const String time = "Time";
