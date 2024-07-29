@@ -1,15 +1,15 @@
-import 'package:airotrackgit/Model/MaintenanceModel.dart';
-import 'package:airotrackgit/ui/maintenance/maintenance.dart';
-import 'package:airotrackgit/ui/no_internet/no_internet.dart';
-import 'package:airotrackgit/ui/server/serverdown.dart';
-import 'package:airotrackgit/ui/update/force_update.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:airotrackgit/Model/MaintenanceModel.dart';
 import 'package:airotrackgit/Model/home_model.dart';
 import 'package:airotrackgit/config/api_config.dart';
 import 'package:airotrackgit/ui/login/view/login.dart';
+import 'package:airotrackgit/ui/maintenance/maintenance.dart';
+import 'package:airotrackgit/ui/no_internet/no_internet.dart';
+import 'package:airotrackgit/ui/server/serverdown.dart';
+import 'package:airotrackgit/ui/update/force_update.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 
 class HomeController extends GetxController {
