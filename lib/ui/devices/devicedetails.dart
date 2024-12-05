@@ -313,7 +313,10 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                       const SizedBox(
                                         width: 12,
                                       ),
-                                      const Icon(Icons.visibility)
+                                       Icon(Icons.visibility,
+                                        color: controller.deviceDetails!.gnssFix == 1
+                                            ? Colors.green
+                                            : Colors.black,)
                                       // Container(
                                       //   decoration: BoxDecoration(
                                       //       shape: BoxShape.circle,
@@ -707,144 +710,144 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                     ],
                                   ),
                                 ),
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 15, right: 20, top: 5),
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 1,
-                                  color: greylight,
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 40,
-                                  margin:
-                                      const EdgeInsets.only(left: 10, top: 3),
-                                  child: Row(
-                                    children: [
-                                      const SizedBox(
-                                        width: 15,
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        child: const Text(
-                                          Strings.activationDate,
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.black,
-                                            fontFamily: 'Poppins-Light',
-                                          ),
-                                          maxLines: 3,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.06,
-                                        child: const Text(
-                                          " :",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.black,
-                                            fontFamily: 'Poppins-Light',
-                                          ),
-                                          maxLines: 3,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        child: Text(
-                                          controller.deviceDetails!
-                                                      .simActivationDate ==
-                                                  null
-                                              ? ""
-                                              : DateFormat('dd MMM yyyy')
-                                                  .format(controller
-                                                      .deviceDetails!
-                                                      .simActivationDate!),
-                                          style: const TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.black,
-                                            fontFamily: 'Poppins-Light',
-                                          ),
-                                          maxLines: 3,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                      left: 15, right: 20, top: 5),
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 1,
-                                  color: greylight,
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 40,
-                                  margin:
-                                      const EdgeInsets.only(left: 10, top: 3),
-                                  child: Row(
-                                    children: [
-                                      const SizedBox(
-                                        width: 15,
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        child: const Text(
-                                          Strings.expiryDate,
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.black,
-                                            fontFamily: 'Poppins-Light',
-                                          ),
-                                          maxLines: 3,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.06,
-                                        child: const Text(
-                                          " :",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.black,
-                                            fontFamily: 'Poppins-Light',
-                                          ),
-                                          maxLines: 3,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        child: Text(
-                                          controller.deviceDetails!
-                                                      .expirationtime ==
-                                                  null
-                                              ? ""
-                                              : DateFormat('dd MMM yyyy')
-                                                  .format(controller
-                                                      .deviceDetails!
-                                                      .expirationtime!),
-                                          style: const TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.black,
-                                            fontFamily: 'Poppins-Light',
-                                          ),
-                                          maxLines: 3,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                // Container(
+                                //   margin: const EdgeInsets.only(
+                                //       left: 15, right: 20, top: 5),
+                                //   width: MediaQuery.of(context).size.width,
+                                //   height: 1,
+                                //   color: greylight,
+                                // ),
+                                // Container(
+                                //   width: MediaQuery.of(context).size.width,
+                                //   height: 40,
+                                //   margin:
+                                //       const EdgeInsets.only(left: 10, top: 3),
+                                //   child: Row(
+                                //     children: [
+                                //       const SizedBox(
+                                //         width: 15,
+                                //       ),
+                                //       SizedBox(
+                                //         width:
+                                //             MediaQuery.of(context).size.width *
+                                //                 0.3,
+                                //         child: const Text(
+                                //           Strings.activationDate,
+                                //           style: TextStyle(
+                                //             fontSize: 15,
+                                //             color: Colors.black,
+                                //             fontFamily: 'Poppins-Light',
+                                //           ),
+                                //           maxLines: 3,
+                                //         ),
+                                //       ),
+                                //       SizedBox(
+                                //         width:
+                                //             MediaQuery.of(context).size.width *
+                                //                 0.06,
+                                //         child: const Text(
+                                //           " :",
+                                //           style: TextStyle(
+                                //             fontSize: 15,
+                                //             color: Colors.black,
+                                //             fontFamily: 'Poppins-Light',
+                                //           ),
+                                //           maxLines: 3,
+                                //         ),
+                                //       ),
+                                //       SizedBox(
+                                //         width:
+                                //             MediaQuery.of(context).size.width *
+                                //                 0.3,
+                                //         child: Text(
+                                //           controller.deviceDetails!
+                                //                       .simActivationDate ==
+                                //                   null
+                                //               ? ""
+                                //               : DateFormat('dd MMM yyyy')
+                                //                   .format(controller
+                                //                       .deviceDetails!
+                                //                       .simActivationDate!),
+                                //           style: const TextStyle(
+                                //             fontSize: 15,
+                                //             color: Colors.black,
+                                //             fontFamily: 'Poppins-Light',
+                                //           ),
+                                //           maxLines: 3,
+                                //         ),
+                                //       )
+                                //     ],
+                                //   ),
+                                // ),
+                                // Container(
+                                //   margin: const EdgeInsets.only(
+                                //       left: 15, right: 20, top: 5),
+                                //   width: MediaQuery.of(context).size.width,
+                                //   height: 1,
+                                //   color: greylight,
+                                // ),
+                                // Container(
+                                //   width: MediaQuery.of(context).size.width,
+                                //   height: 40,
+                                //   margin:
+                                //       const EdgeInsets.only(left: 10, top: 3),
+                                //   child: Row(
+                                //     children: [
+                                //       const SizedBox(
+                                //         width: 15,
+                                //       ),
+                                //       SizedBox(
+                                //         width:
+                                //             MediaQuery.of(context).size.width *
+                                //                 0.3,
+                                //         child: const Text(
+                                //           Strings.expiryDate,
+                                //           style: TextStyle(
+                                //             fontSize: 15,
+                                //             color: Colors.black,
+                                //             fontFamily: 'Poppins-Light',
+                                //           ),
+                                //           maxLines: 3,
+                                //         ),
+                                //       ),
+                                //       SizedBox(
+                                //         width:
+                                //             MediaQuery.of(context).size.width *
+                                //                 0.06,
+                                //         child: const Text(
+                                //           " :",
+                                //           style: TextStyle(
+                                //             fontSize: 15,
+                                //             color: Colors.black,
+                                //             fontFamily: 'Poppins-Light',
+                                //           ),
+                                //           maxLines: 3,
+                                //         ),
+                                //       ),
+                                //       SizedBox(
+                                //         width:
+                                //             MediaQuery.of(context).size.width *
+                                //                 0.3,
+                                //         child: Text(
+                                //           controller.deviceDetails!
+                                //                       .expirationtime ==
+                                //                   null
+                                //               ? ""
+                                //               : DateFormat('dd MMM yyyy')
+                                //                   .format(controller
+                                //                       .deviceDetails!
+                                //                       .expirationtime!),
+                                //           style: const TextStyle(
+                                //             fontSize: 15,
+                                //             color: Colors.black,
+                                //             fontFamily: 'Poppins-Light',
+                                //           ),
+                                //           maxLines: 3,
+                                //         ),
+                                //       )
+                                //     ],
+                                //   ),
+                                // ),
                                 Container(
                                   margin: const EdgeInsets.only(
                                       left: 15, right: 20, top: 5),

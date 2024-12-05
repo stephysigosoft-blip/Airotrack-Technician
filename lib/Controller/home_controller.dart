@@ -11,6 +11,7 @@ import 'package:airotrackgit/ui/no_internet/no_internet.dart';
 import 'package:airotrackgit/ui/server/serverdown.dart';
 import 'package:airotrackgit/ui/update/force_update.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class HomeController extends GetxController {
   bool isLoading = true;
@@ -26,15 +27,22 @@ class HomeController extends GetxController {
 
   getMaintenanceAPI() async {
     try {
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String buildNumber = packageInfo.version;
       var url = APIConfig.BASE_URL + APIEndpoints.setting;
       if (await checkNetwork()) {
         var response = await dio.get(url);
         if (response.statusCode == 200) {
           settings = MaintenanceData.fromJson(response.data['data']);
+          print(response.data.toString());
           if (settings != null && settings!.maintenance == 1) {
             Get.offAll(() => const MaintenanceScreen());
           } else if (settings!.androidUpdate == 1) {
-            Get.offAll(() => const ForceUpdate());
+            if(settings!.androidVersion.toString()!=buildNumber){
+              Get.offAll(() => const ForceUpdate());
+            }else{
+              getHome();
+            }
           } else {
             getHome();
           }
