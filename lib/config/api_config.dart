@@ -1,5 +1,6 @@
 class APIConfig {
-  static String BASE_URL = "https://dev-api.airotrack.in/technician/";
+  // static String BASE_URL = "https://dev-api.airotrack.in/technician/";
+  static String BASE_URL = "https://api.airotrack.in/technician/";
 }
 
 class APIEndpoints {

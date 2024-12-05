@@ -94,7 +94,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    Strings.deviceID,
+                                    Strings.imei,
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.black,
@@ -102,7 +102,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                     ),
                                   ),
                                   Text(
-                                    controller.deviceDetails?.id.toString() ??
+                                    controller.deviceDetails?.imei.toString() ??
                                         "id",
                                     style: const TextStyle(
                                       fontSize: 15,
