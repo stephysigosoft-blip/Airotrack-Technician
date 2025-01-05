@@ -18,26 +18,25 @@ class HomeData {
   dynamic lastName;
   String rtoTradeCertificateNo;
 
-  HomeData({
-    required this.id,
-    required this.userName,
-    required this.email,
-    required this.mobile,
-    required this.address,
-    required this.companyName,
-    required this.roleId,
-    required this.status,
-    required this.regStatus,
-    required this.countryCodeId,
-    required this.profileImg,
-    required this.addedBy,
-    required this.updatedBy,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.firstName,
-    required this.lastName,
-    required this.rtoTradeCertificateNo,
-  });
+  HomeData(
+      {required this.id,
+      required this.userName,
+      required this.email,
+      required this.mobile,
+      required this.address,
+      required this.companyName,
+      required this.roleId,
+      required this.status,
+      required this.regStatus,
+      required this.countryCodeId,
+      required this.profileImg,
+      required this.addedBy,
+      required this.updatedBy,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.firstName,
+      required this.lastName,
+      required this.rtoTradeCertificateNo,});
 
   factory HomeData.fromJson(Map<String, dynamic> json) => HomeData(
         id: json["id"],

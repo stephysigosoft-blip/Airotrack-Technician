@@ -407,8 +407,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                 ),
                                               ),
                                               Text(
-                                                DateFormat("dd MMM yyyy")
-                                                    .format(DateTime.now()),
+                                               controller.deviceDetails?.lastUpdateDate.toString()??"",
                                                 style: const TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black,
@@ -432,7 +431,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                 ),
                                               ),
                                               Text(
-                                                TimeOfDay.now().format(context),
+                                                controller.deviceDetails?.lastUpdateTime.toString()??"",
                                                 style: const TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black,

@@ -36,26 +36,29 @@ class DeviceDetails {
   String longitude;
   String alertId;
   String deviceModel;
+  dynamic  lastUpdateDate;
+  dynamic lastUpdateTime;
 
-  DeviceDetails({
-    required this.id,
-    required this.imei,
-    required this.firmwareVersion,
-    required this.power,
-    required this.gnssFix,
-    required this.gsmSignalStrength,
-    required this.ignition,
-    required this.primaryMobileNumber,
-    required this.secondaryMobileNumber,
-    required this.networkProvider,
-    required this.simProvider,
-    required this.simActivationDate,
-    required this.expirationtime,
-    required this.latitude,
-    required this.longitude,
-    required this.alertId,
-    required this.deviceModel,
-  });
+  DeviceDetails(
+      {required this.id,
+      required this.imei,
+      required this.firmwareVersion,
+      required this.power,
+      required this.gnssFix,
+      required this.gsmSignalStrength,
+      required this.ignition,
+      required this.primaryMobileNumber,
+      required this.secondaryMobileNumber,
+      required this.networkProvider,
+      required this.simProvider,
+      required this.simActivationDate,
+      required this.expirationtime,
+      required this.latitude,
+      required this.longitude,
+      required this.alertId,
+      required this.deviceModel,
+      required this.lastUpdateDate,
+      required this.lastUpdateTime});
 
   factory DeviceDetails.fromJson(Map<String, dynamic> json) => DeviceDetails(
         id: json["id"],
@@ -86,6 +89,8 @@ class DeviceDetails {
         longitude: json["longitude"] ?? "0.00",
         alertId: json["alert_id"] ?? "",
         deviceModel: json["device_model"] ?? "",
+        lastUpdateDate: json["lastupdate_date"],
+        lastUpdateTime: json["lastupdate_time"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -106,5 +111,7 @@ class DeviceDetails {
         "longitude": longitude,
         "alert_id": alertId,
         "device_model": deviceModel,
+        "lastupdate_date": lastUpdateDate,
+        "lastupdate_time": lastUpdateTime,
       };
 }
