@@ -51,4 +51,31 @@ class Strings {
   static const String openScanner = "Open Scanner";
   static const String oopsSomethingWentWrong =
       "Oops Something went wrong try again !!";
+  static const String acceptJobRequest = "Accept Job Request ?";
+  static const String areYouSureYouWantThisJob =
+      "Are you sure you want to accept this Job ?";
+  static const String no = "No";
+  static const String yes = "Yes";
+  static const String jobDetails = "Job Details";
+  static const String callNow = "Call Now";
+  static const String device = "Device : ";
+  static const String jobType = "Job Type: ";
+  static const String vehicleNumber = "Vehicle Number: ";
+  static const String navigate = "Navigate";
+  static const String requestForCancellation =  "Request for Cancellation";
+  static const String checkIn = "Check-In";
+  static const String confirmCheckIn = "Confirm Check-In?";
+  static const String areYouSureYouWantToCheckIn= "Are you sure you want to check-in?";
+  static const String payment = "Payment";
+  static const String p = "";
+  static const String q = "";
+  static const String r = "";
+  static const String s = "";
+  static const String t = "";
+  static const String u = "";
+  static const String v = "";
+  static const String w = "";
+  static const String x = "";
+  static const String y = "";
+  static const String z = "";
 }

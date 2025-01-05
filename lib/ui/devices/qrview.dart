@@ -81,89 +81,80 @@ class _QRViewExampleState extends State<QRViewExample> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                /*if (result != null)
-                  Text(
-                      'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                else
-                  const Text('Scan a code'),*/
                 const SizedBox(
                   height: 30,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(8),
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: colorPrimary,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12))),
-                          onPressed: () async {
-                            await controller?.toggleFlash();
-                            setState(() {});
-                          },
-                          child: FutureBuilder(
-                            future: controller?.getFlashStatus(),
-                            builder: (context, snapshot) {
-                              return Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    'lib/assets/images/flash.svg',
-                                    width: 15,
-                                    height: 15,
-                                  ),
-                                  const SizedBox(
-                                    width: 7,
-                                  ),
-                                  const Text('Flash',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 15))
-                                ],
-                              );
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        margin: const EdgeInsets.all(8),
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: colorPrimary,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6))),
+                            onPressed: () async {
+                              await controller?.toggleFlash();
+                              setState(() {});
                             },
-                          )),
-                    ),
-                    // Container(
-                    //   margin: const EdgeInsets.all(8),
-                    //   child: ElevatedButton(
-                    //       style: ElevatedButton.styleFrom(
-                    //           backgroundColor: colorPrimary,
-                    //           shape: RoundedRectangleBorder(
-                    //               borderRadius: BorderRadius.circular(12)
-                    //           )
-                    //
-                    //       ),
-                    //       onPressed: () async {
-                    //         // getImage(ImageSource.gallery);
-                    //
-                    //       },
-                    //       child: FutureBuilder(
-                    //         future: controller?.getFlashStatus(),
-                    //         builder: (context, snapshot) {
-                    //           return Row(
-                    //             mainAxisAlignment: MainAxisAlignment.start,
-                    //             children: [
-                    //               SvgPicture.asset('lib/assets/images/gallery.svg',width: 15,height: 15,),
-                    //               SizedBox(
-                    //                 width: 7,
-                    //               ),
-                    //               Text('Upload from gallery',
-                    //                   style: TextStyle(
-                    //                       color: Colors.white,
-                    //                       fontSize: 15
-                    //                   ))
-                    //             ],
-                    //           );
-                    //         },
-                    //       )),
-                    // ),
-                  ],
+                            child: FutureBuilder(
+                              future: controller?.getFlashStatus(),
+                              builder: (context, snapshot) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'lib/assets/images/flash.svg',
+                                      width: 15,
+                                      height: 15,
+                                    ),
+                                    const SizedBox(
+                                      width: 7,
+                                    ),
+                                    const Text('Flash',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 15))
+                                  ],
+                                );
+                              },
+                            )),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.all(8),
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: colorPrimary,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6))),
+                            onPressed: () async {},
+                            child: FutureBuilder(
+                              future: controller?.getFlashStatus(),
+                              builder: (context, snapshot) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'lib/assets/images/gallery.svg',
+                                      width: 15,
+                                      height: 15,
+                                    ),
+                                    const SizedBox(
+                                      width: 7,
+                                    ),
+                                    const Text('Upload from gallery',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 15))
+                                  ],
+                                );
+                              },
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
                 /*  Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -200,22 +191,17 @@ class _QRViewExampleState extends State<QRViewExample> {
   }
 
   Widget _buildQrView(BuildContext context) {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 300.0;
-    // To ensure the Scanner view is properly sizes after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
+    final screenSize = MediaQuery.of(context).size;
+    final scanWidth = screenSize.width * (4 / 5);
+    final scanHeight = screenSize.height * (3/ 8);
     return cameraBarCode.QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
       overlay: cameraBarCode.QrScannerOverlayShape(
-          borderColor: Colors.red,
-          borderRadius: 10,
-          borderLength: 30,
+          borderColor: Colors.black,
           borderWidth: 10,
-          cutOutSize: scanArea),
+          cutOutWidth: scanWidth,
+          cutOutHeight: scanHeight),
       onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
     );
   }

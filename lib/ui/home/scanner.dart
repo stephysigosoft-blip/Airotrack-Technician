@@ -13,7 +13,7 @@ class ScannerScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
+          const Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: SizedBox(
                 height: 300,

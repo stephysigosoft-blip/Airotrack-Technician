@@ -1,3 +1,5 @@
+import 'package:airotrackgit/assets/resources/colors.dart';
+import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,12 +15,18 @@ import 'package:airotrackgit/ui/update/force_update.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../assets/resources/strings.dart';
+import '../ui/job_details/job_details.dart';
+import '../ui/utils/Widgets/NormalTextPoppins.dart';
+import '../ui/utils/Widgets/YesButtonWidget.dart';
+
 class HomeController extends GetxController {
   bool isLoading = true;
   HomeData? homeData;
   Dio dio = Dio();
 
   MaintenanceData? settings;
+
   @override
   void onInit() {
     getMaintenanceAPI();
@@ -38,9 +46,9 @@ class HomeController extends GetxController {
           if (settings != null && settings!.maintenance == 1) {
             Get.offAll(() => const MaintenanceScreen());
           } else if (settings!.androidUpdate == 1) {
-            if(settings!.androidVersion.toString()!=buildNumber){
+            if (settings!.androidVersion.toString() != buildNumber) {
               Get.offAll(() => const ForceUpdate());
-            }else{
+            } else {
               getHome();
             }
           } else {
@@ -143,5 +151,59 @@ class HomeController extends GetxController {
         showFlushBar(error.toString());
       }
     }
+  }
+
+  showAcceptJobDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final media = MediaQuery.of(context).size;
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: const BoldTextPoppins(
+            text: Strings.acceptJobRequest,
+            color: Colors.black,
+            fontSize: 18,
+          ),
+          content: const NormalTextPoppins(
+            text: Strings.areYouSureYouWantThisJob,
+            color: Colors.black,
+            fontSize: 14,
+          ),
+          actionsPadding: EdgeInsets.symmetric(
+            horizontal: media.width * 0.025,
+            vertical: media.height * 0.01,
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: media.width * 0.025,
+                vertical: media.height * 0.01,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  YesButtonWidget(
+                      onTap: () => Get.back(),
+                      media: media,
+                      text: Strings.no,
+                      textColor: Colors.black,
+                      buttonColor: lightBlue),
+                  YesButtonWidget(
+                      onTap: () => Get.to(JobDetails()),
+                      media: media,
+                      text: Strings.yes,
+                      textColor: Colors.white,
+                      buttonColor: colorPrimary),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

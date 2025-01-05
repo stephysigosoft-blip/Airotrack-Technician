@@ -28,6 +28,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   PackageInfo? packageInfo;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -40,9 +41,11 @@ class _HomeState extends State<Home> {
   TextEditingController deviceIdController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final homeCOntroller = Get.lazyPut(() => HomeController());
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(
+      init: HomeController(),
       initState: (_) {},
       builder: (controller) {
         return Scaffold(
@@ -83,16 +86,21 @@ class _HomeState extends State<Home> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                      margin: const EdgeInsets.only(
-                                          left: 15, top: 25),
-                                      child: const Text(
-                                        Strings.welcome,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                            fontFamily: 'Poppins-Regular'),
-                                      )),
+                                  InkWell(
+                                    onTap: () {
+                                      controller.showAcceptJobDialog(context);
+                                    },
+                                    child: Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 15, top: 25),
+                                        child: const Text(
+                                          Strings.welcome,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18,
+                                              fontFamily: 'Poppins-Regular'),
+                                        )),
+                                  ),
                                   Container(
                                       margin: const EdgeInsets.only(
                                           left: 15, top: 15),
@@ -322,6 +330,7 @@ class _HomeState extends State<Home> {
 class UserDrawer extends StatefulWidget {
   final PackageInfo? packageInfo;
   final GlobalKey<ScaffoldState> scaffoldKey;
+
   const UserDrawer({
     super.key,
     this.packageInfo,
@@ -334,6 +343,7 @@ class UserDrawer extends StatefulWidget {
 
 class _UserDrawerState extends State<UserDrawer> {
   AppUpdateInfo? updateInfo;
+
   Future<void> checkForUpdate() async {
     Navigator.pop(context);
     InAppUpdate.checkForUpdate().then((info) {
@@ -541,6 +551,7 @@ class TitleTile extends StatelessWidget {
   final String trailImg;
   final TextStyle? titlestyle;
   final void Function()? onTap;
+
   const TitleTile({
     super.key,
     required this.title,
