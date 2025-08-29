@@ -1,0 +1,88 @@
+import 'package:airotrackgit/ui/Payment/Payment.dart';
+import 'package:flutter/material.dart';
+
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/route_manager.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../assets/resources/colors.dart';
+import '../assets/resources/strings.dart';
+import '../ui/utils/Widgets/BoldTextPoppins.dart';
+import '../ui/utils/Widgets/NormalTextPoppins.dart';
+import '../ui/utils/Widgets/YesButtonWidget.dart';
+
+class JobDetailsController extends GetxController {
+  @override
+  void onInit() {
+    super.onInit();
+    debugPrint("JobDetailsController initialized");
+  }
+
+  @override
+  void onClose() {
+    debugPrint("JobDetailsController disposed");
+    super.onClose();
+  }
+  final String note =
+      "Note: Lorem ipsum dolor sit amet consectetur adipiscing elit. "
+      "Dolor sit amet consectetur adipiscing elit quisque faucibus.";
+  late GoogleMapController mapController;
+  final LatLng center = const LatLng(9.9312, 76.2673);
+  void onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  showConfirmCheckIn(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final media = MediaQuery.of(context).size;
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: const BoldTextPoppins(
+            text: Strings.confirmCheckIn,
+            color: Colors.black,
+            fontSize: 18,
+          ),
+          content: const NormalTextPoppins(
+            text: Strings.areYouSureYouWantToCheckIn,
+            color: Colors.black,
+            fontSize: 14,
+          ),
+          actionsPadding: EdgeInsets.symmetric(
+            horizontal: media.width * 0.025,
+            vertical: media.height * 0.01,
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: media.width * 0.025,
+                vertical: media.height * 0.01,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  YesButtonWidget(
+                      onTap: () => Get.back(),
+                      media: media,
+                      text: Strings.no,
+                      textColor: Colors.black,
+                      buttonColor: lightBlue),
+                  YesButtonWidget(
+                      onTap: () => Get.back(),
+                      media: media,
+                      text: Strings.yes,
+                      textColor: Colors.white,
+                      buttonColor: colorPrimary),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
