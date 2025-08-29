@@ -10,5 +10,9 @@ const lightBlue = Color(0xffD5F0FE);
 const lightGreen = Color(0xff039300);
 const paleRed = Color(0xffFFF0F0);
 const greyFillColor = Color(0xffEFEFEF);
+const greyText = Color(0xff7F7F7F);
+const colorPrimaryWithOpacity25 = Color(0x4056B5E6);
+const colorPrimaryWithOpacity40 = Color(0x6656B5E6);
+
 
 

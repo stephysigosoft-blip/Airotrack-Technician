@@ -67,6 +67,32 @@ class Strings {
   static const String confirmCheckIn = "Confirm Check-In?";
   static const String areYouSureYouWantToCheckIn= "Are you sure you want to check-in?";
   static const String payment = "Payment";
+  static const String collect = "Collect";
+  static const String generateCertificate = "Generate Certificate";
+  static const String total = "Total";
+  static const String pickAPaymentMethod = "Pick a Payment Method";
+  static const String pleaseCollect= "Please collect";
+  static const String inCash = "in Cash.";
+  static const String pleaseScanToPay = "Please Scan to Pay";
+  static const String cashAmount = "Cash Amount";
+  static const String checkStatus = "Check Status";
+  static const String next = "Next";
+  static const String forText = "For";
+  static const String paymentReceived = "Payment Received";
+  static const String earnings = "Earnings";
+  static const String recentJobs = "Recent Jobs";
+  static const String d = "";
+  static const String e = "";
+  static const String f = "";
+  static const String g = "";
+  static const String h = "";
+  static const String i = "";
+  static const String j = "";
+  static const String k = "";
+  static const String l = "";
+  static const String m = "";
+  static const String n = "";
+  static const String o = "";
   static const String p = "";
   static const String q = "";
   static const String r = "";
@@ -78,4 +104,5 @@ class Strings {
   static const String x = "";
   static const String y = "";
   static const String z = "";
+
 }
