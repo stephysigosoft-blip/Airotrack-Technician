@@ -5,17 +5,15 @@ import 'package:airotrackgit/ui/utils/Widgets/NavigateButton.dart';
 import 'package:airotrackgit/ui/utils/Widgets/NormalTextPoppins.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../assets/resources/strings.dart';
-import '../Payment/Payment.dart';
 import '../utils/Widgets/CancelButton.dart';
 import '../utils/Widgets/CheckInButton.dart';
 import '../utils/Widgets/CustomAppBar.dart';
 import '../utils/Widgets/RichtextWidget.dart';
-import 'RowWidgets/RowWidget1.dart';
-import 'RowWidgets/RowWidget2.dart';
+import 'Widgets/RowWidget1.dart';
+import 'Widgets/RowWidget2.dart';
 
 class JobDetails extends StatefulWidget {
   const JobDetails({super.key});
@@ -114,7 +112,8 @@ class _JobDetailsState extends State<JobDetails> {
                 Column(
                   children: [
                     CancelButton(
-                      onTap: () => Get.to(const PaymentScreen()),
+                      onTap: () =>
+                          controller.showCancelReasonDialog(context, media),
                       media: media,
                       buttonText: Strings.requestForCancellation,
                     ),

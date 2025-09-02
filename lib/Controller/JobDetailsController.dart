@@ -1,4 +1,5 @@
 import 'package:airotrackgit/ui/Payment/Payment.dart';
+import 'package:airotrackgit/ui/utils/Widgets/CheckInButton.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
@@ -7,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../assets/resources/colors.dart';
 import '../assets/resources/strings.dart';
+import '../ui/job_details/Widgets/MultilineTextField.dart';
 import '../ui/utils/Widgets/BoldTextPoppins.dart';
 import '../ui/utils/Widgets/NormalTextPoppins.dart';
 import '../ui/utils/Widgets/YesButtonWidget.dart';
@@ -23,11 +25,13 @@ class JobDetailsController extends GetxController {
     debugPrint("JobDetailsController disposed");
     super.onClose();
   }
+
   final String note =
       "Note: Lorem ipsum dolor sit amet consectetur adipiscing elit. "
       "Dolor sit amet consectetur adipiscing elit quisque faucibus.";
   late GoogleMapController mapController;
   final LatLng center = const LatLng(9.9312, 76.2673);
+
   void onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
@@ -81,6 +85,40 @@ class JobDetailsController extends GetxController {
               ),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Future<void> showCancelReasonDialog(BuildContext context, Size media) async {
+    final TextEditingController reasonController = TextEditingController();
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8), // blue border
+          ),
+          contentPadding: EdgeInsets.all(media.height * 0.02),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const BoldTextPoppins(
+                  text: Strings.reasonForCancellation,
+                  color: Colors.black,
+                  fontSize: 16),
+              SizedBox(height: media.height * 0.01),
+              const NormalTextPoppins(
+                  text: Strings.pleaseSpecifyTheCancellationReason,
+                  color: Colors.black,
+                  fontSize: 14),
+              SizedBox(height: media.height * 0.02),
+              MultiLineTextField(reasonController: reasonController),
+              const SizedBox(height: 16),
+              CheckInButton(media: media, buttonText: Strings.submitRequest)
+            ],
+          ),
         );
       },
     );

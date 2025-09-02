@@ -1,4 +1,6 @@
+import 'package:airotrackgit/ui/CreateNewWork/CreateNewWork.dart';
 import 'package:airotrackgit/ui/RecentJobs/RecentJobs.dart';
+import 'package:airotrackgit/ui/ScanDevices/ScanDevice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -398,7 +400,7 @@ class _UserDrawerState extends State<UserDrawer> {
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ContactUs()));
+                  MaterialPageRoute(builder: (context) => const CreateNewWorkScreen()));
             },
           ),
           Container(
@@ -426,7 +428,7 @@ class _UserDrawerState extends State<UserDrawer> {
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ContactUs()));
+                  MaterialPageRoute(builder: (context) => const ScanDeviceScreen()));
             },
           ),
           Container(

@@ -20,7 +20,7 @@ class BoldTextPoppins extends StatelessWidget {
         color: color,
         fontSize: fontSize,
         fontFamily: 'Poppins-Bold',
-        fontWeight: FontWeight.bold
+        fontWeight: FontWeight.bold,
       ),
     );
   }
