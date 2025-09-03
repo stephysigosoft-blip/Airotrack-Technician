@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 import '../../../assets/resources/colors.dart';
+import '../../../assets/resources/strings.dart';
 import 'CreateNewWorkTextField.dart';
 
 class CountryCodeAndMobile extends StatelessWidget {
@@ -27,7 +28,7 @@ class CountryCodeAndMobile extends StatelessWidget {
             )),
         SizedBox(width: media.width * 0.02),
         Expanded(
-          child: CreateNewWorkTextField(hintText: "12345678", media: media),
+          child: CreateNewWorkTextField(hintText: Strings.phoneNumber, media: media),
         ),
       ],
     );

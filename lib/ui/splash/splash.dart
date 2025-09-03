@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:airotrackgit/ui/home/homeNew.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -27,7 +28,7 @@ class _SplashState extends State<Splash> {
     if (await checkNetwork()) {
       var token = await getSavedObject("token");
       if (token != null) {
-        Timer(const Duration(seconds: 3), () => Get.offAll(const Home()));
+        Timer(const Duration(seconds: 3), () => Get.offAll(const homeNew()));
       } else {
         Timer(const Duration(seconds: 3), () => Get.offAll(const Login()));
       }

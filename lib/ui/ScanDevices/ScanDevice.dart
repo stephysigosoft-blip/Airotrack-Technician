@@ -1,3 +1,4 @@
+import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/ui/devices/qrview.dart';
 import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
 import 'package:airotrackgit/ui/utils/Widgets/RecentJobsAppBar.dart';
@@ -27,6 +28,7 @@ class ScanDeviceScreen extends StatelessWidget {
             SizedBox(height: media.height * 0.015),
             OpenScannerButton(
               media: media,
+              buttonColor: colorPrimary,
               onPressed: () => Get.to(const QRViewExample()),
             ),
             SizedBox(height: media.height * 0.025),

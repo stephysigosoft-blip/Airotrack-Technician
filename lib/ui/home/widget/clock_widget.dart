@@ -12,15 +12,19 @@ class ClockWidget extends StatefulWidget {
 class _ClockWidgetState extends State<ClockWidget> {
   String _currentTime = '';
   String _currentPeriod = '';
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _updateTime();
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      _updateTime();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (mounted) {
+        _updateTime();
+      }
     });
   }
+
 
   void _updateTime() {
     setState(() {

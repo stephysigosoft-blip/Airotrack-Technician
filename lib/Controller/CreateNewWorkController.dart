@@ -15,6 +15,6 @@ class CreateNewWorkController extends GetxController {
   }
   final productList = ["GPS Tracker", "Dashcam", "Other"];
   final workTypes = ["Repair", "Installation", "Service"];
-  String? selectedProduct = "GPS Tracker";
-  String? selectedWorkType = "Repair";
+  String? selectedProduct = "";
+  String? selectedWorkType = "";
 }

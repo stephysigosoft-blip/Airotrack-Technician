@@ -97,12 +97,39 @@ class Strings {
   static const String reasonForCancellation = "Reason for Cancellation?";
   static const String pleaseSpecifyTheCancellationReason = "Please specify the reason for cancellation.";
   static const String submitRequest = "Submit Request";
-  static const String t = "";
-  static const String u = "";
+  static const String checkInForm = "Check In Form";
+  static const String registrationCertificate = "Registration Certificate";
+  static const String devicePhoto = "Device Photo";
+  static const String serviceDetails = "Service Details";
+  static const String engineNumber = "Engine Number";
+  static const String enterEngineNumber = "Enter Engine Number";
+  static const String chassisNumber = "Chassis Number";
+  static const String enterChassisNumber = "Enter Chassis Number";
+  static const String deviceSerialNumber = "Device Serial Number";
+  static const String enterDeviceSerialNumber = "Enter Device Serial Number";
+  static const String dealerNameForCertificate = "Dealer Name For Certificate";
+  static const String enterDealerName = "Enter Dealers Name";
+  static const String vehicleImage = "Vehicle Image";
+  static const String cameraView = "Camera View";
+  static const String goToPayment = "Go To Payment";
+  static const String productCertificate = "Product Certificate";
+  static const String goToMainMenu = "Go To Main Menu";
+  static const String totalEarnings = "Total Earnings";
+  static const String fromWithSpace = "From ";
+  static const String toWithSpace = " To ";
+  static const String credited = "Credited";
+  static const String notifications = "Notifications";
+  static const String today = "Today";
+  static const String areYouSureYouWantToLogout = "Are you sure you want to logout?";
+  static const String pickAProduct = "Pick A Product";
+  static const String selectWorkType = "Select Work Type";
+  static const String phoneNumber = "Phone Number";
+  static const String flash = "Flash";
   static const String v = "";
   static const String w = "";
   static const String x = "";
   static const String y = "";
   static const String z = "";
+
 
 }

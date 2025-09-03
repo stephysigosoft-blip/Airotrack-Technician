@@ -1,3 +1,4 @@
+import 'package:airotrackgit/ui/ProductCertificate/ProductCertificate.dart';
 import 'package:airotrackgit/ui/utils/Widgets/CheckInButton.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,7 +36,10 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
               const Spacer(),
               SizedBox(height: media.height * 0.1),
               CheckInButton(
-                  media: media, buttonText: Strings.generateCertificate)
+                media: media,
+                buttonText: Strings.generateCertificate,
+                onTap: () => Get.to(const ProductCertificateScreen()),
+              )
             ],
           ),
         ),

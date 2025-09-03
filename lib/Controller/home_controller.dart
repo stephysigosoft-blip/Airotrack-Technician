@@ -2,6 +2,7 @@ import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import 'package:airotrackgit/Model/MaintenanceModel.dart';
@@ -193,7 +194,57 @@ class HomeController extends GetxController {
                       textColor: Colors.black,
                       buttonColor: lightBlue),
                   YesButtonWidget(
-                      onTap: () => Get.to(JobDetails()),
+                      onTap: () => Get.off(const JobDetails()),
+                      media: media,
+                      text: Strings.yes,
+                      textColor: Colors.white,
+                      buttonColor: colorPrimary),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  logoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        final media = MediaQuery.of(context).size;
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: SvgPicture.asset("lib/assets/images/logout_icon.svg"),
+          content: const NormalTextPoppins(
+            text: Strings.areYouSureYouWantToLogout,
+            color: Colors.black,
+            fontSize: 14,
+          ),
+          actionsPadding: EdgeInsets.symmetric(
+            horizontal: media.width * 0.025,
+            vertical: media.height * 0.01,
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: media.width * 0.025,
+                vertical: media.height * 0.01,
+              ),
+              child: Row(
+                children: [
+                  YesButtonWidget(
+                      onTap: () => Get.back(),
+                      media: media,
+                      text: Strings.no,
+                      textColor: Colors.black,
+                      buttonColor: lightBlue),
+                  SizedBox(width: media.width * 0.03),
+                  YesButtonWidget(
+                      onTap: () => logoutAPI(),
                       media: media,
                       text: Strings.yes,
                       textColor: Colors.white,

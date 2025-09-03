@@ -1,3 +1,4 @@
+import 'package:airotrackgit/ui/home/homeNew.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -36,7 +37,7 @@ class LoginController extends GetxController {
         Response response = await dio.post(url, data: formData);
         if (response.statusCode == 200) {
           saveObject('token', response.data['data']['details']['token']);
-          Get.offAll(() => const Home());
+          Get.offAll(() => const homeNew());
         }
       } else {
         Get.to(const NoInternet());

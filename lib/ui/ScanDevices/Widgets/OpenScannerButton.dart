@@ -5,12 +5,14 @@ import '../../utils/Widgets/BoldTextPoppins.dart';
 
 class OpenScannerButton extends StatelessWidget {
   final Size media;
+  final Color buttonColor;
   final VoidCallback? onPressed;
 
   const OpenScannerButton({
     super.key,
     required this.media,
     this.onPressed,
+    required this.buttonColor,
   });
 
   @override
@@ -19,7 +21,7 @@ class OpenScannerButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
-            backgroundColor: colorPrimary,
+            backgroundColor: buttonColor,
             padding: EdgeInsets.symmetric(vertical: media.width * 0.035),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6),

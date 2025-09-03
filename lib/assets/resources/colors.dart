@@ -16,6 +16,7 @@ const colorPrimaryWithOpacity40 = Color(0x6656B5E6);
 const blackShadeJObCard = Color(0xff333333);
 const paymentPendingBlue = Color(0xff0697E2);
 const textFieldFillColor = Color(0xffE9E9E9);
+const greytext = Color(0xff333333);
 
 
 

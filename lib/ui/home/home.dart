@@ -1,4 +1,5 @@
 import 'package:airotrackgit/ui/CreateNewWork/CreateNewWork.dart';
+import 'package:airotrackgit/ui/Earnings/Earnings.dart';
 import 'package:airotrackgit/ui/RecentJobs/RecentJobs.dart';
 import 'package:airotrackgit/ui/ScanDevices/ScanDevice.dart';
 import 'package:flutter/cupertino.dart';
@@ -90,21 +91,16 @@ class _HomeState extends State<Home> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  InkWell(
-                                    onTap: () {
-                                      controller.showAcceptJobDialog(context);
-                                    },
-                                    child: Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 15, top: 25),
-                                        child: const Text(
-                                          Strings.welcome,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18,
-                                              fontFamily: 'Poppins-Regular'),
-                                        )),
-                                  ),
+                                  Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 15, top: 25),
+                                      child: const Text(
+                                        Strings.welcome,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontFamily: 'Poppins-Regular'),
+                                      )),
                                   Container(
                                       margin: const EdgeInsets.only(
                                           left: 15, top: 15),
@@ -400,7 +396,7 @@ class _UserDrawerState extends State<UserDrawer> {
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const CreateNewWorkScreen()));
+                  MaterialPageRoute(builder: (context) => const EarningsScreen()));
             },
           ),
           Container(
@@ -442,7 +438,7 @@ class _UserDrawerState extends State<UserDrawer> {
             onTap: () {
               Navigator.pop(context);
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ContactUs()));
+                  MaterialPageRoute(builder: (context) => const TermsCondition()));
             },
           ),
           Container(
@@ -557,7 +553,7 @@ class _UserDrawerState extends State<UserDrawer> {
                       ));
             },
           ),
-          const Spacer(),
+          SizedBox(height: media.height * 0.018),
           Align(
             alignment: Alignment.center,
             child: Text(

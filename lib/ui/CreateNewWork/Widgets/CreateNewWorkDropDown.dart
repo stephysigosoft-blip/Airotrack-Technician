@@ -33,7 +33,7 @@ class CreateNewWorkDropDown extends StatelessWidget {
         isExpanded: true,
         hint: NormalTextPoppins(
             text: hintText, color: Colors.black, fontSize: 13),
-        value: value,
+        value: (value != null && items.contains(value)) ? value : null,
         items: items.map((item) {
           return DropdownMenuItem(
             value: item,

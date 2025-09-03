@@ -1,5 +1,6 @@
 import 'package:airotrackgit/Controller/CreateNewWorkController.dart';
 import 'package:airotrackgit/assets/resources/colors.dart';
+import 'package:airotrackgit/ui/home/homeNew.dart';
 import 'package:airotrackgit/ui/utils/Widgets/CheckInButton.dart';
 import 'package:airotrackgit/ui/utils/Widgets/CustomAppBar.dart';
 import 'package:airotrackgit/ui/utils/Widgets/NormalTextPoppins.dart';
@@ -36,7 +37,7 @@ class CreateNewWorkScreen extends StatelessWidget {
                 SizedBox(height: media.height * 0.005),
                 CreateNewWorkDropDown(
                   media: media,
-                  hintText: Strings.pickAPaymentMethod,
+                  hintText: Strings.pickAProduct,
                   items: controller.productList,
                   value: controller.selectedProduct,
                   onChanged: (value) {
@@ -48,7 +49,7 @@ class CreateNewWorkScreen extends StatelessWidget {
                 SizedBox(height: media.height * 0.005),
                 CreateNewWorkDropDown(
                   media: media,
-                  hintText: Strings.pickAPaymentMethod,
+                  hintText: Strings.selectWorkType,
                   items: controller.workTypes,
                   value: controller.selectedWorkType,
                   onChanged: (value) {
@@ -91,7 +92,10 @@ class CreateNewWorkScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: media.height * 0.04),
-                CheckInButton(media: media, buttonText: Strings.createWork)
+                CheckInButton(
+                    onTap: () => Get.off(const homeNew()),
+                    media: media,
+                    buttonText: Strings.createWork)
               ],
             ),
           ),

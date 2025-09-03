@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../assets/resources/colors.dart';
 import '../assets/resources/strings.dart';
+import '../ui/CheckInForm/CheckInForm.dart';
 import '../ui/job_details/Widgets/MultilineTextField.dart';
 import '../ui/utils/Widgets/BoldTextPoppins.dart';
 import '../ui/utils/Widgets/NormalTextPoppins.dart';
@@ -76,7 +77,7 @@ class JobDetailsController extends GetxController {
                       textColor: Colors.black,
                       buttonColor: lightBlue),
                   YesButtonWidget(
-                      onTap: () => Get.back(),
+                      onTap: () => Get.off(const CheckInFormScreen()),
                       media: media,
                       text: Strings.yes,
                       textColor: Colors.white,
