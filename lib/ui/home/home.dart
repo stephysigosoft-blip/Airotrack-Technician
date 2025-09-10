@@ -105,8 +105,7 @@ class _HomeState extends State<Home> {
                                       margin: const EdgeInsets.only(
                                           left: 15, top: 15),
                                       child: Text(
-                                        controller.homeData?.firstName ??
-                                            "username",
+                                        "username",
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 18,
@@ -346,8 +345,7 @@ class _UserDrawerState extends State<UserDrawer> {
 
   Future<void> checkForUpdate() async {
     Navigator.pop(context);
-    InAppUpdate.checkForUpdate().then((info) {
-    }).catchError((e) {
+    InAppUpdate.checkForUpdate().then((info) {}).catchError((e) {
       showSnack(e.toString());
     });
   }
@@ -376,7 +374,7 @@ class _UserDrawerState extends State<UserDrawer> {
       child: ListView(
         children: [
           SizedBox(
-            height:media.height * 0.16,
+            height: media.height * 0.16,
             child: DrawerHeader(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -395,8 +393,10 @@ class _UserDrawerState extends State<UserDrawer> {
             title: Strings.earnings,
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const EarningsScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const EarningsScreen()));
             },
           ),
           Container(
@@ -409,8 +409,10 @@ class _UserDrawerState extends State<UserDrawer> {
             title: Strings.recentJobs,
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const RecentJobsScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const RecentJobsScreen()));
             },
           ),
           Container(
@@ -423,8 +425,10 @@ class _UserDrawerState extends State<UserDrawer> {
             title: Strings.scanDevice,
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const ScanDeviceScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ScanDeviceScreen()));
             },
           ),
           Container(
@@ -437,8 +441,10 @@ class _UserDrawerState extends State<UserDrawer> {
             title: Strings.terms,
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const TermsCondition()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const TermsCondition()));
             },
           ),
           Container(

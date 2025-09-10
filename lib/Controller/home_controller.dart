@@ -22,17 +22,20 @@ import '../ui/utils/Widgets/NormalTextPoppins.dart';
 import '../ui/utils/Widgets/YesButtonWidget.dart';
 
 class HomeController extends GetxController {
-  bool isLoading = true;
-  HomeData? homeData;
-  Dio dio = Dio();
-
-  MaintenanceData? settings;
-
   @override
   void onInit() {
     getMaintenanceAPI();
     super.onInit();
   }
+
+  // declare all the variable only here
+  bool isLoading = true;
+  Dio dio = Dio();
+  HomeModel? homeData;
+
+  MaintenanceData? settings;
+
+  // No variables should be declared below this line
 
   getMaintenanceAPI() async {
     try {
@@ -50,10 +53,10 @@ class HomeController extends GetxController {
             if (settings!.androidVersion.toString() != buildNumber) {
               Get.offAll(() => const ForceUpdate());
             } else {
-              getHome();
+              homeData = await fetchHomeData();
             }
           } else {
-            getHome();
+            homeData = await fetchHomeData();
           }
         }
       } else {
@@ -75,35 +78,43 @@ class HomeController extends GetxController {
     }
   }
 
-  getHome() async {
+  Future<HomeModel?> fetchHomeData() async {
+    isLoading = true;
     try {
-      isLoading = true;
-      update();
-      var url = APIConfig.BASE_URL + APIEndpoints.home;
-      var token = getSavedObject('token') ?? "";
+      var token = await getSavedObject("token");
+      debugPrint("Token: $token");
+      String url = APIConfig.BASE_URL + APIEndpoints.home;
       dio.options.headers["Authorization"] = "Bearer $token";
-      if (await checkNetwork()) {
-        var response = await dio.get(url);
-        if (response.statusCode == 200) {
-          homeData = HomeData.fromJson(response.data['data']);
-          update();
+      final response = await dio.get(url);
+      debugPrint("Response Data: ${response.data}");
+      if (response.statusCode == 200) {
+        return HomeModel.fromJson(response.data);
+      } else {
+        throw Exception("Unexpected status code: ${response.statusCode}");
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        switch (e.response?.statusCode) {
+          case 400:
+            print("Bad Request: ${e.response?.data}");
+            break;
+          case 422:
+            print("Validation Error: ${e.response?.data}");
+            break;
+          case 500:
+            print("Server Error: ${e.response?.data}");
+            break;
+          default:
+            print(
+                "Dio Error: ${e.response?.statusCode} -> ${e.response?.data}");
         }
       } else {
-        Get.to(const NoInternet());
+        print("Dio Exception without response: ${e.message}");
       }
-    } catch (error) {
-      if (error is DioException) {
-        if (error.response?.data['message'] is Map) {
-          Map<String, dynamic> message = error.response?.data['message'];
-          showErrorToast(message);
-        } else if (error.response?.statusCode == 500) {
-          Get.offAll(() => const ServerDown());
-        } else {
-          showFlushBar(error.response?.data['message']);
-        }
-      } else {
-        showFlushBar(error.toString());
-      }
+      return null;
+    } catch (e) {
+      print("Unexpected Error: $e");
+      return null;
     } finally {
       isLoading = false;
       update();

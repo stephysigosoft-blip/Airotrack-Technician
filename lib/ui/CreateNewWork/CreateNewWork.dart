@@ -93,7 +93,7 @@ class CreateNewWorkScreen extends StatelessWidget {
                 ),
                 SizedBox(height: media.height * 0.04),
                 CheckInButton(
-                    onTap: () => Get.off(const homeNew()),
+                    onTap: () => Get.off(const HomeNew()),
                     media: media,
                     buttonText: Strings.createWork)
               ],

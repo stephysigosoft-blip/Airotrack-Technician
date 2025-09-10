@@ -28,7 +28,7 @@ class _SplashState extends State<Splash> {
     if (await checkNetwork()) {
       var token = await getSavedObject("token");
       if (token != null) {
-        Timer(const Duration(seconds: 3), () => Get.offAll(const homeNew()));
+        Timer(const Duration(seconds: 3), () => Get.offAll(const HomeNew()));
       } else {
         Timer(const Duration(seconds: 3), () => Get.offAll(const Login()));
       }
