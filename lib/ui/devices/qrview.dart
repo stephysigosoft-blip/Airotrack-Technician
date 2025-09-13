@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:airotrackgit/assets/resources/colors.dart';
+import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'Widgets/ScannerRowWidget.dart';
 import 'Widgets/ScannerWidget.dart';
 
@@ -17,15 +19,49 @@ class QRViewExample extends StatefulWidget {
 class _QRViewExampleState extends State<QRViewExample> {
   final MobileScannerController controller = MobileScannerController();
   bool isLoading = true;
+  bool hasPermission = false;
+  String? errorMessage;
+  bool _isProcessing = false;
 
   @override
   void initState() {
     super.initState();
     _initializeScanner();
+    _setupBarcodeDetection();
+  }
+
+  void _setupBarcodeDetection() {
+    controller.barcodes.listen((barcodeCapture) {
+      if (!_isProcessing) {
+        _isProcessing = true;
+        for (final barcode in barcodeCapture.barcodes) {
+          showToast('QR Code Found: ${barcode.rawValue}');
+          Get.back(result: barcode.rawValue);
+          return; // Exit after first barcode to prevent multiple calls
+        }
+      }
+    });
   }
 
   Future<void> _initializeScanner() async {
-    await controller.start();
+    try {
+      final status = await Permission.camera.request();
+      if (status.isGranted) {
+        setState(() {
+          hasPermission = true;
+        });
+        await controller.start();
+      } else {
+        showToast('Camera permission is required for QR scanning');
+      }
+    } catch (e) {
+      debugPrint('Scanner initialization error: $e');
+      setState(() {
+        errorMessage = 'Failed to initialize camera: $e';
+      });
+      showToast('Failed to initialize camera: $e');
+    }
+
     if (mounted) {
       setState(() {
         isLoading = false;
@@ -71,7 +107,65 @@ class _QRViewExampleState extends State<QRViewExample> {
                   ),
                 ),
                 SizedBox(height: media.height * 0.04),
-                ScannerWidget(media: media, controller: controller),
+                hasPermission
+                    ? Container(
+                        height: media.height * 0.6,
+                        margin: EdgeInsets.symmetric(
+                            horizontal: media.height * 0.02),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.black,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: MobileScanner(
+                            controller: controller,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        height: media.height * 0.6,
+                        margin: EdgeInsets.symmetric(
+                            horizontal: media.height * 0.02),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey[300],
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                errorMessage != null
+                                    ? Icons.error_outline
+                                    : Icons.camera_alt_outlined,
+                                size: 64,
+                                color: Colors.grey[600],
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                errorMessage ?? 'Camera permission required',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.grey[600],
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  setState(() {
+                                    isLoading = true;
+                                    errorMessage = null;
+                                  });
+                                  await _initializeScanner();
+                                },
+                                child: const Text('Retry'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                 ScannerRowWidget(media: media)
               ],
             ),

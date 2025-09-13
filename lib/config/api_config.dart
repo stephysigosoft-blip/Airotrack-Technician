@@ -1,5 +1,7 @@
 class APIConfig {
-   static String BASE_URL = "https://ourworks.co.in/airotrack-new/public/technician/";
+  static String BASE_URL =
+      "https://ourworks.co.in/airotrack-new/public/technician/";
+      static String Image_URL ="https://ourworks.co.in/airotrack-new/public/storage/";
   // static String BASE_URL = "https://dev-api.airotrack.in/technician/";
   // static String BASE_URL = "https://api.airotrack.in/technician/";
 }
@@ -14,4 +16,6 @@ class APIEndpoints {
   static const String logout = "logout";
   static const String sendCommand = "sendCommand";
   static const String setting = "settings";
+  static const String checkIn = "spdCheckIn";
+  static const String workDetails = "spdWorkDetails";
 }

@@ -7,14 +7,11 @@ class RowWidget1 extends StatelessWidget {
   final String name;
   final String amount;
 
-  const RowWidget1({
-    super.key,required this.name,
-    required this.amount
-  });
+  const RowWidget1({super.key, required this.name, required this.amount});
 
   @override
   Widget build(BuildContext context) {
-    return  Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         BoldTextPoppins(
@@ -23,7 +20,7 @@ class RowWidget1 extends StatelessWidget {
           fontSize: 18,
         ),
         BoldTextPoppins(
-          text: amount,
+          text: "₹${double.tryParse(amount)?.toStringAsFixed(0) ?? ""}",
           color: lightGreen,
           fontSize: 18,
         ),

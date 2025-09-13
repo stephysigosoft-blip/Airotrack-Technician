@@ -4,8 +4,6 @@ import 'package:airotrackgit/ui/home/homeNew.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-
-import 'package:airotrackgit/ui/home/home.dart';
 import 'package:airotrackgit/ui/login/view/login.dart';
 import 'package:airotrackgit/ui/no_internet/no_internet.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
@@ -33,7 +31,7 @@ class _SplashState extends State<Splash> {
         Timer(const Duration(seconds: 3), () => Get.offAll(const Login()));
       }
     } else {
-      Get.to(const NoInternet());
+      Get.to(() => const NoInternet());
     }
   }
 

@@ -1,5 +1,7 @@
-import 'package:airotrackgit/ui/Payment/Payment.dart';
+import 'package:airotrackgit/config/api_config.dart';
 import 'package:airotrackgit/ui/utils/Widgets/CheckInButton.dart';
+import 'package:airotrackgit/ui/utils/utils.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
@@ -27,17 +29,35 @@ class JobDetailsController extends GetxController {
     super.onClose();
   }
 
+  // the variables should be declared here
+
   final String note =
       "Note: Lorem ipsum dolor sit amet consectetur adipiscing elit. "
       "Dolor sit amet consectetur adipiscing elit quisque faucibus.";
   late GoogleMapController mapController;
   final LatLng center = const LatLng(9.9312, 76.2673);
+  Set<Marker> markers = {};
+  bool isLoading = false;
+  Dio dio = Dio();
+
+  // No varibales must be declared below this line
 
   void onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
 
-  showConfirmCheckIn(BuildContext context) {
+  void addMarker(String latitude, String longitude) {
+    markers.add(
+      Marker(
+        markerId: const MarkerId('jobLocation'),
+        position: LatLng(double.parse(latitude), double.parse(longitude)),
+        infoWindow: const InfoWindow(title: 'Job Location'),
+        icon: BitmapDescriptor.defaultMarker,
+      ),
+    );
+  }
+
+  showConfirmCheckIn(BuildContext context, dynamic jobDetails) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -77,7 +97,9 @@ class JobDetailsController extends GetxController {
                       textColor: Colors.black,
                       buttonColor: lightBlue),
                   YesButtonWidget(
-                      onTap: () => Get.off(const CheckInFormScreen()),
+                      onTap: () => Get.off(CheckInFormScreen(
+                            jobId: jobDetails.id.toString(),
+                          )),
                       media: media,
                       text: Strings.yes,
                       textColor: Colors.white,

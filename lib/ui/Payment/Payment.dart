@@ -53,7 +53,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 controller.buildPaymentWidget(controller, media),
                 const Spacer(),
                 ColorChangingButton(
-                    onTap: () => Get.to(const PaymentSuccess()),
+                    onTap: () => Get.to(() => const PaymentSuccess()),
                     selectedMethod: controller.selectedMethod,
                     media: media),
               ],

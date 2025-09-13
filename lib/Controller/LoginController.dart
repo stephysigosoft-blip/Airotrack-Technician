@@ -40,7 +40,7 @@ class LoginController extends GetxController {
           Get.offAll(() => const HomeNew());
         }
       } else {
-        Get.to(const NoInternet());
+        Get.to(() => const NoInternet());
       }
     } catch (error) {
       Get.back();

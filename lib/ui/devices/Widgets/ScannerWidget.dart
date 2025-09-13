@@ -19,24 +19,25 @@ class ScannerWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: media.height * 0.02),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
+        color: Colors.black,
       ),
       height: media.height * 0.6,
-      child: Stack(
-        children: [
-          MobileScanner(
-            controller: controller,
-            scanWindow: Rect.fromCenter(
-              center: const Offset(200, 225),
-              width: media.width - 40,
-              height: media.height * 0.4,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Stack(
+          children: [
+            SizedBox.expand(
+              child: MobileScanner(
+                controller: controller,
+              ),
             ),
-          ),
-          Positioned.fill(
-            child: CustomPaint(
-              painter: ScannerOverlay(),
+            Positioned.fill(
+              child: CustomPaint(
+                painter: ScannerOverlay(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

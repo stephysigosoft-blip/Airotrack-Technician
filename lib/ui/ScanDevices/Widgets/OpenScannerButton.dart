@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../assets/resources/colors.dart';
 import '../../../assets/resources/strings.dart';
 import '../../utils/Widgets/BoldTextPoppins.dart';
 

@@ -1,5 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 <uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.CAMERA" />
+
+<!-- Storage permissions for different Android versions -->
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+<!-- Photos permission for Android 13+ -->
+<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <application
         android:label="Airo Track"
         android:name="${applicationName}"

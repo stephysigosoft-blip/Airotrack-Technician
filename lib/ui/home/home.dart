@@ -1,8 +1,6 @@
-import 'package:airotrackgit/ui/CreateNewWork/CreateNewWork.dart';
 import 'package:airotrackgit/ui/Earnings/Earnings.dart';
 import 'package:airotrackgit/ui/RecentJobs/RecentJobs.dart';
 import 'package:airotrackgit/ui/ScanDevices/ScanDevice.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -261,7 +259,7 @@ class _HomeState extends State<Home> {
                                 ],
                                 onFieldSubmitted: (value) {
                                   if (formKey.currentState!.validate()) {
-                                    Get.to(DeviceDetail(
+                                    Get.to(() => DeviceDetail(
                                       deviceId: value,
                                     ));
                                     deviceIdController.clear();
@@ -296,7 +294,7 @@ class _HomeState extends State<Home> {
                                     suffixIcon: InkWell(
                                       onTap: () {
                                         if (formKey.currentState!.validate()) {
-                                          Get.to(DeviceDetail(
+                                          Get.to(() => DeviceDetail(
                                             deviceId:
                                                 deviceIdController.text.trim(),
                                           ));

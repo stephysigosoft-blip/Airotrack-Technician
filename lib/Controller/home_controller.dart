@@ -32,7 +32,7 @@ class HomeController extends GetxController {
   bool isLoading = true;
   Dio dio = Dio();
   HomeModel? homeData;
-
+  List workTypes = ["Pending Works", "Ongoing Works", "Completed Works"];
   MaintenanceData? settings;
 
   // No variables should be declared below this line
@@ -46,21 +46,21 @@ class HomeController extends GetxController {
         var response = await dio.get(url);
         if (response.statusCode == 200) {
           settings = MaintenanceData.fromJson(response.data['data']);
-          print(response.data.toString());
+          debugPrint(response.data.toString());
           if (settings != null && settings!.maintenance == 1) {
             Get.offAll(() => const MaintenanceScreen());
           } else if (settings!.androidUpdate == 1) {
             if (settings!.androidVersion.toString() != buildNumber) {
               Get.offAll(() => const ForceUpdate());
             } else {
-              homeData = await fetchHomeData();
+              homeData = await fetchHomeData("");
             }
           } else {
-            homeData = await fetchHomeData();
+            homeData = await fetchHomeData("");
           }
         }
       } else {
-        Get.to(const NoInternet());
+        Get.to(() => const NoInternet());
       }
     } catch (error) {
       if (error is DioException) {
@@ -78,17 +78,19 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<HomeModel?> fetchHomeData() async {
+  Future<HomeModel?> fetchHomeData(String serviceType) async {
     isLoading = true;
     try {
       var token = await getSavedObject("token");
       debugPrint("Token: $token");
       String url = APIConfig.BASE_URL + APIEndpoints.home;
       dio.options.headers["Authorization"] = "Bearer $token";
+      dio.options.queryParameters = {"service_type": serviceType};
       final response = await dio.get(url);
       debugPrint("Response Data: ${response.data}");
       if (response.statusCode == 200) {
-        return HomeModel.fromJson(response.data);
+        homeData = HomeModel.fromJson(response.data);
+        return homeData;
       } else {
         throw Exception("Unexpected status code: ${response.statusCode}");
       }
@@ -96,24 +98,24 @@ class HomeController extends GetxController {
       if (e.response != null) {
         switch (e.response?.statusCode) {
           case 400:
-            print("Bad Request: ${e.response?.data}");
+            debugPrint("Bad Request: ${e.response?.data}");
             break;
           case 422:
-            print("Validation Error: ${e.response?.data}");
+            debugPrint("Validation Error: ${e.response?.data}");
             break;
           case 500:
-            print("Server Error: ${e.response?.data}");
+            debugPrint("Server Error: ${e.response?.data}");
             break;
           default:
-            print(
+            debugPrint(
                 "Dio Error: ${e.response?.statusCode} -> ${e.response?.data}");
         }
       } else {
-        print("Dio Exception without response: ${e.message}");
+        debugPrint("Dio Exception without response: ${e.message}");
       }
       return null;
     } catch (e) {
-      print("Unexpected Error: $e");
+      debugPrint("Unexpected Error: $e");
       return null;
     } finally {
       isLoading = false;
@@ -148,7 +150,7 @@ class HomeController extends GetxController {
           Get.offAll(() => const Login());
         }
       } else {
-        Get.to(const NoInternet());
+        Get.to(() => const NoInternet());
       }
     } catch (error) {
       Get.back();
@@ -165,7 +167,7 @@ class HomeController extends GetxController {
     }
   }
 
-  showAcceptJobDialog(BuildContext context) {
+  showAcceptJobDialog(BuildContext context, dynamic jobDetails) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -205,7 +207,10 @@ class HomeController extends GetxController {
                       textColor: Colors.black,
                       buttonColor: lightBlue),
                   YesButtonWidget(
-                      onTap: () => Get.off(const JobDetails()),
+                      onTap: () => Get.off(JobDetails(
+                            isOngoing: false,
+                            jobDetails: jobDetails,
+                          )),
                       media: media,
                       text: Strings.yes,
                       textColor: Colors.white,

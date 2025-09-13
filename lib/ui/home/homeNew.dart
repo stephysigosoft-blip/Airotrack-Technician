@@ -1,13 +1,16 @@
+import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/ui/CreateNewWork/CreateNewWork.dart';
+import 'package:airotrackgit/ui/home/JobItem.dart';
 import 'package:airotrackgit/ui/home/widget/home_welcome_card.dart';
 import 'package:airotrackgit/ui/home/widget/work_type_details.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:airotrackgit/ui/job_details/job_details.dart';
+import 'package:airotrackgit/ui/utils/Functions/ProductIdToProduct.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:airotrackgit/controller/home_controller.dart';
+import '../../assets/resources/strings.dart';
 import 'home.dart';
 import 'widget/create_new_work_button.dart';
 
@@ -22,6 +25,7 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
   PackageInfo? packageInfo;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   late final TabController tabController;
+  bool lodingHome = true;
   final List<String> tabs = const [
     'All',
     'New Installations',
@@ -31,12 +35,28 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
+    setupTabController();
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        lodingHome = false;
+      });
+    });
+    super.initState();
+  }
+
+  void setupTabController() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       packageInfo = await PackageInfo.fromPlatform();
       tabController = TabController(length: tabs.length, vsync: this);
-      setState(() {});
+      tabController.addListener(() {
+        if (!tabController.indexIsChanging) {
+          final c = Get.find<HomeController>();
+          final i = tabController.index;
+          final serviceType = i == 0 ? "" : i.toString();
+          c.fetchHomeData(serviceType);
+        }
+      });
     });
-    super.initState();
   }
 
   @override
@@ -47,68 +67,168 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
 
   TextEditingController deviceIdController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  final homeController = Get.lazyPut(() => HomeController());
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final media = MediaQuery.of(context).size;
     return GetBuilder<HomeController>(
         init: HomeController(),
         initState: (_) {},
         builder: (controller) {
-          if (controller.homeData == null) {
-            return const Scaffold(body: Center(child: Text("No Data found")));
-          } else {
-            var technician = controller.homeData?.data?.technician;
-            return Scaffold(
-                key: scaffoldKey,
-                appBar: AppBar(
-                  backgroundColor: Colors.white,
-                  centerTitle: true,
-                  title: SvgPicture.asset(
-                    'lib/assets/images/logosplash.svg',
-                    height: 60,
-                  ),
+          var technician = controller.homeData?.data?.technician;
+          return Scaffold(
+              key: scaffoldKey,
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                centerTitle: true,
+                toolbarHeight: media.height * 0.10,
+                title: SvgPicture.asset(
+                  'lib/assets/images/logosplash.svg',
+                  height: media.height * 0.10,
                 ),
-                drawer: UserDrawer(
-                  packageInfo: packageInfo,
-                  scaffoldKey: scaffoldKey,
-                ),
-                body: controller.isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            HomeWelcomeCard(userName: technician?.name ?? ""),
-                            CreateNewWorkButton(
-                              onPressed: () =>
-                                  Get.to(const CreateNewWorkScreen()),
-                            ),
-                            ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) =>
-                                    WorkTypeDetails(
-                                      workType: "Job Request",
-                                      theme: theme,
-                                      onAcceptTapped: () => controller
-                                          .showAcceptJobDialog(context),
-                                      tabController: tabController,
-                                      tab: tabs,
-                                    ),
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                itemCount: 3)
-                          ],
-                        ),
-                      ));
-          }
+                actions: const [Icon(Icons.notification_important)],
+              ),
+              drawer: UserDrawer(
+                packageInfo: packageInfo,
+                scaffoldKey: scaffoldKey,
+              ),
+              body: () {
+                if (lodingHome) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: colorPrimary),
+                  );
+                } else {
+                  var upcomingWorks =
+                      controller.homeData?.data?.upcomingWorks ?? [];
+                  var pendingWorks =
+                      controller.homeData?.data?.pendingWorks ?? [];
+                  var ongoingWorks =
+                      controller.homeData?.data?.ongoingWorks ?? [];
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: media.width * 0.040,
+                          vertical: media.height * 0.020),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          HomeWelcomeCard(
+                              media: media, userName: technician?.name ?? ""),
+                          SizedBox(height: media.height * 0.020),
+                          CreateNewWorkButton(
+                            media: media,
+                            onPressed: () =>
+                                Get.to(() => const CreateNewWorkScreen()),
+                          ),
+                          SizedBox(height: media.height * 0.010),
+                          ongoingWorks.isEmpty
+                              ? const SizedBox.shrink()
+                              : const Text(
+                                  Strings.ongoingJobs,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Poppins-Bold'),
+                                ),
+                          SizedBox(height: media.height * 0.010),
+                          ongoingWorks.isEmpty
+                              ? const SizedBox.shrink()
+                              : Column(
+                                  children: List.generate(
+                                      1,
+                                      (index) => Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom: media.height * 0.015),
+                                            child: JobItem(
+                                              onAcceptTapped: () =>
+                                                  Get.to(() => JobDetails(
+                                                        isOngoing: true,
+                                                        jobDetails:
+                                                            ongoingWorks[index],
+                                                      )),
+                                              deviceName: ongoingWorks[index]
+                                                      .productName ??
+                                                  "",
+                                              workType: serviceIdToService(
+                                                  ongoingWorks[index]
+                                                          .serviceType
+                                                          ?.toInt() ??
+                                                      0),
+                                              location: ongoingWorks[index]
+                                                      .location ??
+                                                  "",
+                                              price: ongoingWorks[index]
+                                                      .totalAmount ??
+                                                  "",
+                                              isUpcoming: true,
+                                            ),
+                                          )),
+                                ),
+                          SizedBox(height: media.height * 0.010),
+                          upcomingWorks.isEmpty
+                              ? const SizedBox.shrink()
+                              : const Text(
+                                  Strings.upComingJobs,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Poppins-Bold'),
+                                ),
+                          SizedBox(height: media.height * 0.010),
+                          upcomingWorks.isEmpty
+                              ? const SizedBox.shrink()
+                              : Column(
+                                  children: List.generate(
+                                      upcomingWorks.length,
+                                      (index) => Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom: media.height * 0.015),
+                                            child: JobItem(
+                                              onAcceptTapped: () =>
+                                                  Get.to(() => JobDetails(
+                                                        isOngoing: false,
+                                                        jobDetails:
+                                                            upcomingWorks[
+                                                                index],
+                                                      )),
+                                              deviceName: upcomingWorks[index]
+                                                      .productName ??
+                                                  "",
+                                              workType: serviceIdToService(
+                                                  upcomingWorks[index]
+                                                          .serviceType
+                                                          ?.toInt() ??
+                                                      0),
+                                              location: upcomingWorks[index]
+                                                      .location ??
+                                                  "",
+                                              price: upcomingWorks[index]
+                                                      .totalAmount ??
+                                                  "",
+                                              isUpcoming: true,
+                                            ),
+                                          )),
+                                ),
+                          WorkTypeDetails(
+                            isLoading: controller.isLoading,
+                            pendingWorks: pendingWorks,
+                            workStatus: Strings.jobRequest,
+                            theme: theme,
+                            onAcceptTapped: () => controller
+                                .showAcceptJobDialog(context, pendingWorks),
+                            tabController: tabController,
+                            tab: tabs,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              }());
         });
   }
 }

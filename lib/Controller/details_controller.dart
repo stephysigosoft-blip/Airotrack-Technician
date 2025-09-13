@@ -39,7 +39,7 @@ class DetailsController extends GetxController {
           update();
         }
       } else {
-        Get.to(const NoInternet());
+        Get.to(() => const NoInternet());
       }
     } catch (error) {
       if (error is DioException) {
@@ -86,7 +86,7 @@ class DetailsController extends GetxController {
           update();
         }
       } else {
-        Get.to(const NoInternet());
+        Get.to(() => const NoInternet());
       }
     } catch (error) {
       if (error is DioException) {
@@ -134,7 +134,7 @@ class DetailsController extends GetxController {
           showFlushBar(response.data['message']);
         }
       } else {
-        Get.to(const NoInternet());
+        Get.to(() => const NoInternet());
       }
     } catch (error) {
       Get.back();

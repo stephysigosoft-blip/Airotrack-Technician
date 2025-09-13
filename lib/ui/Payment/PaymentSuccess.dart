@@ -38,7 +38,7 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
               CheckInButton(
                 media: media,
                 buttonText: Strings.generateCertificate,
-                onTap: () => Get.to(const ProductCertificateScreen()),
+                onTap: () => Get.to(() => const ProductCertificateScreen()),
               )
             ],
           ),

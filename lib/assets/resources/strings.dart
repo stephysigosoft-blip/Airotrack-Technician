@@ -62,16 +62,17 @@ class Strings {
   static const String jobType = "Job Type: ";
   static const String vehicleNumber = "Vehicle Number: ";
   static const String navigate = "Navigate";
-  static const String requestForCancellation =  "Request for Cancellation";
+  static const String requestForCancellation = "Request for Cancellation";
   static const String checkIn = "Check-In";
   static const String confirmCheckIn = "Confirm Check-In?";
-  static const String areYouSureYouWantToCheckIn= "Are you sure you want to check-in?";
+  static const String areYouSureYouWantToCheckIn =
+      "Are you sure you want to check-in?";
   static const String payment = "Payment";
   static const String collect = "Collect";
   static const String generateCertificate = "Generate Certificate";
   static const String total = "Total";
   static const String pickAPaymentMethod = "Pick a Payment Method";
-  static const String pleaseCollect= "Please collect";
+  static const String pleaseCollect = "Please collect";
   static const String inCash = "in Cash.";
   static const String pleaseScanToPay = "Please Scan to Pay";
   static const String cashAmount = "Cash Amount";
@@ -95,7 +96,8 @@ class Strings {
   static const String createWork = "Create Work";
   static const String chooseOnMap = "Choose on Map";
   static const String reasonForCancellation = "Reason for Cancellation?";
-  static const String pleaseSpecifyTheCancellationReason = "Please specify the reason for cancellation.";
+  static const String pleaseSpecifyTheCancellationReason =
+      "Please specify the reason for cancellation.";
   static const String submitRequest = "Submit Request";
   static const String checkInForm = "Check In Form";
   static const String registrationCertificate = "Registration Certificate";
@@ -120,16 +122,18 @@ class Strings {
   static const String credited = "Credited";
   static const String notifications = "Notifications";
   static const String today = "Today";
-  static const String areYouSureYouWantToLogout = "Are you sure you want to logout?";
+  static const String areYouSureYouWantToLogout =
+      "Are you sure you want to logout?";
   static const String pickAProduct = "Pick A Product";
   static const String selectWorkType = "Select Work Type";
   static const String phoneNumber = "Phone Number";
   static const String flash = "Flash";
-  static const String v = "";
-  static const String w = "";
-  static const String x = "";
-  static const String y = "";
-  static const String z = "";
-
-
+  static const String jobRequest = "Job Request";
+  static const String noDataFound = "No Data Found";
+  static const String upComingJobs = "Upcoming Jobs";
+  static const String accept = "Accept";
+  static const String chooseImage = "Choose Image : ";
+  static const String camera = "Camera";
+  static const String gallery = "Gallery";
+  static const String ongoingJobs = "Ongoing Jobs";
 }

@@ -29,7 +29,7 @@ class ScanDeviceScreen extends StatelessWidget {
             OpenScannerButton(
               media: media,
               buttonColor: colorPrimary,
-              onPressed: () => Get.to(const QRViewExample()),
+              onPressed: () => Get.to(() => const QRViewExample()),
             ),
             SizedBox(height: media.height * 0.025),
             const BoldTextPoppins(

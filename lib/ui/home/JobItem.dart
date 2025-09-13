@@ -1,13 +1,24 @@
-import 'package:flutter/cupertino.dart';
+import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:flutter/material.dart';
 
 import '../../assets/resources/colors.dart';
-import '../../assets/resources/strings.dart';
 
 class JobItem extends StatefulWidget {
   final VoidCallback onAcceptTapped;
+  final String deviceName;
+  final String workType;
+  final String location;
+  final String price;
+  final bool? isUpcoming;
 
-  const JobItem({super.key, required this.onAcceptTapped});
+  const JobItem(
+      {super.key,
+      required this.onAcceptTapped,
+      required this.deviceName,
+      required this.workType,
+      required this.location,
+      required this.price,
+      this.isUpcoming});
 
   @override
   State<JobItem> createState() => _JobItemState();
@@ -16,8 +27,8 @@ class JobItem extends StatefulWidget {
 class _JobItemState extends State<JobItem> {
   @override
   Widget build(BuildContext context) {
+    final media = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: lightBlue,
@@ -28,20 +39,20 @@ class _JobItemState extends State<JobItem> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Camera",
-                style: TextStyle(
+                widget.deviceName,
+                style: const TextStyle(
                     color: greytext,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Poppins-Regular'),
               ),
               Text(
-                "₹1200",
-                style: TextStyle(
+                '₹${(double.tryParse(widget.price.toString()) ?? 0).toStringAsFixed(0)}',
+                style: const TextStyle(
                     color: lightGreen,
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -49,9 +60,9 @@ class _JobItemState extends State<JobItem> {
               ),
             ],
           ),
-          const Text(
-            "New Installation",
-            style: TextStyle(
+          Text(
+            widget.workType,
+            style: const TextStyle(
                 color: greytext,
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -60,20 +71,24 @@ class _JobItemState extends State<JobItem> {
           const SizedBox(
             height: 10,
           ),
-          const Row(children: [
-            Icon(
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Icon(
               Icons.location_on,
               color: colorPrimary,
               size: 16,
             ),
-            SizedBox(width: 5),
-            Text(
-              "Mullakkal",
-              style: TextStyle(
-                  color: greytext,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Poppins-Regular'),
+            const SizedBox(width: 5),
+            SizedBox(
+              width: media.width * 0.70,
+              child: Text(
+                widget.location,
+                maxLines: 2,
+                style: const TextStyle(
+                    color: greytext,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Poppins-Regular'),
+              ),
             ),
           ]),
           const SizedBox(
@@ -101,10 +116,10 @@ class _JobItemState extends State<JobItem> {
                   borderRadius: BorderRadius.circular(7),
                 ),
               ),
-              onPressed:widget.onAcceptTapped,
-              child: const Text(
-                "Accept",
-                style: TextStyle(
+              onPressed: widget.onAcceptTapped,
+              child: Text(
+                widget.isUpcoming == true ? Strings.jobDetails : Strings.accept,
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 17,
                     fontFamily: 'Poppins-Bold',

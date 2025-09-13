@@ -73,7 +73,7 @@ class ServiceDetailsScreen extends StatelessWidget {
               CheckInButton(
                 media: media,
                 buttonText: Strings.goToPayment,
-                onTap: () => Get.to(const PaymentScreen()),
+                onTap: () => Get.to(() => const PaymentScreen()),
               )
             ],
           ),
@@ -81,6 +81,11 @@ class ServiceDetailsScreen extends StatelessWidget {
       ),
     );
   }
+
+  
+
+
+
 
   Widget buildImageBox(String imageUrl, Size media) {
     return ClipRRect(
