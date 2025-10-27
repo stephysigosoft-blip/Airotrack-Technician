@@ -7,7 +7,9 @@ import '../utils/Widgets/CustomAppBar.dart';
 import '../utils/Widgets/PaymentStatusWidget.dart';
 
 class PaymentSuccess extends StatefulWidget {
-  const PaymentSuccess({super.key});
+  const PaymentSuccess({super.key, required this.amount, required this.jobId});
+  final double amount;
+  final String jobId;
 
   @override
   State<PaymentSuccess> createState() => _PaymentSuccessState();
@@ -32,13 +34,15 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
             children: [
               SizedBox(height: media.height * 0.17),
               PaymentStatusWidget(
-                  amount: 1200, message: Strings.paymentReceived, media: media),
+                  amount: widget.amount,
+                  message: Strings.paymentReceived,
+                  media: media),
               const Spacer(),
               SizedBox(height: media.height * 0.1),
               CheckInButton(
                 media: media,
                 buttonText: Strings.generateCertificate,
-                onTap: () => Get.to(() => const ProductCertificateScreen()),
+                onTap: () => Get.to(() =>  ProductCertificateScreen(jobId: widget.jobId)),
               )
             ],
           ),

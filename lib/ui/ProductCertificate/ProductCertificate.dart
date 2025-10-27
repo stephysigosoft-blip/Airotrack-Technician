@@ -15,8 +15,8 @@ import '../utils/Widgets/CustomAppBar.dart';
 import 'Widget/CustomOffsetFABLocation.dart';
 
 class ProductCertificateScreen extends StatefulWidget {
-  const ProductCertificateScreen({super.key});
-
+  const ProductCertificateScreen({super.key, required this.jobId});
+  final String jobId;
   @override
   State<ProductCertificateScreen> createState() =>
       _ProductCertificateScreenState();
@@ -30,12 +30,17 @@ class _ProductCertificateScreenState extends State<ProductCertificateScreen> {
         top: false,
         child: GetBuilder(
           init: ProductCertificateController(),
+          didChangeDependencies: (state) {
+            state.controller?.generateProductCertificate(widget.jobId);
+          },
           builder: (controller) => Scaffold(
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: colorPrimary,
-              onPressed: () {},
-              child: SvgPicture.asset("lib/assets/images/share_icon.svg"),
-            ),
+            floatingActionButton: controller.productCertificate.isNotEmpty
+                ? FloatingActionButton(
+                    backgroundColor: colorPrimary,
+                    onPressed: () {},
+                    child: SvgPicture.asset("lib/assets/images/share_icon.svg"),
+                  )
+                : const SizedBox.shrink(),
             floatingActionButtonLocation: const CustomOffsetFABLocation(80),
             appBar: CustomAppBar(
                 title: Strings.productCertificate, onBack: () => Get.back()),
@@ -49,13 +54,17 @@ class _ProductCertificateScreenState extends State<ProductCertificateScreen> {
                             child: CircularProgressIndicator(
                             color: colorPrimary,
                           ))
-                        : PDFView(
+                        :controller.productCertificate.isNotEmpty ? PDFView(
                             filePath: controller.localPdfPath!,
+                          ) : const Center(
+                            child: Text(Strings.noDataFound),
                           ),
                   ),
                   const Spacer(),
-                  CheckInButton(onTap: () => Get.offAll(const HomeNew()),
-                      media: media, buttonText: Strings.goToMainMenu)
+                  CheckInButton(
+                      onTap: () => Get.offAll(const HomeNew()),
+                      media: media,
+                      buttonText: Strings.goToMainMenu)
                 ],
               ),
             ),

@@ -1,21 +1,22 @@
+import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:flutter/material.dart';
-
-import '../../../assets/resources/colors.dart';
-import '../../../assets/resources/strings.dart';
 
 class CreateNewWorkSearchField extends StatelessWidget {
   final String hintText;
+  final TextEditingController controller;
 
-  const CreateNewWorkSearchField({
-    super.key,
-    required this.media,required this.hintText
-  });
+  const CreateNewWorkSearchField(
+      {super.key,
+      required this.media,
+      required this.hintText,
+      required this.controller});
 
   final Size media;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+        controller: controller,
         decoration: InputDecoration(
             filled: true,
             hintText: hintText,

@@ -9,10 +9,11 @@ class CountryCodeAndMobile extends StatelessWidget {
   const CountryCodeAndMobile({
     super.key,
     required this.media,
+    required this.controller,
   });
 
   final Size media;
-
+  final TextEditingController controller;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -23,12 +24,16 @@ class CountryCodeAndMobile extends StatelessWidget {
               selectedCode: "+91",
               media: MediaQuery.of(context).size,
               onChanged: (value) {
-                print("Selected: $value");
+                debugPrint("Selected: $value");
               },
             )),
         SizedBox(width: media.width * 0.02),
         Expanded(
-          child: CreateNewWorkTextField(hintText: Strings.phoneNumber, media: media),
+          child: CreateNewWorkTextField(
+            phoneNumber: true,
+              controller: controller,
+              hintText: Strings.phoneNumber,
+              media: media),
         ),
       ],
     );
@@ -36,7 +41,7 @@ class CountryCodeAndMobile extends StatelessWidget {
 }
 
 class CountryCodeDropdown extends StatelessWidget {
-  final List<String> countryCodes = ["+91", "+1", "+44", "+971"];
+  final List<String> countryCodes = ["+91"];
   final String selectedCode;
   final void Function(String?) onChanged;
   final Size media;

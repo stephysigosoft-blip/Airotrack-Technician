@@ -1,5 +1,5 @@
 import 'package:airotrackgit/Controller/JobDetailsController.dart';
-import 'package:airotrackgit/ui/Payment/Payment.dart';
+import 'package:airotrackgit/config/api_config.dart';
 import 'package:airotrackgit/ui/ServiceDetails/Widgets/ServiceDetailsTextFiedl.dart';
 import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
 import 'package:airotrackgit/ui/utils/Widgets/CheckInButton.dart';
@@ -11,7 +11,10 @@ import '../../assets/resources/strings.dart';
 import '../CreateNewWork/Widgets/LabelTextWidget.dart';
 
 class ServiceDetailsScreen extends StatelessWidget {
-  const ServiceDetailsScreen({super.key});
+  const ServiceDetailsScreen(
+      {super.key, required this.jobId, required this.amount});
+  final String jobId;
+  final double amount;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +28,9 @@ class ServiceDetailsScreen extends StatelessWidget {
           padding: EdgeInsets.all(media.width * 0.05),
           child: GetBuilder(
             init: JobDetailsController(),
+            didChangeDependencies: (state) {
+              state.controller?.getServiceDetails(jobId);
+            },
             builder: (controller) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -55,43 +61,43 @@ class ServiceDetailsScreen extends StatelessWidget {
                     controller: controller.dealerNameForCertificateController,
                     hintText: Strings.enterDealerName,
                     media: media),
-                SizedBox(height: media.height * 0.018),
-                const BoldTextPoppins(
-                    text: Strings.vehicleImage,
-                    color: Colors.black,
-                    fontSize: 15),
+                controller.vehicleImages.isNotEmpty
+                    ? SizedBox(height: media.height * 0.018)
+                    : const SizedBox.shrink(),
+                controller.vehicleImages.isNotEmpty
+                    ? const BoldTextPoppins(
+                        text: Strings.vehicleImage,
+                        color: Colors.black,
+                        fontSize: 15)
+                    : const SizedBox.shrink(),
                 SizedBox(height: media.height * 0.01),
                 Row(
                   children: [
-                    buildImageBox(
-                        "lib/assets/images/service_details_dummy.png", media),
-                    const SizedBox(width: 8),
-                    buildImageBox(
-                        "lib/assets/images/service_details_dummy.png", media),
-                    const SizedBox(width: 8),
-                    buildImageBox(
-                        "lib/assets/images/service_details_dummy.png", media),
+                    controller.vehicleImages.isNotEmpty
+                        ? buildImageBox(controller.vehicleImages[0], media)
+                        : buildAddImageBox(media),
                   ],
                 ),
                 SizedBox(height: media.height * 0.01),
-                const BoldTextPoppins(
-                    text: Strings.cameraView,
-                    color: Colors.black,
-                    fontSize: 15),
+                controller.cameraImages.isNotEmpty
+                    ? const BoldTextPoppins(
+                        text: Strings.cameraView,
+                        color: Colors.black,
+                        fontSize: 15)
+                    : const SizedBox.shrink(),
                 SizedBox(height: media.height * 0.01),
                 Row(
                   children: [
-                    buildImageBox(
-                        "lib/assets/images/service_details_dummy.png", media),
-                    SizedBox(width: media.width * 0.02),
-                    buildAddImageBox(media),
+                    controller.cameraImages.isNotEmpty
+                        ? buildImageBox(controller.cameraImages[0], media)
+                        : buildAddImageBox(media),
                   ],
                 ),
                 SizedBox(height: media.height * 0.018),
                 CheckInButton(
                   media: media,
                   buttonText: Strings.goToPayment,
-                  onTap: () => Get.to(() => const PaymentScreen()),
+                  onTap: () => controller.updateServiceDetails(amount, jobId),
                 )
               ],
             ),
@@ -104,8 +110,8 @@ class ServiceDetailsScreen extends StatelessWidget {
   Widget buildImageBox(String imageUrl, Size media) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
-      child: Image.asset(
-        imageUrl,
+      child: Image.network(
+        APIConfig.Image_URL + imageUrl,
         width: media.width * 0.25,
         height: media.height * 0.12,
         fit: BoxFit.cover,

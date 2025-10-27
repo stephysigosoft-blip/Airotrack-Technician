@@ -19,5 +19,12 @@ class APIEndpoints {
   static const String checkIn = "spdCheckIn";
   static const String workDetails = "spdWorkDetails";
   static const String requestCancelling = "cancelRequest";
+  static const String generateQrCode = "generateQrCode";
+  static const String generateProductCertificate = "generateWorkCertificate";
+  static const String postNewWorkDetails = "spdCreateWork";
+  static const String fetchRto = "rtoList";
+  static const String allDevices = "allDevices";
+  static const String vehicleTypes = "spdVehicleTypes";
+
   
 }

@@ -163,7 +163,10 @@ class _JobDetailsState extends State<JobDetails> {
                             showToast(Strings.techniciansNote);
                             return;
                           }
-                          Get.to(const ServiceDetailsScreen());
+                          Get.to(ServiceDetailsScreen(
+                              jobId: widget.jobDetails.id.toString(),
+                              amount: double.parse(
+                                  widget.jobDetails.totalAmount ?? "0")));
                         },
                         media: media,
                         buttonText: "Finish Job",

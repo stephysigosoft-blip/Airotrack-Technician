@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../assets/resources/colors.dart';
 import '../../../assets/resources/strings.dart';
@@ -35,12 +36,22 @@ class PaymentQRWidget extends StatelessWidget {
         SizedBox(height: media.height * 0.02),
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: Image.asset(
-            qrImage,
-            height: media.height * 0.25,
-            width: media.height * 0.25,
-            fit: BoxFit.cover,
-          ),
+          child: qrImage.startsWith('<svg') || qrImage.startsWith('<?xml')
+              ? SvgPicture.string(
+                  qrImage,
+                  height: media.height * 0.25,
+                  width: media.height * 0.25,
+                  fit: BoxFit.contain,
+                )
+              : SizedBox(
+                  height: media.height * 0.25,
+                  width: media.height * 0.25,
+                  child: const Center(
+                      child: BoldTextPoppins(
+                          text: "Qr code not found",
+                          color: Colors.black,
+                          fontSize: 14)),
+                ),
         ),
       ],
     );

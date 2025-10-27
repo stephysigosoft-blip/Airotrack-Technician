@@ -7,11 +7,14 @@ import 'NormalTextPoppins.dart';
 class ColorChangingButton extends StatelessWidget {
   final Size media;
   final VoidCallback? onTap;
+  final double amount;
 
   const ColorChangingButton(
       {super.key,
       required this.selectedMethod,
-      required this.media, this.onTap});
+      required this.media,
+      this.onTap,
+      required this.amount});
 
   final String? selectedMethod;
 
@@ -20,9 +23,7 @@ class ColorChangingButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: selectedMethod == null
-            ? null
-            : onTap,
+        onPressed: selectedMethod == null ? null : onTap,
         style: ElevatedButton.styleFrom(
           backgroundColor: colorPrimary,
           disabledBackgroundColor: greyFillColor,
@@ -35,7 +36,7 @@ class ColorChangingButton extends StatelessWidget {
           text: selectedMethod == null
               ? Strings.generateCertificate
               : selectedMethod == "Cash"
-                  ? "${Strings.collect} ₹1200 ${Strings.inCash}"
+                  ? "${Strings.collect} ₹${amount.toStringAsFixed(0)} ${Strings.inCash}"
                   : selectedMethod == "Online"
                       ? Strings.checkStatus
                       : Strings.next,

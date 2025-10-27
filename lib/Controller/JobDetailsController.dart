@@ -1,4 +1,6 @@
+import 'package:airotrackgit/Model/work_details_model.dart';
 import 'package:airotrackgit/config/api_config.dart';
+import 'package:airotrackgit/ui/Payment/Payment.dart';
 import 'package:airotrackgit/ui/home/homeNew.dart';
 import 'package:airotrackgit/ui/utils/Functions/network_testing.dart';
 import 'package:airotrackgit/ui/utils/Functions/on_dio_exception.dart';
@@ -42,13 +44,19 @@ class JobDetailsController extends GetxController {
   Set<Marker> markers = {};
   bool isLoading = false;
   Dio dio = Dio();
+  WorkDetailsModel? workDetails;
   final TextEditingController reasonController = TextEditingController();
-  final TextEditingController techniciansNoteController = TextEditingController();
+  final TextEditingController techniciansNoteController =
+      TextEditingController();
   final TextEditingController engineNumberController = TextEditingController();
   final TextEditingController chassisNumberController = TextEditingController();
-  final TextEditingController deviceSerialNumberController = TextEditingController();
-  final TextEditingController dealerNameForCertificateController = TextEditingController();
-
+  final TextEditingController deviceSerialNumberController =
+      TextEditingController();
+  final TextEditingController dealerNameForCertificateController =
+      TextEditingController();
+  List<String> vehicleImages = [];
+  List<String> cameraImages = [];
+  String qrCode = "";
   // No varibales must be declared below this line
 
   void onMapCreated(GoogleMapController controller) {
@@ -64,6 +72,14 @@ class JobDetailsController extends GetxController {
         icon: BitmapDescriptor.defaultMarker,
       ),
     );
+  }
+
+  List<String> _convertToStringList(dynamic value) {
+    if (value == null) return [];
+    if (value is List) {
+      return value.map((e) => e.toString()).toList();
+    }
+    return [value.toString()];
   }
 
   showConfirmCheckIn(BuildContext context, dynamic jobDetails) {
@@ -196,25 +212,34 @@ class JobDetailsController extends GetxController {
     }
   }
 
-
   Future<void> getServiceDetails(String id) async {
     isLoading = true;
     checkNetworkAndRedirectOffAll();
     try {
       var token = await getSavedObject("token");
       debugPrint("Token: $token");
-      String url = APIConfig.BASE_URL + APIEndpoints.requestCancelling;
+      String url = APIConfig.BASE_URL + APIEndpoints.workDetails;
       dio.options.headers["Authorization"] = "Bearer $token";
       dio.options.queryParameters = {
         "job_id": id,
-        "cancellation_reason": reasonController.text
       };
       debugPrint("URL: $url");
       debugPrint("Query Parameters: ${dio.options.queryParameters}");
       final response = await dio.get(url);
       debugPrint("Response Data: ${response.data}");
       if (response.statusCode == 200) {
-        Get.offAll(() => const HomeNew());
+        workDetails = WorkDetailsModel.fromJson(response.data);
+        engineNumberController.text =
+            workDetails?.data?.details?.engineNo ?? "";
+        chassisNumberController.text =
+            workDetails?.data?.details?.chassisNo ?? "";
+        deviceSerialNumberController.text =
+            workDetails?.data?.details?.deviceSerialNo ?? "";
+        vehicleImages = _convertToStringList(
+            workDetails?.data?.details?.images?.vehicleImage);
+        cameraImages = _convertToStringList(
+            workDetails?.data?.details?.images?.capturedImage);
+        update();
       } else {
         throw Exception("Unexpected status code: ${response.statusCode}");
       }
@@ -232,6 +257,29 @@ class JobDetailsController extends GetxController {
     }
   }
 
+  Future<void> updateServiceDetails(double amount, String jobId) async {
+    if (engineNumberController.text.isEmpty) {
+      showToast("Please enter the engine number");
+      return;
+    } else if (chassisNumberController.text.isEmpty) {
+      showToast("Please enter the chassis number");
+      return;
+    } else if (deviceSerialNumberController.text.isEmpty) {
+      showToast("Please enter the device serial number");
+      return;
+    } else if (dealerNameForCertificateController.text.isEmpty) {
+      showToast("Please enter the dealer name for certificate");
+      return;
+    } else if (vehicleImages.isEmpty) {
+      showToast("Please add the vehicle image");
+      return;
+    } else if (cameraImages.isEmpty) {
+      showToast("Please add the camera image");
+      return;
+    } else {
+      Get.to(() => PaymentScreen(amount: amount, jobId: jobId));
+    }
+  }
 
-
+ 
 }

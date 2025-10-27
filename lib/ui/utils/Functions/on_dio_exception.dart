@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../utils.dart';
 
-
 void handleDioException(DioException e) {
   if (e.response != null) {
     switch (e.response?.statusCode) {
@@ -24,7 +23,7 @@ void handleDioException(DioException e) {
         break;
       case 422:
         debugPrint("Validation Error: ${e.response?.data}");
-        showToast("Validation Error: ${e.response?.data}");
+        showToast(e.response?.data["message"].toString() ?? "");
         break;
       case 500:
         debugPrint("Server Error: ${e.response?.data}");
