@@ -7,9 +7,9 @@ import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
 import 'package:airotrackgit/ui/utils/Widgets/CallNowButton.dart';
 import 'package:airotrackgit/ui/utils/Widgets/NavigateButton.dart';
 import 'package:airotrackgit/ui/utils/Widgets/NormalTextPoppins.dart';
+import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -59,7 +59,7 @@ class _JobDetailsState extends State<JobDetails> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 RowWidget1(
-                  name: widget.jobDetails.technicianName ?? "",
+                  name: widget.jobDetails.customerName ?? "",
                   amount: widget.jobDetails.totalAmount ?? "",
                 ),
                 SizedBox(height: media.height * 0.015),
@@ -105,7 +105,10 @@ class _JobDetailsState extends State<JobDetails> {
                     ? SizedBox(height: media.height * 0.015)
                     : const SizedBox.shrink(),
                 widget.isOngoing
-                    ? TechniciansNoteWidget(media: media)
+                    ? TechniciansNoteWidget(
+                        media: media,
+                        techniciansNoteController:
+                            controller.techniciansNoteController)
                     : Container(
                         height: media.height * 0.30,
                         width: double.infinity,
@@ -155,6 +158,11 @@ class _JobDetailsState extends State<JobDetails> {
                 widget.isOngoing
                     ? CheckInButton(
                         onTap: () {
+                          if (controller
+                              .techniciansNoteController.text.isEmpty) {
+                            showToast(Strings.techniciansNote);
+                            return;
+                          }
                           Get.to(const ServiceDetailsScreen());
                         },
                         media: media,
@@ -164,7 +172,9 @@ class _JobDetailsState extends State<JobDetails> {
                         children: [
                           CancelButton(
                             onTap: () => controller.showCancelReasonDialog(
-                                context, media),
+                                context,
+                                media,
+                                widget.jobDetails.id.toString()),
                             media: media,
                             buttonText: Strings.requestForCancellation,
                           ),

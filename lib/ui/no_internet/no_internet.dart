@@ -1,9 +1,44 @@
+import 'dart:async';
 import 'package:airotrackgit/assets/resources/strings.dart';
+import 'package:airotrackgit/ui/splash/splash.dart';
+import 'package:airotrackgit/ui/utils/Functions/network_testing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
-class NoInternet extends StatelessWidget {
+class NoInternet extends StatefulWidget {
   const NoInternet({super.key});
+
+  @override
+  State<NoInternet> createState() => _NoInternetState();
+}
+
+class _NoInternetState extends State<NoInternet> {
+  Timer? _networkCheckTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    checkNetwork();
+    _networkCheckTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      checkNetwork();
+    });
+  }
+
+  @override
+  void dispose() {
+    _networkCheckTimer?.cancel();
+    super.dispose();
+  }
+
+  checkNetwork() async {
+    if (await isNetworkAvailable()) {
+      _networkCheckTimer?.cancel();
+      Get.offAll(() => const Splash());
+    } else {
+      debugPrint("No internet");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

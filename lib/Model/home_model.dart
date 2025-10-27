@@ -219,18 +219,18 @@ class UpcomingWorks {
   final String? startLong;
   final String? endLat;
   final String? endLong;
-  final String? deviceId;
+  final int? deviceId;
   final String? imei;
   final int? jobStatus;
   final int? isEnquiry;
   final String? cancellationStatus;
   final String? cancellationReason;
-  final String? paymentType;
+  final int? paymentType;
   final int? paymentStatus;
   final String? paymentId;
   final String? cashInHand;
   final String? cashOnline;
-  final String? companyTitleId;
+  final int? companyTitleId;
   final int? fromAiro;
   final int? rtoId;
   final String? installationDate;
@@ -321,18 +321,18 @@ class UpcomingWorks {
       startLong: json['start_long'] as String?,
       endLat: json['end_lat'] as String?,
       endLong: json['end_long'] as String?,
-      deviceId: json['device_id'] as String?,
+      deviceId: json['device_id'] as int?,
       imei: json['imei'] as String?,
       jobStatus: json['job_status'] as int?,
       isEnquiry: json['is_enquiry'] as int?,
       cancellationStatus: json['cancellation_status'] as String?,
       cancellationReason: json['cancellation_reason'] as String?,
-      paymentType: json['payment_type'] as String?,
+      paymentType: json['payment_type'] as int?,
       paymentStatus: json['payment_status'] as int?,
       paymentId: json['payment_id'] as String?,
       cashInHand: json['cash_in_hand'] as String?,
       cashOnline: json['cash_online'] as String?,
-      companyTitleId: json['company_title_id'] as String?,
+      companyTitleId: json['company_title_id'] as int?,
       fromAiro: json['from_airo'] as int?,
       rtoId: json['rto_id'] as int?,
       installationDate: json['installation_date'] as String?,

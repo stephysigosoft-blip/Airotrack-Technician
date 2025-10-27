@@ -4,11 +4,13 @@ import '../../../assets/resources/colors.dart';
 
 class ServiceDetailsTextField extends StatelessWidget {
   final String hintText;
+  final TextEditingController controller;
 
   const ServiceDetailsTextField({
     super.key,
     required this.media,
     required this.hintText,
+    required this.controller,
   });
 
   final Size media;
@@ -16,7 +18,7 @@ class ServiceDetailsTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-        controller: TextEditingController(),
+        controller: controller,
         decoration: InputDecoration(
           filled: true,
           hintText: hintText,

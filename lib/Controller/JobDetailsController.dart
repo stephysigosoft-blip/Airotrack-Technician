@@ -1,4 +1,7 @@
 import 'package:airotrackgit/config/api_config.dart';
+import 'package:airotrackgit/ui/home/homeNew.dart';
+import 'package:airotrackgit/ui/utils/Functions/network_testing.dart';
+import 'package:airotrackgit/ui/utils/Functions/on_dio_exception.dart';
 import 'package:airotrackgit/ui/utils/Widgets/CheckInButton.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:dio/dio.dart';
@@ -39,6 +42,12 @@ class JobDetailsController extends GetxController {
   Set<Marker> markers = {};
   bool isLoading = false;
   Dio dio = Dio();
+  final TextEditingController reasonController = TextEditingController();
+  final TextEditingController techniciansNoteController = TextEditingController();
+  final TextEditingController engineNumberController = TextEditingController();
+  final TextEditingController chassisNumberController = TextEditingController();
+  final TextEditingController deviceSerialNumberController = TextEditingController();
+  final TextEditingController dealerNameForCertificateController = TextEditingController();
 
   // No varibales must be declared below this line
 
@@ -113,8 +122,8 @@ class JobDetailsController extends GetxController {
     );
   }
 
-  Future<void> showCancelReasonDialog(BuildContext context, Size media) async {
-    final TextEditingController reasonController = TextEditingController();
+  Future<void> showCancelReasonDialog(
+      BuildContext context, Size media, String jobId) async {
     return showDialog(
       context: context,
       builder: (context) {
@@ -139,11 +148,90 @@ class JobDetailsController extends GetxController {
               SizedBox(height: media.height * 0.02),
               MultiLineTextField(reasonController: reasonController),
               const SizedBox(height: 16),
-              CheckInButton(media: media, buttonText: Strings.submitRequest)
+              CheckInButton(
+                  onTap: () => reasonController.text.isEmpty
+                      ? showToast("Please enter a reason for cancellation")
+                      : requestCancelling(jobId.toString()),
+                  media: media,
+                  buttonText: Strings.submitRequest)
             ],
           ),
         );
       },
     );
   }
+
+  Future<void> requestCancelling(String id) async {
+    isLoading = true;
+    checkNetworkAndRedirectOffAll();
+    try {
+      var token = await getSavedObject("token");
+      debugPrint("Token: $token");
+      String url = APIConfig.BASE_URL + APIEndpoints.requestCancelling;
+      dio.options.headers["Authorization"] = "Bearer $token";
+      dio.options.queryParameters = {
+        "job_id": id,
+        "cancellation_reason": reasonController.text
+      };
+      debugPrint("URL: $url");
+      debugPrint("Query Parameters: ${dio.options.queryParameters}");
+      final response = await dio.get(url);
+      debugPrint("Response Data: ${response.data}");
+      if (response.statusCode == 200) {
+        Get.offAll(() => const HomeNew());
+      } else {
+        throw Exception("Unexpected status code: ${response.statusCode}");
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        handleDioException(e);
+      } else {
+        debugPrint("Dio Exception without response: ${e.message}");
+      }
+    } catch (e) {
+      debugPrint("Unexpected Error: $e");
+    } finally {
+      isLoading = false;
+      update();
+    }
+  }
+
+
+  Future<void> getServiceDetails(String id) async {
+    isLoading = true;
+    checkNetworkAndRedirectOffAll();
+    try {
+      var token = await getSavedObject("token");
+      debugPrint("Token: $token");
+      String url = APIConfig.BASE_URL + APIEndpoints.requestCancelling;
+      dio.options.headers["Authorization"] = "Bearer $token";
+      dio.options.queryParameters = {
+        "job_id": id,
+        "cancellation_reason": reasonController.text
+      };
+      debugPrint("URL: $url");
+      debugPrint("Query Parameters: ${dio.options.queryParameters}");
+      final response = await dio.get(url);
+      debugPrint("Response Data: ${response.data}");
+      if (response.statusCode == 200) {
+        Get.offAll(() => const HomeNew());
+      } else {
+        throw Exception("Unexpected status code: ${response.statusCode}");
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        handleDioException(e);
+      } else {
+        debugPrint("Dio Exception without response: ${e.message}");
+      }
+    } catch (e) {
+      debugPrint("Unexpected Error: $e");
+    } finally {
+      isLoading = false;
+      update();
+    }
+  }
+
+
+
 }

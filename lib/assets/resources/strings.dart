@@ -136,4 +136,5 @@ class Strings {
   static const String camera = "Camera";
   static const String gallery = "Gallery";
   static const String ongoingJobs = "Ongoing Jobs";
+  static const String techniciansNote = "Please enter technicians note";
 }

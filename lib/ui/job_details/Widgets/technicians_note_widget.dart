@@ -5,15 +5,17 @@ class TechniciansNoteWidget extends StatelessWidget {
   const TechniciansNoteWidget({
     super.key,
     required this.media,
+    required this.techniciansNoteController,
   });
 
   final Size media;
-
+  final TextEditingController techniciansNoteController;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: media.height * 0.30,
       child: TextField(
+        controller: techniciansNoteController,
         decoration: InputDecoration(
           hintText: "Type here...",
           hintStyle: const TextStyle(

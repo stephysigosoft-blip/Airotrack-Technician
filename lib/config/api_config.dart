@@ -18,4 +18,6 @@ class APIEndpoints {
   static const String setting = "settings";
   static const String checkIn = "spdCheckIn";
   static const String workDetails = "spdWorkDetails";
+  static const String requestCancelling = "cancelRequest";
+  
 }
