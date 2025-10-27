@@ -1,4 +1,5 @@
 import 'package:airotrackgit/assets/resources/colors.dart';
+import 'package:airotrackgit/ui/utils/Functions/network_testing.dart';
 import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ class HomeController extends GetxController {
   // No variables should be declared below this line
 
   getMaintenanceAPI() async {
+    checkNetworkAndRedirectOffAll();
     try {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       String buildNumber = packageInfo.version;
@@ -80,6 +82,7 @@ class HomeController extends GetxController {
 
   Future<HomeModel?> fetchHomeData(String serviceType) async {
     isLoading = true;
+    checkNetworkAndRedirectOffAll();
     try {
       var token = await getSavedObject("token");
       debugPrint("Token: $token");
@@ -114,8 +117,8 @@ class HomeController extends GetxController {
         debugPrint("Dio Exception without response: ${e.message}");
       }
       return null;
-    } catch (e) {
-      debugPrint("Unexpected Error: $e");
+    } catch (e, stackTrace) {
+      debugPrint("Unexpected Error: $e $stackTrace");
       return null;
     } finally {
       isLoading = false;
@@ -124,6 +127,7 @@ class HomeController extends GetxController {
   }
 
   logoutAPI() async {
+    checkNetworkAndRedirectOffAll();
     try {
       showDialog(
           context: Get.context!,
@@ -167,7 +171,7 @@ class HomeController extends GetxController {
     }
   }
 
-  showAcceptJobDialog(BuildContext context, dynamic jobDetails) {
+  showAcceptJobDialog(BuildContext context, Work jobDetails) {
     showDialog(
       context: context,
       builder: (BuildContext context) {

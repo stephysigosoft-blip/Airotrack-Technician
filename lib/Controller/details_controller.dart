@@ -2,6 +2,7 @@ import 'package:airotrackgit/Model/details_details.dart';
 import 'package:airotrackgit/config/api_config.dart';
 import 'package:airotrackgit/ui/no_internet/no_internet.dart';
 import 'package:airotrackgit/ui/server/serverdown.dart';
+import 'package:airotrackgit/ui/utils/Functions/network_testing.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class DetailsController extends GetxController {
   getDeatils(
     String imei,
   ) async {
+    checkNetworkAndRedirectOffAll();
     try {
       isLoading = true;
       update();
@@ -64,6 +66,7 @@ class DetailsController extends GetxController {
   getDeatilsWithId(
     String id,
   ) async {
+    checkNetworkAndRedirectOffAll();
     try {
       isLoading = true;
       update();
@@ -109,6 +112,7 @@ class DetailsController extends GetxController {
   }
 
   sendCommands(String imei, String commandId) async {
+    checkNetworkAndRedirectOffAll();
     try {
       showDialog(
           context: Get.context!,

@@ -12,7 +12,7 @@ class WorkTypeDetails extends StatelessWidget {
   final dynamic theme;
   final TabController tabController;
   final List<String> tab;
-  final VoidCallback onAcceptTapped;
+  final Function(Work) onAcceptTapped;
   final List<Work> pendingWorks;
   final bool isLoading;
 
@@ -132,7 +132,8 @@ class WorkTypeDetails extends StatelessWidget {
                                         ? 'Unknown'
                                         : serviceIdToService(v);
                                   })(),
-                                  onAcceptTapped: () => onAcceptTapped(),
+                                  onAcceptTapped: () =>
+                                      onAcceptTapped(pendingWorks[index]),
                                   isUpcoming: false),
                             );
                           });

@@ -15,7 +15,7 @@ class RowWidget1 extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         BoldTextPoppins(
-          text: name,
+          text: name.toString(),
           color: Colors.black,
           fontSize: 18,
         ),

@@ -218,8 +218,8 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
                             pendingWorks: pendingWorks,
                             workStatus: Strings.jobRequest,
                             theme: theme,
-                            onAcceptTapped: () => controller
-                                .showAcceptJobDialog(context, pendingWorks),
+                            onAcceptTapped: (work) =>
+                                controller.showAcceptJobDialog(context, work),
                             tabController: tabController,
                             tab: tabs,
                           ),

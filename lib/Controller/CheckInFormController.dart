@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:airotrackgit/Model/work_details_model.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/config/api_config.dart';
+import 'package:airotrackgit/ui/utils/Functions/network_testing.dart';
 import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -44,6 +45,64 @@ class CheckInFormController extends GetxController {
   RxString qrCode = "".obs;
   // varibales must be declared below this line
 
+  // Helper functions should be declared here
+
+
+  String _getSafeString(String? value, String fallback) {
+    if (value == null || value.isEmpty || value == "null") {
+      return fallback;
+    }
+    return value;
+  }
+
+
+  String _getSafeImei() {
+    final imei = workDetails?.data?.details?.imei?.toString();
+    return _getSafeString(imei, qrCode.value);
+  }
+
+  String _getSafeDeviceImage() {
+    final deviceImage =
+        workDetails?.data?.details?.images?.deviceImage?.toString();
+    return _getSafeString(deviceImage, pickedImage);
+  }
+
+  String _getSafeRcImage() {
+    final rcImage = workDetails?.data?.details?.images?.rcImage?.toString();
+    return _getSafeString(rcImage, pickedRcImage);
+  }
+
+
+  bool _isFieldValid(String? value) {
+    return value != null && value.isNotEmpty && value != "null";
+  }
+
+  bool _validateRequiredFields() {
+    final imei = _getSafeImei();
+    final deviceImage = _getSafeDeviceImage();
+    final rcImage = _getSafeRcImage();
+
+    return _isFieldValid(imei) &&
+        _isFieldValid(deviceImage) &&
+        _isFieldValid(rcImage);
+  }
+
+  List<String> _getMissingFields() {
+    final missingFields = <String>[];
+
+    if (!_isFieldValid(_getSafeImei())) {
+      missingFields.add("IMEI");
+    }
+    if (!_isFieldValid(_getSafeDeviceImage())) {
+      missingFields.add("Device Image");
+    }
+    if (!_isFieldValid(_getSafeRcImage())) {
+      missingFields.add("RC Image");
+    }
+
+    return missingFields;
+  }
+
   void requestPermissions() async {
     debugPrint("Requesting permissions");
     cameraStatus = await Permission.camera.request();
@@ -51,6 +110,8 @@ class CheckInFormController extends GetxController {
     debugPrint("Camera permission: $cameraStatus");
     debugPrint("Photos permission: $photosStatus");
   }
+
+  // Helper functions should be declared here
 
   Future<void> openCamera() async {
     try {
@@ -131,9 +192,7 @@ class CheckInFormController extends GetxController {
 
   Future<void> openGalleryForRc() async {
     try {
-      // For Android 13+ use photos permission, for older versions use storage
       Permission permission = Permission.photos;
-
       photosStatus = await permission.request();
       if (photosStatus == PermissionStatus.granted) {
         final XFile? image = await imagePicker.pickImage(
@@ -157,11 +216,10 @@ class CheckInFormController extends GetxController {
   }
 
   Widget buildImageBox(Size media, String imageUrl, bool isPicked) {
-    debugPrint("Device Image URL: $imageUrl"); // Debug the URL
-    debugPrint("Device Image isPicked: $isPicked"); // Debug the isPicked flag
+    debugPrint("Device Image URL: $imageUrl"); 
+    debugPrint("Device Image isPicked: $isPicked"); 
     debugPrint(
-        "Device Image pickedImage: $pickedImage"); // Debug the picked image path
-
+        "Device Image pickedImage: $pickedImage"); 
     return Container(
       height: media.width * 0.3,
       width: media.width * 0.3,
@@ -201,11 +259,10 @@ class CheckInFormController extends GetxController {
   }
 
   Widget buildRcImageBox(Size media, String imageUrl, bool isPicked) {
-    debugPrint("RC Image URL: $imageUrl"); // Debug the URL
-    debugPrint("RC Image isPicked: $isPicked"); // Debug the isPicked flag
+    debugPrint("RC Image URL: $imageUrl");
+    debugPrint("RC Image isPicked: $isPicked"); 
     debugPrint(
-        "RC Image pickedRcImage: $pickedRcImage"); // Debug the picked image path
-
+        "RC Image pickedRcImage: $pickedRcImage"); 
     return Container(
       height: media.width * 0.3,
       width: media.width * 0.3,
@@ -286,6 +343,7 @@ class CheckInFormController extends GetxController {
       required String deviceImage,
       required String rcImage}) async {
     isLoading = true;
+    checkNetworkAndRedirectOffAll();
     try {
       var token = await getSavedObject("token");
       debugPrint("Token: $token");
@@ -347,23 +405,30 @@ class CheckInFormController extends GetxController {
         switch (e.response?.statusCode) {
           case 400:
             showToast("Bad Request: ${e.response?.data}");
+            debugPrint("Bad Request: ${e.response?.data}");
             break;
           case 422:
             showToast("Validation Error: ${e.response?.data}");
+            debugPrint("Validation Error: ${e.response?.data}");
             break;
           case 500:
             showToast("Server Error: ${e.response?.data}");
+            debugPrint("Server Error: ${e.response?.data}");
             break;
           default:
             showToast(
                 "Dio Error: ${e.response?.statusCode} -> ${e.response?.data}");
+            debugPrint(
+                "Dio Error: ${e.response?.statusCode} -> ${e.response?.data}");
         }
       } else {
         showToast("Dio Exception without response: ${e.message}");
+        debugPrint("Dio Exception without response: ${e.message}");
       }
       return false;
     } catch (e) {
       showToast("Unexpected Error: $e");
+      debugPrint("Unexpected Error: $e");
       return false;
     } finally {
       isLoading = false;
@@ -373,6 +438,7 @@ class CheckInFormController extends GetxController {
 
   Future<void> fetchWorkDetails(String id) async {
     isLoading = true;
+    checkNetworkAndRedirectOffAll();
     try {
       var token = await getSavedObject("token");
       debugPrint("Token: $token");
@@ -517,34 +583,30 @@ class CheckInFormController extends GetxController {
 
   Future<void> checkIn({required String jobId}) async {
     try {
+      checkNetworkAndRedirectOffAll();
       debugPrint("Starting check-in process...");
+      if (!_validateRequiredFields()) {
+        final missingFields = _getMissingFields();
+        final missingFieldsText = missingFields.join(", ");
+        debugPrint(
+            "Check-in failed: Missing required fields - $missingFieldsText");
+        showToast(
+            "Please provide the following fields before checking in: $missingFieldsText");
+
+        return;
+      }
+
+      debugPrint("All required fields validated successfully");
+
       final result = await postCheckinData(
         jobId: jobId,
         latitude: workDetails?.data?.details?.latitude ?? "",
         longitude: workDetails?.data?.details?.longitude ?? "",
-        imei: workDetails?.data?.details?.imei.toString() != null &&
-                workDetails?.data?.details?.imei.toString() != "null" &&
-                workDetails?.data?.details?.imei.toString() != ""
-            ? workDetails!.data!.details!.imei.toString()
-            : qrCode.value,
-        deviceImage: (workDetails?.data?.details?.images?.deviceImage
-                        ?.toString() !=
-                    null &&
-                workDetails?.data?.details?.images?.deviceImage?.toString() !=
-                    "null" &&
-                workDetails?.data?.details?.images?.deviceImage?.toString() !=
-                    "")
-            ? workDetails!.data!.details!.images!.deviceImage.toString()
-            : pickedImage,
-        rcImage:
-            (workDetails?.data?.details?.images?.rcImage?.toString() != null &&
-                    workDetails?.data?.details?.images?.rcImage?.toString() !=
-                        "null" &&
-                    workDetails?.data?.details?.images?.rcImage?.toString() !=
-                        "")
-                ? workDetails!.data!.details!.images!.rcImage.toString()
-                : pickedRcImage,
+        imei: _getSafeImei(),
+        deviceImage: _getSafeDeviceImage(),
+        rcImage: _getSafeRcImage(),
       );
+
       if (result) {
         debugPrint("Check-in completed successfully");
         Get.back();
