@@ -87,8 +87,15 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
                   'lib/assets/images/logosplash.svg',
                   height: media.height * 0.10,
                 ),
-                actions: const [Icon(Icons.notification_important)],
-              ),
+                actions: [Container(
+                  margin: EdgeInsetsDirectional.only(end: 10),
+                  child: SvgPicture.asset(
+                    'lib/assets/images/notifications.svg',
+                    height: 25,
+                    width: 25,
+                  ),
+                ),
+              ]),
               drawer: UserDrawer(
                 packageInfo: packageInfo,
                 scaffoldKey: scaffoldKey,

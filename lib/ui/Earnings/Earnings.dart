@@ -197,27 +197,6 @@ class EarningsScreen extends StatelessWidget {
                         ]),
                       )),
                 )
-                // const BoldTextPoppins(
-                //     text: "18 June 2025", color: Colors.black, fontSize: 17),
-                // SizedBox(height: media.height * 0.01),
-                // Expanded(
-                //   child: ListView.separated(
-                //     padding: EdgeInsets.zero,
-                //     itemCount: 6,
-                //     itemBuilder: (context, index) {
-                //       final item = controller.earnings[index];
-                //       return EarningCard(
-                //         media: media,
-                //         location: item["location"]!,
-                //         product: item["product"]!,
-                //         amount: item["amount"]!,
-                //       );
-                //     },
-                //     separatorBuilder: (context, index) => SizedBox(
-                //       height: media.height * 0.003,
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ),

@@ -45,14 +45,6 @@ class EarningsController extends GetxController {
   TextEditingController fromDateController = TextEditingController();
   TextEditingController toDateController = TextEditingController();
 
-  // final earnings = [
-  //   {"location": "Mullakal", "product": "Camera", "amount": "₹850"},
-  //   {"location": "Thumpoly", "product": "Speed Governor", "amount": "₹800"},
-  //   {"location": "Komady", "product": "GPS Tracker", "amount": "₹350"},
-  //   {"location": "Mullakal", "product": "Speed Governor", "amount": "₹500"},
-  //   {"location": "Thumpoly", "product": "Camera", "amount": "₹600"},
-  //   {"location": "Punnamada", "product": "Speed Governor", "amount": "₹800"},
-  // ];
 
   getFormattedDate() {
     final now = DateTime.now();

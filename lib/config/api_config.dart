@@ -20,4 +20,5 @@ class APIEndpoints {
   static const String workDetails = "spdWorkDetails";
   static const String requestCancelling = "cancelRequest";
   static const String earnings = "spdEarnings";
+  static const String rcentJobs = "recentJobs";
 }
