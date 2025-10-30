@@ -25,14 +25,20 @@ class FilterChipsList extends StatelessWidget {
         itemBuilder: (context, index) {
           return FilterChip(
             showCheckmark: false,
-            label: NormalTextPoppins(
-                text: filters[index],
-                color: selectedIndex == index ? Colors.white : Colors.black,
-                fontSize: 14),
+            label: Text(
+              filters[index],
+              style: TextStyle(
+                  color: selectedIndex == index ? Colors.white : Colors.black,
+                  fontSize: 14, fontFamily: 'Poppins-Regular',fontWeight: FontWeight.bold),
+            ),
             selected: selectedIndex == index,
             onSelected: (_) => onSelected(index),
             selectedColor: colorPrimary,
             backgroundColor: Colors.white,
+            side: BorderSide(
+              color: selectedIndex == index ? Colors.transparent : colorPrimary,
+              width: 1,
+            ),
           );
         },
         separatorBuilder: (_, __) => SizedBox(width: media.width * 0.02),

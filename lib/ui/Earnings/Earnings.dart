@@ -2,10 +2,14 @@ import 'package:airotrackgit/Controller/EarningsController.dart';
 import 'package:airotrackgit/ui/Earnings/Widgets/TotalEarningsWidget.dart';
 import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
 import 'package:airotrackgit/ui/utils/Widgets/RecentJobsAppBar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:intl/intl.dart';
 
+import '../../Model/EarningsModel.dart';
+import '../../assets/resources/colors.dart';
 import '../../assets/resources/strings.dart';
 import 'Widgets/DateSelectionWidget.dart';
 import 'Widgets/EarningCard.dart';
@@ -27,7 +31,17 @@ class EarningsScreen extends StatelessWidget {
           ),
           body: Padding(
             padding: EdgeInsets.all(media.width * 0.04),
-            child: Column(
+            child: controller.isFirstLoadRunning && controller.earningsByDate!.length == 0
+                ? Container(
+                color: Colors.white,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: colorPrimary,
+                  ),
+                ))
+
+                :
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DateSelectionWidget(
@@ -40,32 +54,149 @@ class EarningsScreen extends StatelessWidget {
                 SizedBox(height: media.height * 0.02),
                 TotalEarningsWidget(
                   media: media,
-                  fromDate: "17/06/2025",
-                  toDate: "18/06/2025",
-                  totalAmount: "₹6600",
+                  fromDate: controller.fromDateController.text,
+                  toDate: controller.toDateController.text,
+                  totalAmount: controller.earningsByDate!.length == 0?"₹0":"₹"+ controller.earningsData!.data!.totalEarnings.toString(),
                 ),
                 SizedBox(height: media.height * 0.02),
-                const BoldTextPoppins(
-                    text: "18 June 2025", color: Colors.black, fontSize: 17),
-                SizedBox(height: media.height * 0.01),
-                Expanded(
-                  child: ListView.separated(
-                    padding: EdgeInsets.zero,
-                    itemCount: 6,
-                    itemBuilder: (context, index) {
-                      final item = controller.earnings[index];
-                      return EarningCard(
-                        media: media,
-                        location: item["location"]!,
-                        product: item["product"]!,
-                        amount: item["amount"]!,
-                      );
-                    },
-                    separatorBuilder: (context, index) => SizedBox(
-                      height: media.height * 0.003,
+                  controller.earningsByDate!.length == 0
+          ? Container(
+          color: Colors.white,
+          alignment: Alignment.center,
+          margin: const EdgeInsets.all(15),
+          child: SafeArea(
+            child: Stack(
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Container(
+                    //   alignment: Alignment.center,
+                    //   margin: const EdgeInsets.only(
+                    //       bottom: 40,
+                    //       // top: 100,
+                    //       left: 40,
+                    //       right: 40),
+                    //   child: Image.asset(
+                    //     "lib/Assets/Images/nodata.png",
+                    //   ),
+                    // ),
+                    SizedBox(height: 100,),
+                    Container(
+                      alignment: Alignment.center,
+                      child: Column(
+                        children: [
+                          Text(
+                            "No Earnings Found",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Regular',
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Text(
+                            "There is no earnings to show",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Regular',
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal),
+                          ),
+                          const SizedBox(
+                            height: 3,
+                          ),
+                          Text(
+                            "you right now.",
+                            style: TextStyle(
+                                fontFamily: 'Poppins-Regular',
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
+
+              ],
+            ),
+          ),
+        ):
+                Expanded(
+                  child: SingleChildScrollView(
+                      controller: controller.scrollcontroller,
+                      child: Container(
+                        color: Colors.white,
+                        child: Column(children: [
+                          ListView.builder(
+                            itemCount: controller.earningsByDate!.length,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              EarningsByDate model = controller.earningsByDate![index];
+                              var date = DateTime.parse(controller.earningsByDate![index].date.toString());
+                              final currentDate = DateTime.now();
+                              DateTime dateServer =
+                              DateTime(date.year, date.month, date.day);
+                              final difference =
+                                  currentDate.difference(dateServer).inDays;
+                              if (difference == 0) {
+                                controller.day = "Today";
+                              } else if (difference == 1) {
+                                controller.day = "Yesterday";
+                              } else {
+                                final DateFormat formatter =
+                                DateFormat('dd MMM yyy');
+                                controller.day = formatter.format(dateServer);
+                              }
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                   BoldTextPoppins(
+                                      text: controller.day, color: Colors.black, fontSize: 17),
+                                  SizedBox(height: media.height * 0.01),
+                                  ListView.separated(
+                                      itemCount: model.earnings!.length,
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return EarningCard(
+                                        media: media,
+                                        location:model.earnings![index].location.toString(),
+                                        product:model.earnings![index].productName.toString(),
+                                        amount: model.earnings![index].amount.toString(),
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) => SizedBox(
+                                      height: media.height * 0.003,
+                                    ),),
+                                  // when the _loadMore function is running
+
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                          if (controller.isLoadMoreRunning == true)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10, bottom: 10),
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: colorPrimary,
+                                ),
+                              ),
+                            ),
+                        ]),
+                      )),
+                )
               ],
             ),
           ),

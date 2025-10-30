@@ -27,4 +27,6 @@ class APIEndpoints {
   static const String vehicleTypes = "spdVehicleTypes";
 
   
+  static const String earnings = "spdEarnings";
+  static const String rcentJobs = "recentJobs";
 }

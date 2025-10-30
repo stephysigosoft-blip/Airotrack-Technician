@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../assets/resources/colors.dart';
@@ -10,7 +11,7 @@ class JobCard extends StatelessWidget {
   final String location;
   final Size media;
   final String? amount;
-  final String? statusText;
+  final String? paymentId;
 
   const JobCard({
     super.key,
@@ -19,7 +20,7 @@ class JobCard extends StatelessWidget {
     required this.location,
     required this.media,
     this.amount,
-    this.statusText,
+    this.paymentId,
   });
 
   @override
@@ -29,7 +30,7 @@ class JobCard extends StatelessWidget {
       padding: EdgeInsets.all(media.width * 0.04),
       decoration: BoxDecoration(
         color: lightBlue,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(6),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -38,35 +39,33 @@ class JobCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              BoldTextPoppins(text: title, color: Colors.black, fontSize: 16),
-              SizedBox(height: media.height * 0.005),
+              Expanded(child: BoldTextPoppins(text: title, color: Colors.black, fontSize: 16)),
+              paymentId.toString() == "null"||paymentId.toString()==""?
               BoldTextPoppins(
-                  text: subtitle, color: blackShadeJObCard, fontSize: 13),
-              SizedBox(height: media.height * 0.005),
-              Row(
-                children: [
-                  const Icon(Icons.location_on, size: 14, color: colorPrimary),
-                  SizedBox(width: media.width * 0.01),
-                  NormalTextPoppins(
-                      text: location, color: blackShadeJObCard, fontSize: 13)
-                ],
-              ),
+                  text: "Payment Pending",
+                  color: paymentPendingBlue,
+                  fontSize: 14):
+              BoldTextPoppins(text: "₹"+amount!, color: lightGreen, fontSize: 18)
+
             ],
           ),
-          if (amount != null)
-            BoldTextPoppins(text: amount!, color: lightGreen, fontSize: 20)
-          else if (statusText != null)
-            BoldTextPoppins(
-                text: statusText!,
-                color: paymentPendingBlue,
-                fontSize: 14)
+          SizedBox(height: media.height * 0.00),
+          BoldTextPoppins(
+              text: subtitle, color: blackShadeJObCard, fontSize: 13),
+          SizedBox(height: media.height * 0.015),
+          Row(
+            children: [
+              const Icon(Icons.location_on, size: 14, color: colorPrimary),
+              SizedBox(width: media.width * 0.01),
+              NormalTextPoppins(
+                  text: location, color: blackShadeJObCard, fontSize: 13)
+            ],
+          ),
         ],
       ),
     );

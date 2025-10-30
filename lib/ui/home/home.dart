@@ -19,6 +19,7 @@ import 'package:airotrackgit/ui/devices/qrview.dart';
 import 'package:airotrackgit/ui/privacy/privacy.dart';
 import 'package:airotrackgit/ui/terms/terms_condition.dart';
 
+import '../utils/utils.dart';
 import 'widget/clock_widget.dart';
 
 class Home extends StatefulWidget {
@@ -31,10 +32,11 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   PackageInfo? packageInfo;
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
+  var role_id;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      role_id = await getSavedObject("role_id");
       packageInfo = await PackageInfo.fromPlatform();
       setState(() {});
     });
@@ -64,6 +66,7 @@ class _HomeState extends State<Home> {
             drawer: UserDrawer(
               packageInfo: packageInfo,
               scaffoldKey: scaffoldKey,
+                role_id:role_id
             ),
             body: controller.isLoading
                 ? const Center(
@@ -327,11 +330,12 @@ class _HomeState extends State<Home> {
 class UserDrawer extends StatefulWidget {
   final PackageInfo? packageInfo;
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final role_id;
 
   const UserDrawer({
     super.key,
     this.packageInfo,
-    required this.scaffoldKey,
+    required this.scaffoldKey, required this.role_id,
   });
 
   @override
@@ -386,6 +390,7 @@ class _UserDrawerState extends State<UserDrawer> {
               ),
             ),
           ),
+          widget.role_id=="10"?
           TitleTile(
             img: 'lib/assets/images/earnings_icon.svg',
             title: Strings.earnings,
@@ -396,12 +401,14 @@ class _UserDrawerState extends State<UserDrawer> {
                   MaterialPageRoute(
                       builder: (context) => const EarningsScreen()));
             },
-          ),
+          ):Container(),
+          widget.role_id=="10"?
           Container(
             margin: const EdgeInsets.all(10),
             height: 1,
             color: greyline,
-          ),
+          ):Container(),
+          widget.role_id=="10"?
           TitleTile(
             img: 'lib/assets/images/earnings_icon.svg',
             title: Strings.recentJobs,
@@ -412,12 +419,14 @@ class _UserDrawerState extends State<UserDrawer> {
                   MaterialPageRoute(
                       builder: (context) => const RecentJobsScreen()));
             },
-          ),
+          ):Container(),
+          widget.role_id=="10"?
           Container(
             margin: const EdgeInsets.all(10),
             height: 1,
             color: greyline,
-          ),
+          ):Container(),
+          widget.role_id=="10"?
           TitleTile(
             img: 'lib/assets/images/scandevice_icon.svg',
             title: Strings.scanDevice,
@@ -428,12 +437,13 @@ class _UserDrawerState extends State<UserDrawer> {
                   MaterialPageRoute(
                       builder: (context) => const ScanDeviceScreen()));
             },
-          ),
+          ):Container(),
+          widget.role_id=="10"?
           Container(
             margin: const EdgeInsets.all(10),
             height: 1,
             color: greyline,
-          ),
+          ):Container(),
           TitleTile(
             img: 'lib/assets/images/terms.svg',
             title: Strings.terms,
