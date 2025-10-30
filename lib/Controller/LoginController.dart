@@ -37,7 +37,14 @@ class LoginController extends GetxController {
         Response response = await dio.post(url, data: formData);
         if (response.statusCode == 200) {
           saveObject('token', response.data['data']['details']['token']);
-          Get.offAll(() => const HomeNew());
+          saveObject('role_id', response.data['data']['details']['role_id'].toString());
+          if(response.data['data']['details']['role_id'].toString()=="3"){
+            //dealer
+            Get.offAll(() => const Home());
+          }else {
+            //technician
+            Get.offAll(() => const HomeNew());
+          }
         }
       } else {
         Get.to(() => const NoInternet());
