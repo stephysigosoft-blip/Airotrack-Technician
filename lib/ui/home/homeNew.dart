@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:airotrackgit/controller/home_controller.dart';
 import '../../assets/resources/strings.dart';
+import '../utils/utils.dart';
 import 'home.dart';
 import 'widget/create_new_work_button.dart';
 
@@ -26,6 +27,7 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   late final TabController tabController;
   bool lodingHome = true;
+  var role_id;
   final List<String> tabs = const [
     'All',
     'New Installations',
@@ -47,6 +49,7 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
   void setupTabController() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       packageInfo = await PackageInfo.fromPlatform();
+      role_id = await getSavedObject("role_id");
       tabController = TabController(length: tabs.length, vsync: this);
       tabController.addListener(() {
         if (!tabController.indexIsChanging) {
@@ -87,11 +90,19 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
                   'lib/assets/images/logosplash.svg',
                   height: media.height * 0.10,
                 ),
-                actions: const [Icon(Icons.notification_important)],
-              ),
+                actions: [Container(
+                  margin: EdgeInsetsDirectional.only(end: 10),
+                  child: SvgPicture.asset(
+                    'lib/assets/images/notifications.svg',
+                    height: 25,
+                    width: 25,
+                  ),
+                ),
+              ]),
               drawer: UserDrawer(
                 packageInfo: packageInfo,
                 scaffoldKey: scaffoldKey,
+                role_id: role_id,
               ),
               body: () {
                 if (lodingHome) {

@@ -8,6 +8,8 @@ import 'package:airotrackgit/ui/login/view/login.dart';
 import 'package:airotrackgit/ui/no_internet/no_internet.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 
+import '../home/home.dart';
+
 class Splash extends StatefulWidget {
   const Splash({super.key});
 
@@ -25,8 +27,13 @@ class _SplashState extends State<Splash> {
   loginCheck() async {
     if (await checkNetwork()) {
       var token = await getSavedObject("token");
+      var role_id = await getSavedObject("role_id");
       if (token != null) {
-        Timer(const Duration(seconds: 3), () => Get.offAll(const HomeNew()));
+        if(role_id.toString()=="3"){
+          Timer(const Duration(seconds: 3), () => Get.offAll(const Home()));
+        }else {
+          Timer(const Duration(seconds: 3), () => Get.offAll(const HomeNew()));
+        }
       } else {
         Timer(const Duration(seconds: 3), () => Get.offAll(const Login()));
       }
