@@ -426,6 +426,7 @@ class _UserDrawerState extends State<UserDrawer> {
             height: 1,
             color: greyline,
           ):Container(),
+          widget.role_id=="10"?
           TitleTile(
             img: 'lib/assets/images/scandevice_icon.svg',
             title: Strings.scanDevice,
@@ -436,12 +437,13 @@ class _UserDrawerState extends State<UserDrawer> {
                   MaterialPageRoute(
                       builder: (context) => const ScanDeviceScreen()));
             },
-          ),
+          ):Container(),
+          widget.role_id=="10"?
           Container(
             margin: const EdgeInsets.all(10),
             height: 1,
             color: greyline,
-          ),
+          ):Container(),
           TitleTile(
             img: 'lib/assets/images/terms.svg',
             title: Strings.terms,
