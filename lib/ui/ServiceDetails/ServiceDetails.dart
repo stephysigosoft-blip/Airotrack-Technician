@@ -1,12 +1,11 @@
 import 'package:airotrackgit/Controller/JobDetailsController.dart';
-import 'package:airotrackgit/config/api_config.dart';
 import 'package:airotrackgit/ui/ServiceDetails/Widgets/ServiceDetailsTextFiedl.dart';
+import 'package:airotrackgit/ui/ServiceDetails/Widgets/speed_governor_search_field.dart';
 import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
 import 'package:airotrackgit/ui/utils/Widgets/CheckInButton.dart';
 import 'package:airotrackgit/ui/utils/Widgets/CustomAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/route_manager.dart';
 import '../../assets/resources/strings.dart';
 import '../CreateNewWork/Widgets/LabelTextWidget.dart';
 
@@ -30,6 +29,7 @@ class ServiceDetailsScreen extends StatelessWidget {
             init: JobDetailsController(),
             didChangeDependencies: (state) {
               state.controller?.getServiceDetails(jobId);
+              state.controller?.getSpeedGovernorDetails();
             },
             builder: (controller) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,38 +61,88 @@ class ServiceDetailsScreen extends StatelessWidget {
                     controller: controller.dealerNameForCertificateController,
                     hintText: Strings.enterDealerName,
                     media: media),
-                controller.vehicleImages.isNotEmpty
+                controller.productId.toString() == "2"
                     ? SizedBox(height: media.height * 0.018)
                     : const SizedBox.shrink(),
-                controller.vehicleImages.isNotEmpty
-                    ? const BoldTextPoppins(
-                        text: Strings.vehicleImage,
-                        color: Colors.black,
-                        fontSize: 15)
+                controller.productId.toString() == "2"
+                    ? const LabelTextWidget(label: Strings.cameraName)
                     : const SizedBox.shrink(),
-                SizedBox(height: media.height * 0.01),
-                Row(
-                  children: [
-                    controller.vehicleImages.isNotEmpty
-                        ? buildImageBox(controller.vehicleImages[0], media)
-                        : buildAddImageBox(media),
-                  ],
-                ),
-                SizedBox(height: media.height * 0.01),
-                controller.cameraImages.isNotEmpty
-                    ? const BoldTextPoppins(
-                        text: Strings.cameraView,
-                        color: Colors.black,
-                        fontSize: 15)
+                controller.productId.toString() == "2"
+                    ? SizedBox(height: media.height * 0.005)
                     : const SizedBox.shrink(),
+                controller.productId.toString() == "2"
+                    ? ServiceDetailsTextField(
+                        controller: controller.cameraNameController,
+                        hintText: Strings.cameraName,
+                        media: media)
+                    : const SizedBox.shrink(),
+                controller.productId.toString() == "3"
+                    ? SizedBox(height: media.height * 0.018)
+                    : const SizedBox.shrink(),
+                controller.productId.toString() == "3"
+                    ? const LabelTextWidget(label: Strings.speedGovernorId)
+                    : const SizedBox.shrink(),
+                controller.productId.toString() == "3"
+                    ? SizedBox(height: media.height * 0.005)
+                    : const SizedBox.shrink(),
+                controller.productId.toString() == "3"
+                    ? SpeedGovernorSearchField(
+                        hintText: Strings.speedGovernorId,
+                        items: controller
+                                .speedGovernorDetails?.data?.speedGovernors ??
+                            [],
+                        onChanged: (value) => controller
+                            .speedGovernorIdController
+                            .text = value?.id.toString() ?? "",
+                        media: media,
+                        value: controller
+                            .speedGovernorDetails?.data?.speedGovernors?.first,
+                      )
+                    : const SizedBox.shrink(),
+                SizedBox(height: media.height * 0.018),
+                const BoldTextPoppins(
+                    text: Strings.vehicleImage,
+                    color: Colors.black,
+                    fontSize: 15),
                 SizedBox(height: media.height * 0.01),
-                Row(
-                  children: [
-                    controller.cameraImages.isNotEmpty
-                        ? buildImageBox(controller.cameraImages[0], media)
-                        : buildAddImageBox(media),
-                  ],
-                ),
+                controller.vehicleImages.isNotEmpty ||
+                        controller.pickedVehicleImage.isNotEmpty
+                    ? Row(
+                        children: [
+                          controller.buildImageBox(
+                              controller.vehicleImages.isNotEmpty
+                                  ? controller.vehicleImages[0]
+                                  : "",
+                              media,
+                              controller.pickedVehicleImage.isNotEmpty,
+                              true),
+                          SizedBox(width: media.width * 0.03),
+                          controller.buildAddImageBox(media, true),
+                        ],
+                      )
+                    : controller.buildAddImageBox(media, true),
+                SizedBox(height: media.height * 0.01),
+                const BoldTextPoppins(
+                    text: Strings.cameraView,
+                    color: Colors.black,
+                    fontSize: 15),
+                SizedBox(height: media.height * 0.01),
+                controller.cameraImages.isNotEmpty ||
+                        controller.pickedCameraImage.isNotEmpty
+                    ? Row(
+                        children: [
+                          controller.buildImageBox(
+                              controller.cameraImages.isNotEmpty
+                                  ? controller.cameraImages[0]
+                                  : "",
+                              media,
+                              controller.pickedCameraImage.isNotEmpty,
+                              false),
+                          SizedBox(width: media.width * 0.03),
+                          controller.buildAddImageBox(media, false),
+                        ],
+                      )
+                    : controller.buildAddImageBox(media, false),
                 SizedBox(height: media.height * 0.018),
                 CheckInButton(
                   media: media,
@@ -104,31 +154,6 @@ class ServiceDetailsScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget buildImageBox(String imageUrl, Size media) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: Image.network(
-        APIConfig.Image_URL + imageUrl,
-        width: media.width * 0.25,
-        height: media.height * 0.12,
-        fit: BoxFit.cover,
-      ),
-    );
-  }
-
-  Widget buildAddImageBox(Size media) {
-    return Container(
-      width: media.width * 0.25,
-      height: media.height * 0.12,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey),
-      ),
-      child: const Icon(Icons.add, size: 30, color: Colors.blue),
     );
   }
 }

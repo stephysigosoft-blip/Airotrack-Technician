@@ -14,11 +14,14 @@ import '../../assets/resources/strings.dart';
 
 class CheckInFormScreen extends StatelessWidget {
   final String jobId;
+  final String productId;
+  final String serviceType;
 
-  const CheckInFormScreen({
-    super.key,
-    required this.jobId,
-  });
+  const CheckInFormScreen(
+      {super.key,
+      required this.jobId,
+      required this.productId,
+      required this.serviceType});
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +30,14 @@ class CheckInFormScreen extends StatelessWidget {
       top: false,
       child: GetBuilder(
         init: CheckInFormController(),
+        initState: (state) {
+          debugPrint("Product Id: $productId");
+          debugPrint("Service Type: $serviceType");
+        },
         didChangeDependencies: (state) {
           state.controller?.fetchWorkDetails(jobId);
           if (Get.arguments != null) {
-            debugPrint("QR Code: ${Get.arguments}");
-            state.controller?.qrCode = Get.arguments;
-            state.controller?.update();
+            state.controller?.qrCode.value = Get.arguments;
           }
         },
         builder: (controller) => controller.isLoading
@@ -50,118 +55,124 @@ class CheckInFormScreen extends StatelessWidget {
                           color: Colors.black,
                           fontSize: 15),
                       SizedBox(height: media.height * 0.01),
-                      Row(
-                        children: [
-                          controller.workDetails?.data?.details?.images
-                                          ?.rcImage !=
-                                      null ||
-                                  controller.pickedRcImage.isNotEmpty
-                              ? controller.buildRcImageBox(
-                                  media,
-                                  APIConfig.Image_URL +
-                                      (controller.workDetails?.data?.details
-                                              ?.images?.rcImage ??
-                                          ""),
-                                  controller.pickedRcImage.isNotEmpty)
-                              : const SizedBox.shrink(),
-                          SizedBox(width: media.width * 0.03),
-                          controller.workDetails?.data?.details?.images
-                                          ?.rcImage ==
-                                      null &&
-                                  controller.pickedRcImage.isEmpty
-                              ? controller.buildAddRcImageBox(media)
-                              : const SizedBox.shrink(),
-                        ],
-                      ),
+                      controller.workDetails?.data?.details?.images?.rcImage !=
+                                  null ||
+                              controller.pickedRcImage.isNotEmpty
+                          ? Row(
+                              children: [
+                                controller.buildRcImageBox(
+                                    media,
+                                    APIConfig.Image_URL +
+                                        (controller.workDetails?.data?.details
+                                                ?.images?.rcImage ??
+                                            ""),
+                                    controller.pickedRcImage.isNotEmpty),
+                                SizedBox(width: media.width * 0.03),
+                                controller.buildAddRcImageBox(media)
+                              ],
+                            )
+                          : controller.buildAddRcImageBox(media),
                       SizedBox(height: media.height * 0.03),
                       const BoldTextPoppins(
                           text: Strings.devicePhoto,
                           color: Colors.black,
                           fontSize: 15),
                       const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          controller.workDetails?.data?.details?.images
-                                          ?.deviceImage !=
-                                      null ||
-                                  controller.pickedImage.isNotEmpty
-                              ? controller.buildImageBox(
-                                  media,
-                                  APIConfig.Image_URL +
-                                      (controller.workDetails?.data?.details
-                                              ?.images?.deviceImage ??
-                                          ""),
-                                  controller.pickedImage.isNotEmpty)
-                              : const SizedBox.shrink(),
-                          SizedBox(width: media.width * 0.03),
-                          controller.workDetails?.data?.details?.images
-                                          ?.deviceImage ==
-                                      null &&
-                                  controller.pickedImage.isEmpty
-                              ? controller.buildAddImageBox(media)
-                              : const SizedBox.shrink(),
-                        ],
-                      ),
-                      SizedBox(height: media.height * 0.03),
-                      const BoldTextPoppins(
-                          text: Strings.scanDevice,
-                          color: Colors.black,
-                          fontSize: 15),
-                      SizedBox(height: media.height * 0.01),
-                      OpenScannerButton(
-                        media: media,
-                        buttonColor: colorPrimary,
-                        onPressed: () async {
-                          final result =
-                              await Get.to(() => const QRViewExample());
-                          if (result != null) {
-                            debugPrint('QR Code Result: $result');
-                            controller.qrCode.value = result;
-                            // Update UI to show the scanned QR code
-                          }
-                        },
-                      ),
-                      SizedBox(height: media.height * 0.03),
-                      controller.workDetails?.data?.details?.imei.toString() !=
-                                  "null" &&
-                              controller.workDetails?.data?.details?.productId
-                                      .toString() ==
-                                  "1"
+                      controller.workDetails?.data?.details?.images
+                                      ?.deviceImage !=
+                                  null ||
+                              controller.pickedImage.isNotEmpty
                           ? Row(
                               children: [
-                                const NormalTextPoppins(
-                                    text: "IMEI :",
-                                    color: Colors.black,
-                                    fontSize: 15),
+                                controller.buildImageBox(
+                                    media,
+                                    APIConfig.Image_URL +
+                                        (controller.workDetails?.data?.details
+                                                ?.images?.deviceImage ??
+                                            ""),
+                                    controller.pickedImage.isNotEmpty),
                                 SizedBox(width: media.width * 0.03),
-                                NormalTextPoppins(
-                                    text: controller
-                                            .workDetails?.data?.details?.imei
-                                            .toString() ??
-                                        "",
-                                    color: Colors.black,
-                                    fontSize: 15),
+                                controller.buildAddImageBox(media)
                               ],
                             )
-                          : controller.qrCode.isNotEmpty &&
-                                  controller
-                                          .workDetails?.data?.details?.productId
-                                          .toString() ==
-                                      "1"
-                              ? Row(
-                                  children: [
-                                    const NormalTextPoppins(
-                                        text: "IMEI :",
-                                        color: Colors.black,
-                                        fontSize: 15),
-                                    SizedBox(width: media.width * 0.03),
-                                    Obx(() => NormalTextPoppins(
-                                        text: controller.qrCode.value,
-                                        color: Colors.black,
-                                        fontSize: 15))
-                                  ],
-                                )
-                              : const SizedBox.shrink(),
+                          : controller.buildAddImageBox(media),
+                      SizedBox(height: media.height * 0.03),
+                      productId.toString().trim() == "1" &&
+                              (serviceType.toString().trim() == "1" ||
+                                  serviceType.toString().trim() == "3")
+                          ? const BoldTextPoppins(
+                              text: Strings.scanDevice,
+                              color: Colors.black,
+                              fontSize: 15)
+                          : const SizedBox.shrink(),
+                      SizedBox(height: media.height * 0.01),
+                      productId.toString().trim() == "1" &&
+                              (serviceType.toString().trim() == "1" ||
+                                  serviceType.toString().trim() == "3")
+                          ? OpenScannerButton(
+                              media: media,
+                              buttonColor: colorPrimary,
+                              onPressed: () async {
+                                final result = await Get.to(() =>
+                                    const QRViewExample(fromCheckinForm: true));
+                                if (result != null) {
+                                  debugPrint('QR Code Result: $result');
+                                  controller.qrCode.value = result;
+                                }
+                              },
+                            )
+                          : const SizedBox.shrink(),
+                      SizedBox(height: media.height * 0.03),
+                      productId.toString().trim() == "1" &&
+                              (serviceType.toString().trim() == "1" ||
+                                  serviceType.toString().trim() == "3")
+                          ? Obx(() {
+                              final productId = controller
+                                  .workDetails?.data?.details?.productId
+                                  .toString();
+                              final imei = controller
+                                  .workDetails?.data?.details?.imei
+                                  .toString();
+
+                              debugPrint(
+                                  "Obx rebuild - productId: $productId, imei: $imei, qrCode: ${controller.qrCode.value}");
+
+                              if (productId == "1" || productId == "3") {
+                                if (imei != null &&
+                                    imei != "null" &&
+                                    imei.isNotEmpty) {
+                                  return Row(
+                                    children: [
+                                      const NormalTextPoppins(
+                                          text: "IMEI :",
+                                          color: Colors.black,
+                                          fontSize: 15),
+                                      SizedBox(width: media.width * 0.03),
+                                      NormalTextPoppins(
+                                          text: imei,
+                                          color: Colors.black,
+                                          fontSize: 15),
+                                    ],
+                                  );
+                                } else if (controller.qrCode.value.isNotEmpty) {
+                                  return Row(
+                                    children: [
+                                      const NormalTextPoppins(
+                                          text: "IMEI :",
+                                          color: Colors.black,
+                                          fontSize: 15),
+                                      SizedBox(width: media.width * 0.03),
+                                      NormalTextPoppins(
+                                          text: controller.qrCode.value,
+                                          color: Colors.black,
+                                          fontSize: 15)
+                                    ],
+                                  );
+                                }
+                              }
+                              return const SizedBox.shrink();
+                            })
+                          : const SizedBox.shrink(),
                       SizedBox(height: media.height * 0.03),
                       const Spacer(),
                       CheckInButton(

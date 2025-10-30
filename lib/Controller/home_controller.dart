@@ -1,5 +1,7 @@
+import 'package:airotrackgit/Model/home_model_old.dart';
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/ui/utils/Functions/network_testing.dart';
+import 'package:airotrackgit/ui/utils/Functions/on_dio_exception.dart';
 import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +14,11 @@ import 'package:airotrackgit/config/api_config.dart';
 import 'package:airotrackgit/ui/login/view/login.dart';
 import 'package:airotrackgit/ui/maintenance/maintenance.dart';
 import 'package:airotrackgit/ui/no_internet/no_internet.dart';
-import 'package:airotrackgit/ui/server/serverdown.dart';
 import 'package:airotrackgit/ui/update/force_update.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../assets/resources/strings.dart';
-import '../ui/job_details/job_details.dart';
 import '../ui/utils/Widgets/NormalTextPoppins.dart';
 import '../ui/utils/Widgets/YesButtonWidget.dart';
 
@@ -32,7 +32,7 @@ class HomeController extends GetxController {
   // declare all the variable only here
   bool isLoading = true;
   Dio dio = Dio();
-  HomeModel? homeData;
+  dynamic homeData;
   List workTypes = ["Pending Works", "Ongoing Works", "Completed Works"];
   MaintenanceData? settings;
 
@@ -40,6 +40,7 @@ class HomeController extends GetxController {
 
   getMaintenanceAPI() async {
     checkNetworkAndRedirectOffAll();
+    var role_id = await getSavedObject("role_id");
     try {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       String buildNumber = packageInfo.version;
@@ -55,10 +56,18 @@ class HomeController extends GetxController {
             if (settings!.androidVersion.toString() != buildNumber) {
               Get.offAll(() => const ForceUpdate());
             } else {
-              homeData = await fetchHomeData("");
+              if (role_id.toString() == "3") {
+                homeData = await fetchHomeDataOld("");
+              } else {
+                homeData = await fetchHomeData("");
+              }
             }
           } else {
-            homeData = await fetchHomeData("");
+            if (role_id.toString() == "3") {
+              homeData = await fetchHomeDataOld("");
+            } else {
+              homeData = await fetchHomeData("");
+            }
           }
         }
       } else {
@@ -66,14 +75,7 @@ class HomeController extends GetxController {
       }
     } catch (error) {
       if (error is DioException) {
-        if (error.response?.data['message'] is Map) {
-          Map<String, dynamic> message = error.response?.data['message'];
-          showErrorToast(message);
-        } else if (error.response?.statusCode == 500) {
-          Get.offAll(() => const ServerDown());
-        } else {
-          showFlushBar(error.response?.data['message']);
-        }
+        handleDioException(error);
       } else {
         showFlushBar(error.toString());
       }
@@ -99,20 +101,61 @@ class HomeController extends GetxController {
       }
     } on DioException catch (e) {
       if (e.response != null) {
-        switch (e.response?.statusCode) {
-          case 400:
-            debugPrint("Bad Request: ${e.response?.data}");
-            break;
-          case 422:
-            debugPrint("Validation Error: ${e.response?.data}");
-            break;
-          case 500:
-            debugPrint("Server Error: ${e.response?.data}");
-            break;
-          default:
-            debugPrint(
-                "Dio Error: ${e.response?.statusCode} -> ${e.response?.data}");
+        handleDioException(e);
+      } else {
+        debugPrint("Dio Exception without response: ${e.message}");
+      }
+      return null;
+    } catch (e, stackTrace) {
+      debugPrint("Unexpected Error: $e $stackTrace");
+      return null;
+    } finally {
+      isLoading = false;
+      update();
+    }
+  }
+
+  Future<HomeData?> fetchHomeDataOld(String serviceType) async {
+    isLoading = true;
+    checkNetworkAndRedirectOffAll();
+    try {
+      var token = await getSavedObject("token");
+      debugPrint("Token: $token");
+      String url = APIConfig.BASE_URL + APIEndpoints.home;
+      dio.options.headers["Authorization"] = "Bearer $token";
+      dio.options.queryParameters = {"service_type": serviceType};
+      final response = await dio.get(url);
+      debugPrint("Response Data: ${response.data}");
+      if (response.statusCode == 200) {
+        final dynamic payload = response.data;
+        Map<String, dynamic> source = <String, dynamic>{};
+        if (payload is Map) {
+          final Map<String, dynamic> root = Map<String, dynamic>.from(payload);
+          final dynamic dataNode = root['data'];
+          if (dataNode is Map) {
+            final Map<String, dynamic> dataMap =
+                Map<String, dynamic>.from(dataNode as Map);
+            source = (dataMap['user'] is Map)
+                ? Map<String, dynamic>.from(dataMap['user'] as Map)
+                : (dataMap['technician'] is Map)
+                    ? Map<String, dynamic>.from(dataMap['technician'] as Map)
+                    : (dataMap['details'] is Map)
+                        ? Map<String, dynamic>.from(dataMap['details'] as Map)
+                        : dataMap;
+          } else {
+            source = root;
+          }
         }
+        homeData = HomeData.fromJson(source);
+        debugPrint("Home Data: ${homeData?.toJson()}");
+        debugPrint("Home Data: ${homeData?.userName}");
+        return homeData;
+      } else {
+        throw Exception("Unexpected status code: ${response.statusCode}");
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        handleDioException(e);
       } else {
         debugPrint("Dio Exception without response: ${e.message}");
       }
@@ -211,10 +254,7 @@ class HomeController extends GetxController {
                       textColor: Colors.black,
                       buttonColor: lightBlue),
                   YesButtonWidget(
-                      onTap: () => Get.off(JobDetails(
-                            isOngoing: false,
-                            jobDetails: jobDetails,
-                          )),
+                      onTap: () => acceptJob(jobDetails),
                       media: media,
                       text: Strings.yes,
                       textColor: Colors.white,
@@ -276,5 +316,85 @@ class HomeController extends GetxController {
         );
       },
     );
+  }
+
+  Future<void> acceptJob(Work jobDetails) async {
+    isLoading = true;
+    checkNetworkAndRedirectOffAll();
+    try {
+      var token = await getSavedObject("token");
+      debugPrint("Token: $token");
+      String url = APIConfig.BASE_URL + APIEndpoints.acceptWork;
+      dio.options.headers["Authorization"] = "Bearer $token";
+      dio.options.queryParameters = {"job_id": jobDetails.id};
+      final response = await dio.get(url);
+      debugPrint("Response Data: ${response.data}");
+      if (response.statusCode == 200) {
+        Get.back();
+        showToast(response.data['message']);
+        fetchHomeData("");
+      } else {
+        throw Exception("Unexpected status code: ${response.statusCode}");
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        handleDioException(e);
+      } else {
+        debugPrint("Dio Exception without response: ${e.message}");
+      }
+      return null;
+    } catch (e, stackTrace) {
+      debugPrint("Unexpected Error: $e $stackTrace");
+      return null;
+    } finally {
+      isLoading = false;
+      update();
+    }
+  }
+
+  Future<void> refreshHomeData([String serviceType = ""]) async {
+    isLoading = true;
+    update();
+    try {
+      // First check maintenance status
+      checkNetworkAndRedirectOffAll();
+      var role_id = await getSavedObject("role_id");
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      String buildNumber = packageInfo.version;
+      var url = APIConfig.BASE_URL + APIEndpoints.setting;
+      
+      if (await checkNetwork()) {
+        var response = await dio.get(url);
+        if (response.statusCode == 200) {
+          settings = MaintenanceData.fromJson(response.data['data']);
+          if (settings != null && settings!.maintenance == 1) {
+            Get.offAll(() => const MaintenanceScreen());
+            return;
+          } else if (settings!.androidUpdate == 1) {
+            if (settings!.androidVersion.toString() != buildNumber) {
+              Get.offAll(() => const ForceUpdate());
+              return;
+            }
+          }
+          // If not in maintenance mode, fetch home data with current service type
+          if (role_id.toString() == "3") {
+            await fetchHomeDataOld(serviceType);
+          } else {
+            await fetchHomeData(serviceType);
+          }
+        }
+      } else {
+        Get.to(() => const NoInternet());
+      }
+    } catch (error) {
+      if (error is DioException) {
+        handleDioException(error);
+      } else {
+        showFlushBar(error.toString());
+      }
+    } finally {
+      isLoading = false;
+      update();
+    }
   }
 }

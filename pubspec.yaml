@@ -48,13 +48,14 @@ dependencies:
   dropdown_button2: ^2.3.8
   flutter_pdfview: 1.4.0
   path_provider: ^2.1.2
+  share_plus: ^10.0.0
   mobile_scanner: 5.0.0
   cached_network_image: ^3.3.1
   image_picker: ^1.1.1
   image: ^4.1.7
   permission_handler: ^11.3.1
   geolocator: ^10.1.0
-  geocoding: ^4.0.0
+  geocoding: ^3.0.0
 #  google_ml_kit: ^0.18.0
 
 dev_dependencies:

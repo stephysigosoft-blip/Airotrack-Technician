@@ -3,7 +3,9 @@ import 'dart:typed_data';
 import 'package:airotrackgit/Model/work_details_model.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/config/api_config.dart';
+import 'package:airotrackgit/ui/home/homeNew.dart';
 import 'package:airotrackgit/ui/utils/Functions/network_testing.dart';
+import 'package:airotrackgit/ui/utils/Functions/on_dio_exception.dart';
 import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -47,14 +49,12 @@ class CheckInFormController extends GetxController {
 
   // Helper functions should be declared here
 
-
   String _getSafeString(String? value, String fallback) {
     if (value == null || value.isEmpty || value == "null") {
       return fallback;
     }
     return value;
   }
-
 
   String _getSafeImei() {
     final imei = workDetails?.data?.details?.imei?.toString();
@@ -72,26 +72,41 @@ class CheckInFormController extends GetxController {
     return _getSafeString(rcImage, pickedRcImage);
   }
 
-
   bool _isFieldValid(String? value) {
     return value != null && value.isNotEmpty && value != "null";
   }
 
   bool _validateRequiredFields() {
-    final imei = _getSafeImei();
+    final productId = workDetails?.data?.details?.productId;
+    final serviceType = workDetails?.data?.details?.serviceType;
+
     final deviceImage = _getSafeDeviceImage();
     final rcImage = _getSafeRcImage();
 
-    return _isFieldValid(imei) &&
-        _isFieldValid(deviceImage) &&
-        _isFieldValid(rcImage);
+    // Only validate IMEI if productId is "1" AND serviceType is "1" or "3"
+    bool isImeiValid = true;
+    if (productId.toString() == "1" &&
+        (serviceType.toString() == "1" || serviceType.toString() == "3")) {
+      final imei = _getSafeImei();
+      isImeiValid = imei.isNotEmpty;
+    }
+
+    return isImeiValid && _isFieldValid(deviceImage) && _isFieldValid(rcImage);
   }
 
   List<String> _getMissingFields() {
-    final missingFields = <String>[];
+    final productId = workDetails?.data?.details?.productId;
+    final serviceType = workDetails?.data?.details?.serviceType;
+    debugPrint("Product ID: $productId");
+    debugPrint("Service Type: $serviceType");
 
-    if (!_isFieldValid(_getSafeImei())) {
-      missingFields.add("IMEI");
+    final missingFields = <String>[];
+    if (productId.toString() == "1" &&
+        (serviceType.toString() == "1" || serviceType.toString() == "3")) {
+      final imei = _getSafeImei();
+      if (imei.isEmpty) {
+        missingFields.add("IMEI");
+      }
     }
     if (!_isFieldValid(_getSafeDeviceImage())) {
       missingFields.add("Device Image");
@@ -216,10 +231,9 @@ class CheckInFormController extends GetxController {
   }
 
   Widget buildImageBox(Size media, String imageUrl, bool isPicked) {
-    debugPrint("Device Image URL: $imageUrl"); 
-    debugPrint("Device Image isPicked: $isPicked"); 
-    debugPrint(
-        "Device Image pickedImage: $pickedImage"); 
+    debugPrint("Device Image URL: $imageUrl");
+    debugPrint("Device Image isPicked: $isPicked");
+    debugPrint("Device Image pickedImage: $pickedImage");
     return Container(
       height: media.width * 0.3,
       width: media.width * 0.3,
@@ -260,9 +274,8 @@ class CheckInFormController extends GetxController {
 
   Widget buildRcImageBox(Size media, String imageUrl, bool isPicked) {
     debugPrint("RC Image URL: $imageUrl");
-    debugPrint("RC Image isPicked: $isPicked"); 
-    debugPrint(
-        "RC Image pickedRcImage: $pickedRcImage"); 
+    debugPrint("RC Image isPicked: $isPicked");
+    debugPrint("RC Image pickedRcImage: $pickedRcImage");
     return Container(
       height: media.width * 0.3,
       width: media.width * 0.3,
@@ -358,34 +371,37 @@ class CheckInFormController extends GetxController {
       if (deviceImage.isNotEmpty && !deviceImage.startsWith('http')) {
         File imageFile = File(deviceImage);
         if (await imageFile.exists()) {
-          File compressedImage = await _compressImage(imageFile);
           formFields["device_image"] = await MultipartFile.fromFile(
-            compressedImage.path,
+            imageFile.path,
             filename:
                 "device_image_${DateTime.now().millisecondsSinceEpoch}.jpg",
           );
           debugPrint(
-              "Sending compressed device image: ${compressedImage.path}");
+              "Sending device image as MultipartFile: ${imageFile.path}");
+        } else {
+          debugPrint("Device image file not found: ${imageFile.path}");
         }
       } else if (deviceImage.isNotEmpty && deviceImage.startsWith('http')) {
         formFields["device_image"] = deviceImage;
-        debugPrint("Sending device image URL: $deviceImage");
+        debugPrint("Sending device image URL as String: $deviceImage");
       }
       if (rcImage.isNotEmpty && !rcImage.startsWith('http')) {
         File imageFile = File(rcImage);
         if (await imageFile.exists()) {
-          File compressedImage = await _compressImage(imageFile);
           formFields["rc_image"] = await MultipartFile.fromFile(
-            compressedImage.path,
+            imageFile.path,
             filename: "rc_image_${DateTime.now().millisecondsSinceEpoch}.jpg",
           );
-          debugPrint("Sending compressed RC image: ${compressedImage.path}");
+          debugPrint("Sending RC image as MultipartFile: ${imageFile.path}");
+        } else {
+          debugPrint("RC image file not found: ${imageFile.path}");
         }
       } else if (rcImage.isNotEmpty && rcImage.startsWith('http')) {
         formFields["rc_image"] = rcImage;
-        debugPrint("Sending RC image URL: $rcImage");
+        debugPrint("Sending RC image URL as String: $rcImage");
       }
       FormData formData = FormData.fromMap(formFields);
+      dio.options.headers['Content-Type'] = 'multipart/form-data';
       debugPrint("Form Data Fields:");
       debugPrint("  job_id: $jobId");
       debugPrint("  latitude: $latitude");
@@ -402,25 +418,7 @@ class CheckInFormController extends GetxController {
       }
     } on DioException catch (e) {
       if (e.response != null) {
-        switch (e.response?.statusCode) {
-          case 400:
-            showToast("Bad Request: ${e.response?.data}");
-            debugPrint("Bad Request: ${e.response?.data}");
-            break;
-          case 422:
-            showToast("Validation Error: ${e.response?.data}");
-            debugPrint("Validation Error: ${e.response?.data}");
-            break;
-          case 500:
-            showToast("Server Error: ${e.response?.data}");
-            debugPrint("Server Error: ${e.response?.data}");
-            break;
-          default:
-            showToast(
-                "Dio Error: ${e.response?.statusCode} -> ${e.response?.data}");
-            debugPrint(
-                "Dio Error: ${e.response?.statusCode} -> ${e.response?.data}");
-        }
+        handleDioException(e);
       } else {
         showToast("Dio Exception without response: ${e.message}");
         debugPrint("Dio Exception without response: ${e.message}");
@@ -454,20 +452,7 @@ class CheckInFormController extends GetxController {
       }
     } on DioException catch (e) {
       if (e.response != null) {
-        switch (e.response?.statusCode) {
-          case 400:
-            debugPrint("Bad Request: ${e.response?.data}");
-            break;
-          case 422:
-            showToast("Validation Error here: ${e.response?.data}");
-            break;
-          case 500:
-            debugPrint("Server Error: ${e.response?.data}");
-            break;
-          default:
-            debugPrint(
-                "Dio Error: ${e.response?.statusCode} -> ${e.response?.data}");
-        }
+        handleDioException(e);
       } else {
         debugPrint("Dio Exception without response: ${e.message}");
       }
@@ -595,9 +580,7 @@ class CheckInFormController extends GetxController {
 
         return;
       }
-
       debugPrint("All required fields validated successfully");
-
       final result = await postCheckinData(
         jobId: jobId,
         latitude: workDetails?.data?.details?.latitude ?? "",
@@ -609,7 +592,8 @@ class CheckInFormController extends GetxController {
 
       if (result) {
         debugPrint("Check-in completed successfully");
-        Get.back();
+        showToast("Check-in completed successfully");
+        Get.offAll(() => const HomeNew());
       } else {
         debugPrint("Unable to check in. Please try again.");
       }

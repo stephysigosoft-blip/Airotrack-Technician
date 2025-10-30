@@ -1,5 +1,7 @@
+import 'package:airotrackgit/ui/server/serverdown.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../utils.dart';
 
 void handleDioException(DioException e) {
@@ -27,7 +29,7 @@ void handleDioException(DioException e) {
         break;
       case 500:
         debugPrint("Server Error: ${e.response?.data}");
-        showToast("Server Error: Please try again later");
+        Get.offAll(const ServerDown());
         break;
       case 502:
         debugPrint("Bad Gateway: ${e.response?.data}");

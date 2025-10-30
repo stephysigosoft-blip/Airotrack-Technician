@@ -1,14 +1,12 @@
-import 'dart:io';
-
 import 'package:airotrackgit/Controller/ProductCertificateController.dart';
 import 'package:airotrackgit/assets/resources/colors.dart';
-import 'package:airotrackgit/ui/home/home.dart';
 import 'package:airotrackgit/ui/home/homeNew.dart';
 import 'package:airotrackgit/ui/utils/Widgets/CheckInButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../assets/resources/strings.dart';
 import '../utils/Widgets/CustomAppBar.dart';
@@ -37,7 +35,14 @@ class _ProductCertificateScreenState extends State<ProductCertificateScreen> {
             floatingActionButton: controller.productCertificate.isNotEmpty
                 ? FloatingActionButton(
                     backgroundColor: colorPrimary,
-                    onPressed: () {},
+                    onPressed: () {
+                      if (controller.localPdfPath != null) {
+                        Share.shareXFiles([
+                          XFile(controller.localPdfPath!,
+                              mimeType: 'application/pdf')
+                        ]);
+                      }
+                    },
                     child: SvgPicture.asset("lib/assets/images/share_icon.svg"),
                   )
                 : const SizedBox.shrink(),
@@ -49,16 +54,18 @@ class _ProductCertificateScreenState extends State<ProductCertificateScreen> {
               child: Column(
                 children: [
                   Expanded(
-                    child: controller.localPdfPath == null
+                    child: controller.isLoading == true
                         ? const Center(
                             child: CircularProgressIndicator(
                             color: colorPrimary,
                           ))
-                        :controller.productCertificate.isNotEmpty ? PDFView(
-                            filePath: controller.localPdfPath!,
-                          ) : const Center(
-                            child: Text(Strings.noDataFound),
-                          ),
+                        : controller.productCertificate.isNotEmpty
+                            ? PDFView(
+                                filePath: controller.localPdfPath!,
+                              )
+                            : const Center(
+                                child: Text(Strings.noDataFound),
+                              ),
                   ),
                   const Spacer(),
                   CheckInButton(

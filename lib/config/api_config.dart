@@ -25,7 +25,11 @@ class APIEndpoints {
   static const String fetchRto = "rtoList";
   static const String allDevices = "allDevices";
   static const String vehicleTypes = "spdVehicleTypes";
-
+  static const String checkout = "spdCheckOut";
+  static const String companyTitles = "spdCompanyTitles";
+  static const String getSpeedGovernorData = "getSpeedGovernorData";
+  static const String acceptWork = "spdAcceptWork";
+  static const String postCheckoutConfirm = "spdCheckOutConfirm";
   
   static const String earnings = "spdEarnings";
   static const String rcentJobs = "recentJobs";

@@ -141,5 +141,10 @@ class Strings {
   static const String selectRto = "Select RTO";
   static const String rcImage = "RC Image";
   static const String selectVehicle = "Select Vehicle";
-  
+  static const String doYouWantToConfirmThePayment = "Do you want to confirm the payment?";
+  static const String cameraName = "Camera Name ";
+  static const String enterImei = "Enter IMEI";
+  static const String speedGovernorId = "Speed Governor Id";
+  static const String enterSpeedGovernorId = "Enter Speed Governor Id";
+  static const String paymentId = "Payment ID";
 }

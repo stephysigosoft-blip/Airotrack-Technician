@@ -1,5 +1,6 @@
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/ui/CreateNewWork/CreateNewWork.dart';
+import 'package:airotrackgit/ui/Payment/Payment.dart';
 import 'package:airotrackgit/ui/home/JobItem.dart';
 import 'package:airotrackgit/ui/home/widget/home_welcome_card.dart';
 import 'package:airotrackgit/ui/home/widget/work_type_details.dart';
@@ -83,22 +84,23 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
           return Scaffold(
               key: scaffoldKey,
               appBar: AppBar(
-                backgroundColor: Colors.white,
-                centerTitle: true,
-                toolbarHeight: media.height * 0.10,
-                title: SvgPicture.asset(
-                  'lib/assets/images/logosplash.svg',
-                  height: media.height * 0.10,
-                ),
-                actions: [Container(
-                  margin: EdgeInsetsDirectional.only(end: 10),
-                  child: SvgPicture.asset(
-                    'lib/assets/images/notifications.svg',
-                    height: 25,
-                    width: 25,
+                  backgroundColor: Colors.white,
+                  centerTitle: true,
+                  toolbarHeight: media.height * 0.10,
+                  title: SvgPicture.asset(
+                    'lib/assets/images/logosplash.svg',
+                    height: media.height * 0.10,
                   ),
-                ),
-              ]),
+                  actions: [
+                    Container(
+                      margin: const EdgeInsetsDirectional.only(end: 10),
+                      child: SvgPicture.asset(
+                        'lib/assets/images/notifications.svg',
+                        height: 25,
+                        width: 25,
+                      ),
+                    ),
+                  ]),
               drawer: UserDrawer(
                 packageInfo: packageInfo,
                 scaffoldKey: scaffoldKey,
@@ -116,125 +118,152 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
                       controller.homeData?.data?.pendingWorks ?? [];
                   var ongoingWorks =
                       controller.homeData?.data?.ongoingWorks ?? [];
-                  return SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: media.width * 0.040,
-                          vertical: media.height * 0.020),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          HomeWelcomeCard(
-                              media: media, userName: technician?.name ?? ""),
-                          SizedBox(height: media.height * 0.020),
-                          CreateNewWorkButton(
-                            media: media,
-                            onPressed: () =>
-                                Get.to(() => const CreateNewWorkScreen()),
-                          ),
-                          SizedBox(height: media.height * 0.010),
-                          ongoingWorks.isEmpty
-                              ? const SizedBox.shrink()
-                              : const Text(
-                                  Strings.ongoingJobs,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Poppins-Bold'),
-                                ),
-                          SizedBox(height: media.height * 0.010),
-                          ongoingWorks.isEmpty
-                              ? const SizedBox.shrink()
-                              : Column(
-                                  children: List.generate(
-                                      1,
-                                      (index) => Padding(
-                                            padding: EdgeInsets.only(
-                                                bottom: media.height * 0.015),
-                                            child: JobItem(
-                                              onAcceptTapped: () =>
-                                                  Get.to(() => JobDetails(
-                                                        isOngoing: true,
-                                                        jobDetails:
-                                                            ongoingWorks[index],
-                                                      )),
-                                              deviceName: ongoingWorks[index]
-                                                      .productName ??
-                                                  "",
-                                              workType: serviceIdToService(
-                                                  ongoingWorks[index]
-                                                          .serviceType
-                                                          ?.toInt() ??
-                                                      0),
-                                              location: ongoingWorks[index]
-                                                      .location ??
-                                                  "",
-                                              price: ongoingWorks[index]
-                                                      .totalAmount ??
-                                                  "",
-                                              isUpcoming: true,
-                                            ),
-                                          )),
-                                ),
-                          SizedBox(height: media.height * 0.010),
-                          upcomingWorks.isEmpty
-                              ? const SizedBox.shrink()
-                              : const Text(
-                                  Strings.upComingJobs,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Poppins-Bold'),
-                                ),
-                          SizedBox(height: media.height * 0.010),
-                          upcomingWorks.isEmpty
-                              ? const SizedBox.shrink()
-                              : Column(
-                                  children: List.generate(
-                                      upcomingWorks.length,
-                                      (index) => Padding(
-                                            padding: EdgeInsets.only(
-                                                bottom: media.height * 0.015),
-                                            child: JobItem(
-                                              onAcceptTapped: () =>
-                                                  Get.to(() => JobDetails(
-                                                        isOngoing: false,
-                                                        jobDetails:
-                                                            upcomingWorks[
-                                                                index],
-                                                      )),
-                                              deviceName: upcomingWorks[index]
-                                                      .productName ??
-                                                  "",
-                                              workType: serviceIdToService(
-                                                  upcomingWorks[index]
-                                                          .serviceType
-                                                          ?.toInt() ??
-                                                      0),
-                                              location: upcomingWorks[index]
-                                                      .location ??
-                                                  "",
-                                              price: upcomingWorks[index]
-                                                      .totalAmount ??
-                                                  "",
-                                              isUpcoming: true,
-                                            ),
-                                          )),
-                                ),
-                          WorkTypeDetails(
-                            isLoading: controller.isLoading,
-                            pendingWorks: pendingWorks,
-                            workStatus: Strings.jobRequest,
-                            theme: theme,
-                            onAcceptTapped: (work) =>
-                                controller.showAcceptJobDialog(context, work),
-                            tabController: tabController,
-                            tab: tabs,
-                          ),
-                        ],
+                  return RefreshIndicator(
+                    color: colorPrimary,
+                    backgroundColor: Colors.white,
+                    strokeWidth: 3.0,
+                    displacement: 40.0,
+                    onRefresh: () async {
+                      final serviceType = tabController.index == 0
+                          ? ""
+                          : tabController.index.toString();
+                      await controller.refreshHomeData(serviceType);
+                    },
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: media.width * 0.040,
+                            vertical: media.height * 0.020),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            HomeWelcomeCard(
+                                media: media, userName: technician?.name ?? ""),
+                            SizedBox(height: media.height * 0.020),
+                            CreateNewWorkButton(
+                              media: media,
+                              onPressed: () =>
+                                  Get.to(() => const CreateNewWorkScreen()),
+                            ),
+                            SizedBox(height: media.height * 0.010),
+                            ongoingWorks.isEmpty
+                                ? const SizedBox.shrink()
+                                : const Text(
+                                    Strings.ongoingJobs,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Poppins-Bold'),
+                                  ),
+                            SizedBox(height: media.height * 0.010),
+                            ongoingWorks.isEmpty
+                                ? const SizedBox.shrink()
+                                : Column(
+                                    children: List.generate(
+                                        1,
+                                        (index) => Padding(
+                                              padding: EdgeInsets.only(
+                                                  bottom: media.height * 0.015),
+                                              child: JobItem(
+                                                onAcceptTapped: () => ongoingWorks[
+                                                                index]
+                                                            .jobStatus
+                                                            .toString() ==
+                                                        "3"
+                                                    ? Get.to(() => PaymentScreen(
+                                                        amount: double.parse(
+                                                            ongoingWorks[index]
+                                                                    .totalAmount ??
+                                                                "0.0"),
+                                                        jobId:
+                                                            ongoingWorks[index]
+                                                                .id
+                                                                .toString()))
+                                                    : Get.to(() => JobDetails(
+                                                          isOngoing: true,
+                                                          jobDetails:
+                                                              ongoingWorks[
+                                                                  index],
+                                                        )),
+                                                deviceName: ongoingWorks[index]
+                                                        .productName ??
+                                                    "",
+                                                workType: serviceIdToService(
+                                                    ongoingWorks[index]
+                                                            .serviceType
+                                                            ?.toInt() ??
+                                                        0),
+                                                location: ongoingWorks[index]
+                                                        .location ??
+                                                    "",
+                                                price: ongoingWorks[index]
+                                                        .totalAmount ??
+                                                    "",
+                                                isUpcoming: true,
+                                              ),
+                                            )),
+                                  ),
+                            SizedBox(height: media.height * 0.010),
+                            upcomingWorks.isEmpty
+                                ? const SizedBox.shrink()
+                                : const Text(
+                                    Strings.upComingJobs,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Poppins-Bold'),
+                                  ),
+                            SizedBox(height: media.height * 0.010),
+                            upcomingWorks.isEmpty
+                                ? const SizedBox.shrink()
+                                : Column(
+                                    children: List.generate(
+                                        upcomingWorks.length,
+                                        (index) => Padding(
+                                              padding: EdgeInsets.only(
+                                                  bottom: media.height * 0.015),
+                                              child: JobItem(
+                                                onAcceptTapped: () =>
+                                                    Get.to(() => JobDetails(
+                                                          isOngoing: false,
+                                                          jobDetails:
+                                                              upcomingWorks[
+                                                                  index],
+                                                        )),
+                                                deviceName: upcomingWorks[index]
+                                                        .productName ??
+                                                    "",
+                                                workType: serviceIdToService(
+                                                    upcomingWorks[index]
+                                                            .serviceType
+                                                            ?.toInt() ??
+                                                        0),
+                                                location: upcomingWorks[index]
+                                                        .location ??
+                                                    "",
+                                                price: upcomingWorks[index]
+                                                        .totalAmount ??
+                                                    "",
+                                                isUpcoming: true,
+                                              ),
+                                            )),
+                                  ),
+                            WorkTypeDetails(
+                              isLoading: controller.isLoading,
+                              pendingWorks: pendingWorks,
+                              workStatus: Strings.jobRequest,
+                              theme: theme,
+                              onAcceptTapped: (work) =>
+                                  controller.showAcceptJobDialog(context, work),
+                              tabController: tabController,
+                              tab: tabs,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );

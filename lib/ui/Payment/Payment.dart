@@ -1,5 +1,6 @@
 import 'package:airotrackgit/Controller/PaymentController.dart';
-import 'package:airotrackgit/ui/Payment/PaymentSuccess.dart';
+import 'package:airotrackgit/ui/CreateNewWork/Widgets/CreateNewWorkTextField.dart';
+import 'package:airotrackgit/ui/CreateNewWork/Widgets/LabelTextWidget.dart';
 import 'package:airotrackgit/ui/utils/Widgets/CustomAppBar.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,11 @@ import '../utils/Widgets/CustomDropDown.dart';
 import 'RowWidgets/RowWidget3.dart';
 
 class PaymentScreen extends StatefulWidget {
-  const PaymentScreen({super.key, required this.amount, required this.jobId});
+  const PaymentScreen({
+    super.key,
+    required this.amount,
+    required this.jobId,
+  });
   final double amount;
   final String jobId;
 
@@ -39,6 +44,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
               top: false,
               child: GetBuilder(
                 init: PaymentController(),
+                didChangeDependencies: (state) {
+                  state.controller?.getCompanyTitles();
+                  state.controller?.update();
+                },
                 builder: (controller) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -62,20 +71,59 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       },
                     ),
                     SizedBox(height: media.height * 0.025),
+                    controller.selectedMethod == "Online" ||
+                            controller.selectedMethod == "Cash + Online"
+                        ? const LabelTextWidget(label: Strings.paymentId)
+                        : const SizedBox.shrink(),
+                    controller.selectedMethod == "Online" ||
+                            controller.selectedMethod == "Cash + Online"
+                        ? SizedBox(height: media.height * 0.005)
+                        : const SizedBox.shrink(),
+                    controller.selectedMethod == "Online" ||
+                            controller.selectedMethod == "Cash + Online"
+                        ? CreateNewWorkTextField(
+                            controller: controller.paymentIdController,
+                            media: media,
+                            hintText: Strings.paymentId,
+                          )
+                        : const SizedBox.shrink(),
+                    controller.selectedMethod == "Online" ||
+                            controller.selectedMethod == "Cash + Online"
+                        ? SizedBox(height: media.height * 0.025)
+                        : const SizedBox.shrink(),
                     controller.buildPaymentWidget(
                         controller, media, widget.amount),
                     const Spacer(),
                     ColorChangingButton(
                         amount: widget.amount,
-                        onTap: () =>
-                            controller.selectedMethod == "Cash + Online"
-                                ? controller.cashController.text.isEmpty
-                                    ? showToast("Please enter the cash amount")
-                                    : controller.onCashAndOnlinePayment(
-                                        widget.amount, widget.jobId)
-                                : Get.to(() => PaymentSuccess(
-                                    amount: widget.amount,
-                                    jobId: widget.jobId)),
+                        onTap: () => controller.selectedMethod ==
+                                "Cash + Online"
+                            ? controller.cashController.text.isEmpty
+                                ? showToast("Please enter the cash amount")
+                                : controller.onCashAndOnlinePayment(
+                                    widget.amount, widget.jobId)
+                            : controller.selectCompanyDialog(
+                                context,
+                                widget.amount,
+                                widget.jobId,
+                                "3",
+                                controller.selectedMethod == "Cash"
+                                    ? "1"
+                                    : controller.selectedMethod == "Online"
+                                        ? "2"
+                                        : "3",
+                                controller.companyId,
+                                controller.cashController.text.isEmpty
+                                    ? 0.0
+                                    : double.parse(
+                                        controller.cashController.text),
+                                controller.paymentIdController.text.isEmpty &&
+                                        (controller.selectedMethod ==
+                                                "Online" ||
+                                            controller.selectedMethod ==
+                                                "Cash + Online")
+                                    ? showToast("Please enter the payment id")
+                                    : controller.paymentIdController.text ),
                         selectedMethod: controller.selectedMethod,
                         media: media),
                     SizedBox(height: media.height * 0.16),

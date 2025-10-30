@@ -9,9 +9,7 @@ import 'package:airotrackgit/controller/details_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DeviceDetail extends StatefulWidget {
-  const DeviceDetail({super.key, this.imei, this.deviceId})
-      : assert(imei == null || deviceId == null,
-            "imei and device id can't be null");
+  const DeviceDetail({super.key, this.imei, this.deviceId});
 
   final String? imei;
   final String? deviceId;
@@ -28,12 +26,12 @@ class _DeviceDetailState extends State<DeviceDetail> {
       init: DetailsController(),
       initState: (_) {},
       didChangeDependencies: (state) {
-        debugPrint("widget.imei: ${widget.imei}");
+        debugPrint("widget.imei: ${widget.imei?.toString()}");
+        debugPrint("widget.deviceId: ${widget.deviceId.toString()}");
         if (widget.imei != null) {
-          state.controller?.getDeatils(widget.imei!);
-        }
-        if (widget.deviceId != null) {
-          state.controller?.getDeatilsWithId(widget.deviceId!);
+          state.controller?.getDeatils(widget.imei.toString());
+        } else if (widget.deviceId != null) {
+          state.controller?.getDeatilsWithId(widget.deviceId!.toString());
         }
       },
       builder: (controller) {

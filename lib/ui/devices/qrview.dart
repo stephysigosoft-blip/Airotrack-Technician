@@ -10,7 +10,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'Widgets/ScannerRowWidget.dart';
 
 class QRViewExample extends StatefulWidget {
-  const QRViewExample({super.key});
+  const QRViewExample({super.key, this.fromCheckinForm});
+  final bool? fromCheckinForm;
 
   @override
   State<QRViewExample> createState() => _QRViewExampleState();
@@ -36,7 +37,12 @@ class _QRViewExampleState extends State<QRViewExample> {
         _isProcessing = true;
         for (final barcode in barcodeCapture.barcodes) {
           showToast('Barcode Code Found: ${barcode.rawValue}');
-          Get.to(() => DeviceDetail(imei: barcode.rawValue.toString()));
+          if (widget.fromCheckinForm != null &&
+              widget.fromCheckinForm == true) {
+            Get.back(result: barcode.rawValue.toString());
+          } else {
+            Get.to(() => DeviceDetail(imei: barcode.rawValue.toString()));
+          }
           return;
         }
       }

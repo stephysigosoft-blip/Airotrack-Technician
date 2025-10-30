@@ -23,7 +23,9 @@ import '../utils/utils.dart';
 import 'widget/clock_widget.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({
+    super.key,
+  });
 
   @override
   State<Home> createState() => _HomeState();
@@ -64,10 +66,9 @@ class _HomeState extends State<Home> {
               ),
             ),
             drawer: UserDrawer(
-              packageInfo: packageInfo,
-              scaffoldKey: scaffoldKey,
-                role_id:role_id
-            ),
+                packageInfo: packageInfo,
+                scaffoldKey: scaffoldKey,
+                role_id: role_id),
             body: controller.isLoading
                 ? const Center(
                     child: CircularProgressIndicator(),
@@ -106,7 +107,9 @@ class _HomeState extends State<Home> {
                                       margin: const EdgeInsets.only(
                                           left: 15, top: 15),
                                       child: Text(
-                                        "username",
+                                        controller.homeData?.userName
+                                                .toString() ??
+                                            "",
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 18,
@@ -261,12 +264,10 @@ class _HomeState extends State<Home> {
                                   FilteringTextInputFormatter.digitsOnly
                                 ],
                                 onFieldSubmitted: (value) {
-                                  if (formKey.currentState!.validate()) {
-                                    Get.to(() => DeviceDetail(
-                                      deviceId: value,
-                                    ));
-                                    deviceIdController.clear();
-                                  }
+                                  Get.to(() => DeviceDetail(
+                                        imei: value.toString(),
+                                      ));
+                                  deviceIdController.clear();
                                 },
                                 decoration: InputDecoration(
                                     constraints:
@@ -296,12 +297,14 @@ class _HomeState extends State<Home> {
                                         const TextStyle(color: blacklite),
                                     suffixIcon: InkWell(
                                       onTap: () {
+                                        debugPrint(
+                                            "deviceId: ${deviceIdController.text.trim()}");
                                         if (formKey.currentState!.validate()) {
                                           Get.to(() => DeviceDetail(
-                                            deviceId:
-                                                deviceIdController.text.trim(),
-                                          ));
-                                          deviceIdController.clear();
+                                                imei: deviceIdController.text
+                                                    .trim()
+                                                    .toString(),
+                                              ));
                                         }
                                       },
                                       child: Container(
@@ -335,7 +338,8 @@ class UserDrawer extends StatefulWidget {
   const UserDrawer({
     super.key,
     this.packageInfo,
-    required this.scaffoldKey, required this.role_id,
+    required this.scaffoldKey,
+    required this.role_id,
   });
 
   @override
@@ -390,60 +394,46 @@ class _UserDrawerState extends State<UserDrawer> {
               ),
             ),
           ),
-          widget.role_id=="10"?
-          TitleTile(
-            img: 'lib/assets/images/earnings_icon.svg',
-            title: Strings.earnings,
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const EarningsScreen()));
-            },
-          ):Container(),
-          widget.role_id=="10"?
-          Container(
-            margin: const EdgeInsets.all(10),
-            height: 1,
-            color: greyline,
-          ):Container(),
-          widget.role_id=="10"?
-          TitleTile(
-            img: 'lib/assets/images/earnings_icon.svg',
-            title: Strings.recentJobs,
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const RecentJobsScreen()));
-            },
-          ):Container(),
-          widget.role_id=="10"?
-          Container(
-            margin: const EdgeInsets.all(10),
-            height: 1,
-            color: greyline,
-          ):Container(),
-          widget.role_id=="10"?
-          TitleTile(
-            img: 'lib/assets/images/scandevice_icon.svg',
-            title: Strings.scanDevice,
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>  ScanDeviceScreen()));
-            },
-          ):Container(),
-          widget.role_id=="10"?
-          Container(
-            margin: const EdgeInsets.all(10),
-            height: 1,
-            color: greyline,
-          ):Container(),
+          widget.role_id == "10"
+              ? TitleTile(
+                  img: 'lib/assets/images/earnings_icon.svg',
+                  title: Strings.earnings,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EarningsScreen()));
+                  },
+                )
+              : Container(),
+          widget.role_id == "10"
+              ? Container(
+                  margin: const EdgeInsets.all(10),
+                  height: 1,
+                  color: greyline,
+                )
+              : Container(),
+          widget.role_id == "10"
+              ? TitleTile(
+                  img: 'lib/assets/images/earnings_icon.svg',
+                  title: Strings.recentJobs,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RecentJobsScreen()));
+                  },
+                )
+              : Container(),
+          widget.role_id == "10"
+              ? Container(
+                  margin: const EdgeInsets.all(10),
+                  height: 1,
+                  color: greyline,
+                )
+              : Container(),
           TitleTile(
             img: 'lib/assets/images/terms.svg',
             title: Strings.terms,
@@ -517,7 +507,7 @@ class _UserDrawerState extends State<UserDrawer> {
                   builder: (context) => AlertDialog(
                         title: SvgPicture.asset(
                           "lib/assets/images/logout.svg",
-                          color: Colors.black,
+                          color: colorPrimary,
                           height: 80,
                         ),
                         content: Text(
@@ -551,7 +541,7 @@ class _UserDrawerState extends State<UserDrawer> {
                               backgroundColor: colorPrimary,
                             ),
                             onPressed: () async {
-                              await Get.find<HomeController>().logoutAPI();
+                              await Get.put(HomeController()).logoutAPI();
                             },
                             child: Text(
                               "Yes",

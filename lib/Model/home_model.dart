@@ -223,7 +223,7 @@ class UpcomingWorks {
   final String? imei;
   final int? jobStatus;
   final int? isEnquiry;
-  final String? cancellationStatus;
+  final int? cancellationStatus;
   final String? cancellationReason;
   final int? paymentType;
   final int? paymentStatus;
@@ -325,7 +325,7 @@ class UpcomingWorks {
       imei: json['imei'] as String?,
       jobStatus: json['job_status'] as int?,
       isEnquiry: json['is_enquiry'] as int?,
-      cancellationStatus: json['cancellation_status'] as String?,
+      cancellationStatus: json['cancellation_status'] as int?,
       cancellationReason: json['cancellation_reason'] as String?,
       paymentType: json['payment_type'] as int?,
       paymentStatus: json['payment_status'] as int?,
