@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:airotrackgit/assets/resources/colors.dart';
+import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'Widgets/ScannerRowWidget.dart';
-import 'Widgets/ScannerWidget.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({super.key});
@@ -35,9 +35,9 @@ class _QRViewExampleState extends State<QRViewExample> {
       if (!_isProcessing) {
         _isProcessing = true;
         for (final barcode in barcodeCapture.barcodes) {
-          showToast('QR Code Found: ${barcode.rawValue}');
-          Get.back(result: barcode.rawValue);
-          return; // Exit after first barcode to prevent multiple calls
+          showToast('Barcode Code Found: ${barcode.rawValue}');
+          Get.to(() => DeviceDetail(imei: barcode.rawValue.toString()));
+          return;
         }
       }
     });
@@ -166,7 +166,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                           ),
                         ),
                       ),
-                ScannerRowWidget(media: media)
+                ScannerRowWidget(media: media, controller: controller)
               ],
             ),
     );

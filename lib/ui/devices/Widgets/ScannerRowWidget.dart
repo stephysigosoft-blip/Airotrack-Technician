@@ -1,5 +1,10 @@
+import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:get/get.dart';
+import 'package:airotrackgit/ui/utils/utils.dart';
 
 import '../../../assets/resources/colors.dart';
 
@@ -7,9 +12,11 @@ class ScannerRowWidget extends StatelessWidget {
   const ScannerRowWidget({
     super.key,
     required this.media,
+    required this.controller,
   });
 
   final Size media;
+  final MobileScannerController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +40,11 @@ class ScannerRowWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),
-                    onPressed: () async {},
+                    onPressed: () async {
+                      try {
+                        await controller.toggleTorch();
+                      } catch (_) {}
+                    },
                     child: Row(
                       children: [
                         SvgPicture.asset(
@@ -59,7 +70,29 @@ class ScannerRowWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      try {
+                        final ImagePicker picker = ImagePicker();
+                        final XFile? image =
+                            await picker.pickImage(source: ImageSource.gallery);
+                        if (image == null) return;
+
+                        final capture =
+                            await controller.analyzeImage(image.path);
+                        if (capture != null && capture.barcodes.isNotEmpty) {
+                          final value = capture.barcodes.first.rawValue;
+                          if (value != null && value.isNotEmpty) {
+                            Get.back(result: value);
+                            showToast('Barcode found in image: $value');
+                            Get.to(() => DeviceDetail(imei: value));
+                            return;
+                          }
+                        }
+                        showToast('No Barcode found in image');
+                      } catch (e) {
+                        showToast('Failed to scan image: $e');
+                      }
+                    },
                     child: Row(
                       children: [
                         SvgPicture.asset(

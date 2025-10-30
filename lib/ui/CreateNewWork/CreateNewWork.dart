@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:airotrackgit/Controller/CreateNewWorkController.dart';
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/ui/CreateNewWork/Widgets/rto_dropdown.dart';
@@ -93,7 +95,10 @@ class CreateNewWorkScreen extends StatelessWidget {
                     : const SizedBox.shrink(),
                 controller.selectedProduct == "Airotrack Gps" &&
                         controller.selectedWorkType == "New"
-                    ? controller.buildAddImageBox(media)
+                    ? (controller.pickedRcImage.isEmpty
+                        ? controller.buildAddImageBox(media)
+                        : controller.buildImageBox(
+                            File(controller.pickedRcImage), media))
                     : const SizedBox.shrink(),
                 controller.selectedProduct == "Airotrack Gps" &&
                         controller.selectedWorkType == "New"

@@ -45,15 +45,15 @@ class _UserDrawerState extends State<UserDrawer> {
     if (widget.scaffoldKey.currentContext != null) {
       ScaffoldMessenger.of(widget.scaffoldKey.currentContext!)
           .showSnackBar(SnackBar(
-          content: Text(
-            text,
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(color: Colors.white),
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          )));
+              content: Text(
+        text,
+        style: Theme.of(context)
+            .textTheme
+            .bodyLarge!
+            .copyWith(color: Colors.white),
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+      )));
     }
   }
 
@@ -116,10 +116,8 @@ class _UserDrawerState extends State<UserDrawer> {
             title: Strings.scanDevice,
             onTap: () {
               Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ScanDeviceScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ScanDeviceScreen()));
             },
           ),
           Container(

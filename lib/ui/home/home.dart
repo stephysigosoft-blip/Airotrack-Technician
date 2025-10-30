@@ -435,7 +435,7 @@ class _UserDrawerState extends State<UserDrawer> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const ScanDeviceScreen()));
+                      builder: (context) =>  ScanDeviceScreen()));
             },
           ):Container(),
           widget.role_id=="10"?

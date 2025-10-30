@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:airotrackgit/assets/resources/colors.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/controller/details_controller.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DeviceDetail extends StatefulWidget {
@@ -29,11 +28,12 @@ class _DeviceDetailState extends State<DeviceDetail> {
       init: DetailsController(),
       initState: (_) {},
       didChangeDependencies: (state) {
+        debugPrint("widget.imei: ${widget.imei}");
         if (widget.imei != null) {
           state.controller?.getDeatils(widget.imei!);
         }
         if (widget.deviceId != null) {
-          state.controller?.getDeatils(widget.deviceId!);
+          state.controller?.getDeatilsWithId(widget.deviceId!);
         }
       },
       builder: (controller) {
@@ -313,10 +313,14 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                       const SizedBox(
                                         width: 12,
                                       ),
-                                       Icon(Icons.visibility,
-                                        color: controller.deviceDetails!.gnssFix == 1
-                                            ? Colors.green
-                                            : Colors.black,)
+                                      Icon(
+                                        Icons.visibility,
+                                        color:
+                                            controller.deviceDetails!.gnssFix ==
+                                                    1
+                                                ? Colors.green
+                                                : Colors.black,
+                                      )
                                       // Container(
                                       //   decoration: BoxDecoration(
                                       //       shape: BoxShape.circle,
@@ -407,7 +411,10 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                 ),
                                               ),
                                               Text(
-                                               controller.deviceDetails?.lastUpdateDate.toString()??"",
+                                                controller.deviceDetails
+                                                        ?.lastUpdateDate
+                                                        .toString() ??
+                                                    "",
                                                 style: const TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black,
@@ -431,7 +438,10 @@ class _DeviceDetailState extends State<DeviceDetail> {
                                                 ),
                                               ),
                                               Text(
-                                                controller.deviceDetails?.lastUpdateTime.toString()??"",
+                                                controller.deviceDetails
+                                                        ?.lastUpdateTime
+                                                        .toString() ??
+                                                    "",
                                                 style: const TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black,

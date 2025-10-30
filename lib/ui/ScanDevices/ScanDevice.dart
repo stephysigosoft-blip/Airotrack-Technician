@@ -1,4 +1,5 @@
 import 'package:airotrackgit/assets/resources/colors.dart';
+import 'package:airotrackgit/ui/devices/devicedetails.dart';
 import 'package:airotrackgit/ui/devices/qrview.dart';
 import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
 import 'package:airotrackgit/ui/utils/Widgets/RecentJobsAppBar.dart';
@@ -9,9 +10,11 @@ import '../../assets/resources/strings.dart';
 import 'Widgets/DeviceIdTextField.dart';
 import 'Widgets/OpenScannerButton.dart';
 
+// ignore: must_be_immutable
 class ScanDeviceScreen extends StatelessWidget {
-  const ScanDeviceScreen({super.key});
+  ScanDeviceScreen({super.key});
 
+  TextEditingController deviceIdController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context).size;
@@ -35,12 +38,15 @@ class ScanDeviceScreen extends StatelessWidget {
             const BoldTextPoppins(
                 text: Strings.deviceID, color: Colors.black, fontSize: 18),
             SizedBox(height: media.height * 0.01),
-            DeviceIdTextField(media: media),
+            DeviceIdTextField(
+              deviceIdController: deviceIdController,
+              media: media,
+              onPressed: () => Get.to(
+                  () => DeviceDetail(imei: deviceIdController.text.trim())),
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-

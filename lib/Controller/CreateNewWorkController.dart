@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:airotrackgit/Model/Rto_model.dart';
 import 'package:airotrackgit/Model/imei_model.dart';
 import 'package:airotrackgit/Model/vehicle_details_model.dart';
@@ -257,8 +259,8 @@ class CreateNewWorkController extends GetxController {
     } else if (selectedVehicle == null) {
       showToast("Please select a vehicle");
       return;
-    } else if ((selectedProduct == "Airotrack Gps" &&
-            (selectedWorkType == "New" || selectedWorkType == "Repair")) &&
+    } else if (selectedProduct == "Airotrack Gps" &&
+        (selectedWorkType == "Repair" || selectedWorkType == "Replacement") &&
         imei == "") {
       showToast("Please enter a IMEI number");
       return;
@@ -460,7 +462,9 @@ class CreateNewWorkController extends GetxController {
       debugPrint("Token: $token");
       String url = APIConfig.BASE_URL + APIEndpoints.postNewWorkDetails;
       dio.options.headers["Authorization"] = "Bearer $token";
-      dio.options.queryParameters = {
+      dio.options.queryParameters = {};
+
+      final Map<String, dynamic> payload = {
         "product_id": productId,
         "work_type": workType,
         "imei": imei,
@@ -471,12 +475,19 @@ class CreateNewWorkController extends GetxController {
         "location": location,
         "latitude": latitude,
         "longitude": longitude,
-        "rc_image": rcImage,
         "rto_id": rtoId,
       };
+
+      if (rcImage.isNotEmpty) {
+        payload["rc_image"] = await MultipartFile.fromFile(rcImage);
+      }
+
+      final formData = FormData.fromMap(payload);
+
       debugPrint("URL: $url");
-      debugPrint("Query Parameters: ${dio.options.queryParameters}");
-      final response = await dio.post(url);
+      debugPrint(
+          "Sending multipart form data with keys: ${payload.keys.toList()}");
+      final response = await dio.post(url, data: formData);
       debugPrint("Response Data: ${response.data}");
       if (response.statusCode == 200) {
         showToast(response.data['message']);
@@ -499,13 +510,13 @@ class CreateNewWorkController extends GetxController {
     }
   }
 
-  Widget buildImageBox(String imageUrl, Size media) {
+  Widget buildImageBox(File imageFile, Size media) {
     return InkWell(
       onTap: () => showRcImageOptions(Get.context!, null),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child: Image.network(
-          APIConfig.Image_URL + imageUrl,
+        child: Image.file(
+          imageFile,
           width: media.width * 0.25,
           height: media.height * 0.12,
           fit: BoxFit.cover,
