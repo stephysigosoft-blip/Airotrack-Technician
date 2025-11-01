@@ -41,6 +41,8 @@ class _QRViewExampleState extends State<QRViewExample> {
               widget.fromCheckinForm == true) {
             Get.back(result: barcode.rawValue.toString());
           } else {
+            debugPrint("Barcode: ${barcode.rawValue}");
+            debugPrint("Navigating to Device Detail");
             Get.to(() => DeviceDetail(imei: barcode.rawValue.toString()));
           }
           return;

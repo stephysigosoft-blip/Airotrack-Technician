@@ -31,7 +31,7 @@ class _DeviceDetailState extends State<DeviceDetail> {
         if (widget.imei != null) {
           state.controller?.getDeatils(widget.imei.toString());
         } else if (widget.deviceId != null) {
-          state.controller?.getDeatilsWithId(widget.deviceId!.toString());
+          state.controller?.getDeatils(widget.deviceId!.toString());
         }
       },
       builder: (controller) {

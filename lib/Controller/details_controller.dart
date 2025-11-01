@@ -29,6 +29,9 @@ class DetailsController extends GetxController {
         var response = await dio.get(url, queryParameters: {
           "imei": imei,
         });
+        debugPrint("URL: $url");
+        debugPrint("queryParameters: $imei");
+        debugPrint("Response: ${response.data}");
         if (response.statusCode == 200) {
           if (response.data['data']['device_details'] != null) {
             deviceDetails =

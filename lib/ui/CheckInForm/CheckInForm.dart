@@ -16,12 +16,14 @@ class CheckInFormScreen extends StatelessWidget {
   final String jobId;
   final String productId;
   final String serviceType;
+  final dynamic ongoingWorks;
 
   const CheckInFormScreen(
       {super.key,
       required this.jobId,
       required this.productId,
-      required this.serviceType});
+      required this.serviceType,
+      required this.ongoingWorks});
 
   @override
   Widget build(BuildContext context) {
@@ -175,12 +177,37 @@ class CheckInFormScreen extends StatelessWidget {
                           : const SizedBox.shrink(),
                       SizedBox(height: media.height * 0.03),
                       const Spacer(),
-                      CheckInButton(
-                        media: media,
-                        buttonText: Strings.checkIn,
-                        onTap: () async {
-                          await controller.checkIn(jobId: jobId);
-                        },
+                      GetBuilder<CheckInFormController>(
+                        id: 'checkInButton',
+                        builder: (ctrl) => ctrl.isCheckInLoading
+                            ? SizedBox(
+                                width: double.infinity,
+                                child: Container(
+                                  height: media.height * 0.06,
+                                  width: media.width * 0.4,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: media.height * 0.015),
+                                  decoration: BoxDecoration(
+                                    color: colorPrimary,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2.5,
+                                  ),
+                                ),
+                              )
+                            : CheckInButton(
+                                media: media,
+                                buttonText: Strings.checkIn,
+                                onTap: () async {
+                                  await controller.checkIn(
+                                  
+                                      jobId: jobId,
+                                      jobDetails: ongoingWorks);
+                                },
+                              ),
                       )
                     ],
                   ),

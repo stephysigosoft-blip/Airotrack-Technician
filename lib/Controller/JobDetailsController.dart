@@ -102,7 +102,7 @@ class JobDetailsController extends GetxController {
     return [value.toString()];
   }
 
-  showConfirmCheckIn(BuildContext context, dynamic jobDetails) {
+  showConfirmCheckIn(BuildContext context, dynamic jobDetails, dynamic ongoingWorks) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -143,6 +143,7 @@ class JobDetailsController extends GetxController {
                       buttonColor: lightBlue),
                   YesButtonWidget(
                       onTap: () => Get.off(CheckInFormScreen(
+                        ongoingWorks: ongoingWorks,
                             jobId: jobDetails.id.toString(),
                             productId: jobDetails.productId.toString(),
                             serviceType: jobDetails.serviceType.toString(),
@@ -682,11 +683,10 @@ class JobDetailsController extends GetxController {
     } else if (chassisNumberController.text.isEmpty) {
       showToast("Please enter the chassis number");
       return;
-    } else if (deviceSerialNumberController.text.isEmpty) {
+    } else if (((productId.toString() == "2" || productId.toString() == "3")) &&
+        deviceSerialNumberController.text.isEmpty) {
       showToast("Please enter the device serial number");
-      return;
-    } else if (dealerNameForCertificateController.text.isEmpty) {
-      showToast("Please enter the dealer name for certificate");
+      debugPrint("productId: $productId");
       return;
     } else if (productId.toString() == "2" &&
         cameraNameController.text.isEmpty) {
@@ -700,7 +700,9 @@ class JobDetailsController extends GetxController {
       showToast("Please add the vehicle image");
       debugPrint("Vehicle Images: $vehicleImages, Picked: $pickedVehicleImage");
       return;
-    } else if (cameraImages.isEmpty && pickedCameraImage.isEmpty) {
+    } else if ((productId.toString() == "2") &&
+        cameraImages.isEmpty &&
+        pickedCameraImage.isEmpty) {
       showToast("Please add the camera image");
       debugPrint("Camera Images: $cameraImages, Picked: $pickedCameraImage");
       return;

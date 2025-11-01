@@ -78,7 +78,15 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
     final media = MediaQuery.of(context).size;
     return GetBuilder<HomeController>(
         init: HomeController(),
-        initState: (_) {},
+        initState: (_) {
+          // Refresh data when HomeNew is initialized/opened
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (Get.isRegistered<HomeController>()) {
+              final controller = Get.find<HomeController>();
+              controller.refreshHomeData("");
+            }
+          });
+        },
         builder: (controller) {
           var technician = controller.homeData?.data?.technician;
           return Scaffold(
@@ -183,6 +191,7 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
                                                                 .id
                                                                 .toString()))
                                                     : Get.to(() => JobDetails(
+                                                        
                                                           isOngoing: true,
                                                           jobDetails:
                                                               ongoingWorks[

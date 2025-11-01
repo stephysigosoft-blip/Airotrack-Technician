@@ -4,6 +4,8 @@ import 'package:airotrackgit/Model/work_details_model.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/config/api_config.dart';
 import 'package:airotrackgit/ui/home/homeNew.dart';
+import 'package:airotrackgit/controller/home_controller.dart';
+import 'package:airotrackgit/ui/job_details/job_details.dart';
 import 'package:airotrackgit/ui/utils/Functions/network_testing.dart';
 import 'package:airotrackgit/ui/utils/Functions/on_dio_exception.dart';
 import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
@@ -35,6 +37,7 @@ class CheckInFormController extends GetxController {
 
 // the variables should be declared here
   bool isLoading = true;
+  bool isCheckInLoading = false;
   Dio dio = Dio();
   WorkDetailsModel? workDetails;
   ImagePicker imagePicker = ImagePicker();
@@ -566,8 +569,14 @@ class CheckInFormController extends GetxController {
     );
   }
 
-  Future<void> checkIn({required String jobId}) async {
+  Future<void> checkIn(
+      {required String jobId, required dynamic jobDetails}) async {
+    if (isCheckInLoading) return; // Prevent multiple taps
+
     try {
+      isCheckInLoading = true;
+      update(['checkInButton']); // Update only the button area
+
       checkNetworkAndRedirectOffAll();
       debugPrint("Starting check-in process...");
       if (!_validateRequiredFields()) {
@@ -577,7 +586,8 @@ class CheckInFormController extends GetxController {
             "Check-in failed: Missing required fields - $missingFieldsText");
         showToast(
             "Please provide the following fields before checking in: $missingFieldsText");
-
+        isCheckInLoading = false;
+        update(['checkInButton']); // Update only the button area
         return;
       }
       debugPrint("All required fields validated successfully");
@@ -589,16 +599,30 @@ class CheckInFormController extends GetxController {
         deviceImage: _getSafeDeviceImage(),
         rcImage: _getSafeRcImage(),
       );
-
       if (result) {
         debugPrint("Check-in completed successfully");
         showToast("Check-in completed successfully");
-        Get.offAll(() => const HomeNew());
+        try {
+          if (Get.isRegistered<HomeController>()) {
+            final homeController = Get.find<HomeController>();
+            await homeController.refreshHomeData("");
+          }
+        } catch (e) {
+          debugPrint("Error refreshing home data: $e");
+        }
+        Get.offAll(() => JobDetails(
+              jobDetails: jobDetails,
+              isOngoing: true,
+            ));
       } else {
         debugPrint("Unable to check in. Please try again.");
+        isCheckInLoading = false;
+        update(['checkInButton']);
       }
     } catch (e) {
       debugPrint("Error in checkIn: ${e.toString()}");
+      isCheckInLoading = false;
+      update(['checkInButton']);
     }
   }
 

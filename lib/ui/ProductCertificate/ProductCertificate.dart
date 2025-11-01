@@ -49,11 +49,11 @@ class _ProductCertificateScreenState extends State<ProductCertificateScreen> {
             floatingActionButtonLocation: const CustomOffsetFABLocation(80),
             appBar: CustomAppBar(
                 title: Strings.productCertificate, onBack: () => Get.back()),
-            body: Padding(
-              padding: EdgeInsets.all(media.width * 0.03),
-              child: Column(
-                children: [
-                  Expanded(
+            body: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(media.width * 0.03),
                     child: controller.isLoading == true
                         ? const Center(
                             child: CircularProgressIndicator(
@@ -62,18 +62,29 @@ class _ProductCertificateScreenState extends State<ProductCertificateScreen> {
                         : controller.productCertificate.isNotEmpty
                             ? PDFView(
                                 filePath: controller.localPdfPath!,
+                                onRender: (pages) {
+                                  debugPrint("Pages: $pages");
+                                },
+                                onError: (error) {
+                                  debugPrint("Error: $error");
+                                },
+                                onPageError: (page, error) {
+                                  debugPrint("Page Error: $page, $error");
+                                },
                               )
                             : const Center(
                                 child: Text(Strings.noDataFound),
                               ),
                   ),
-                  const Spacer(),
-                  CheckInButton(
+                ),
+                Padding(
+                  padding: EdgeInsets.all(media.width * 0.03),
+                  child: CheckInButton(
                       onTap: () => Get.offAll(const HomeNew()),
                       media: media,
-                      buttonText: Strings.goToMainMenu)
-                ],
-              ),
+                      buttonText: Strings.goToMainMenu),
+                ),
+              ],
             ),
           ),
         ));

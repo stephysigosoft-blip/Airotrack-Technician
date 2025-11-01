@@ -27,6 +27,10 @@ class ServiceDetailsScreen extends StatelessWidget {
           padding: EdgeInsets.all(media.width * 0.05),
           child: GetBuilder(
             init: JobDetailsController(),
+            initState: (state) {
+              debugPrint(
+                  "Product Id: ${state.controller?.productId.toString()}");
+            },
             didChangeDependencies: (state) {
               state.controller?.getServiceDetails(jobId);
               state.controller?.getSpeedGovernorDetails();
@@ -47,20 +51,25 @@ class ServiceDetailsScreen extends StatelessWidget {
                     controller: controller.chassisNumberController,
                     hintText: Strings.enterChassisNumber,
                     media: media),
-                SizedBox(height: media.height * 0.018),
-                const LabelTextWidget(label: Strings.deviceSerialNumber),
-                SizedBox(height: media.height * 0.005),
-                ServiceDetailsTextField(
-                    controller: controller.deviceSerialNumberController,
-                    hintText: Strings.enterDeviceSerialNumber,
-                    media: media),
-                SizedBox(height: media.height * 0.018),
-                const LabelTextWidget(label: Strings.dealerNameForCertificate),
-                SizedBox(height: media.height * 0.005),
-                ServiceDetailsTextField(
-                    controller: controller.dealerNameForCertificateController,
-                    hintText: Strings.enterDealerName,
-                    media: media),
+                controller.productId.toString() == "2" ||
+                        controller.productId.toString() == "3"
+                    ? SizedBox(height: media.height * 0.018)
+                    : const SizedBox.shrink(),
+                (controller.productId.toString() == "2" ||
+                        controller.productId.toString() == "3")
+                    ? const LabelTextWidget(label: Strings.deviceSerialNumber)
+                    : const SizedBox.shrink(),
+                (controller.productId.toString() == "2" ||
+                        controller.productId.toString() == "3")
+                    ? SizedBox(height: media.height * 0.005)
+                    : const SizedBox.shrink(),
+                (controller.productId.toString() == "2" ||
+                        controller.productId.toString() == "3")
+                    ? ServiceDetailsTextField(
+                        controller: controller.deviceSerialNumberController,
+                        hintText: Strings.enterDeviceSerialNumber,
+                        media: media)
+                    : const SizedBox.shrink(),
                 controller.productId.toString() == "2"
                     ? SizedBox(height: media.height * 0.018)
                     : const SizedBox.shrink(),
@@ -95,8 +104,6 @@ class ServiceDetailsScreen extends StatelessWidget {
                             .speedGovernorIdController
                             .text = value?.id.toString() ?? "",
                         media: media,
-                        value: controller
-                            .speedGovernorDetails?.data?.speedGovernors?.first,
                       )
                     : const SizedBox.shrink(),
                 SizedBox(height: media.height * 0.018),
@@ -121,28 +128,36 @@ class ServiceDetailsScreen extends StatelessWidget {
                         ],
                       )
                     : controller.buildAddImageBox(media, true),
-                SizedBox(height: media.height * 0.01),
-                const BoldTextPoppins(
-                    text: Strings.cameraView,
-                    color: Colors.black,
-                    fontSize: 15),
-                SizedBox(height: media.height * 0.01),
-                controller.cameraImages.isNotEmpty ||
-                        controller.pickedCameraImage.isNotEmpty
-                    ? Row(
-                        children: [
-                          controller.buildImageBox(
-                              controller.cameraImages.isNotEmpty
-                                  ? controller.cameraImages[0]
-                                  : "",
-                              media,
-                              controller.pickedCameraImage.isNotEmpty,
-                              false),
-                          SizedBox(width: media.width * 0.03),
-                          controller.buildAddImageBox(media, false),
-                        ],
-                      )
-                    : controller.buildAddImageBox(media, false),
+                (controller.productId.toString() == "2")
+                    ? SizedBox(height: media.height * 0.01)
+                    : const SizedBox.shrink(),
+                (controller.productId.toString() == "2")
+                    ? const BoldTextPoppins(
+                        text: Strings.cameraView,
+                        color: Colors.black,
+                        fontSize: 15)
+                    : const SizedBox.shrink(),
+                (controller.productId.toString() == "2")
+                    ? SizedBox(height: media.height * 0.01)
+                    : const SizedBox.shrink(),
+                (controller.productId.toString() == "2")
+                    ? controller.cameraImages.isNotEmpty ||
+                            controller.pickedCameraImage.isNotEmpty
+                        ? Row(
+                            children: [
+                              controller.buildImageBox(
+                                  controller.cameraImages.isNotEmpty
+                                      ? controller.cameraImages[0]
+                                      : "",
+                                  media,
+                                  controller.pickedCameraImage.isNotEmpty,
+                                  false),
+                              SizedBox(width: media.width * 0.03),
+                              controller.buildAddImageBox(media, false),
+                            ],
+                          )
+                        : controller.buildAddImageBox(media, false)
+                    : const SizedBox.shrink(),
                 SizedBox(height: media.height * 0.018),
                 CheckInButton(
                   media: media,

@@ -306,7 +306,8 @@ class PaymentController extends GetxController {
         "job_id": id,
         "amount": amount.round(),
         "company_title": companyTitle,
-        "payment_type": paymentType,
+        "payment_type":
+            cashAmount > 0 && (amount - cashAmount) > 0 ? "3" : paymentType,
         "company_title_id": companyId,
         "cash_amount": cashAmount,
         "online_amount": paymentType != "1" ? amount - cashAmount : 0.0,

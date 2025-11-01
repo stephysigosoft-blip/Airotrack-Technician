@@ -24,10 +24,12 @@ import 'Widgets/RowWidget2.dart';
 class JobDetails extends StatefulWidget {
   final dynamic jobDetails;
   final bool isOngoing;
+ 
   const JobDetails({
     super.key,
     required this.jobDetails,
     required this.isOngoing,
+  
   });
 
   @override
@@ -184,7 +186,7 @@ class _JobDetailsState extends State<JobDetails> {
                           SizedBox(height: media.height * 0.01),
                           CheckInButton(
                             onTap: () => controller.showConfirmCheckIn(
-                                context, widget.jobDetails),
+                                context, widget.jobDetails, widget.jobDetails),
                             media: media,
                             buttonText: Strings.checkIn,
                           ),
