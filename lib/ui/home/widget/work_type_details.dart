@@ -134,7 +134,10 @@ class WorkTypeDetails extends StatelessWidget {
                                   })(),
                                   onAcceptTapped: () =>
                                       onAcceptTapped(pendingWorks[index]),
-                                  isUpcoming: false),
+                                  isUpcoming: false,
+                                  createdDate:
+                                      pendingWorks[index].convertedCreatedAt ??
+                                          ""),
                             );
                           });
             }).toList(),

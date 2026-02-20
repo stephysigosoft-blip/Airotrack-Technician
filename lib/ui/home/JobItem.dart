@@ -10,6 +10,7 @@ class JobItem extends StatefulWidget {
   final String location;
   final String price;
   final bool? isUpcoming;
+  final String? createdDate;
 
   const JobItem(
       {super.key,
@@ -18,7 +19,8 @@ class JobItem extends StatefulWidget {
       required this.workType,
       required this.location,
       required this.price,
-      this.isUpcoming});
+      this.isUpcoming,
+      this.createdDate});
 
   @override
   State<JobItem> createState() => _JobItemState();
@@ -98,12 +100,12 @@ class _JobItemState extends State<JobItem> {
             "Accept job to see more details",
             style: TextStyle(
                 color: greytext,
-                fontSize: 10,
+                fontSize: 11,
                 fontWeight: FontWeight.w500,
                 fontFamily: 'Poppins-Regular'),
           ),
           const SizedBox(
-            height: 10,
+            height: 5,
           ),
           Container(
             margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
@@ -127,6 +129,20 @@ class _JobItemState extends State<JobItem> {
               ),
             ),
           ),
+          if (widget.createdDate != null && widget.createdDate!.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "${Strings.createdDate}${widget.createdDate}",
+                style: const TextStyle(
+                    color: greytext,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Poppins-Regular'),
+              ),
+            ),
+          ],
         ],
       ),
     );

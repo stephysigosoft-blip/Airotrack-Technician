@@ -24,12 +24,11 @@ import 'Widgets/RowWidget2.dart';
 class JobDetails extends StatefulWidget {
   final dynamic jobDetails;
   final bool isOngoing;
- 
+
   const JobDetails({
     super.key,
     required this.jobDetails,
     required this.isOngoing,
-  
   });
 
   @override

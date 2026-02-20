@@ -1,7 +1,8 @@
 class APIConfig {
   static String BASE_URL =
-      "https://ourworks.co.in/airotrack-new/public/technician/";
-      static String Image_URL ="https://ourworks.co.in/airotrack-new/public/storage/";
+      "https://dev-api.airotrack.in/airotrack-api/public/technician/";
+  static String Image_URL =
+      "https://dev-api.airotrack.in/airotrack-api/storage/app/public/";
   // static String BASE_URL = "https://dev-api.airotrack.in/technician/";
   // static String BASE_URL = "https://api.airotrack.in/technician/";
 }
@@ -30,7 +31,7 @@ class APIEndpoints {
   static const String getSpeedGovernorData = "getSpeedGovernorData";
   static const String acceptWork = "spdAcceptWork";
   static const String postCheckoutConfirm = "spdCheckOutConfirm";
-  
+
   static const String earnings = "spdEarnings";
   static const String rcentJobs = "recentJobs";
 }

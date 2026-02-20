@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
             surface: Colors.white,
             surfaceTint: Colors.white),
         useMaterial3: true,
-        dialogTheme: const DialogTheme(
+        dialogTheme: const DialogThemeData(
           backgroundColor: Colors.white,
         ),
       ),

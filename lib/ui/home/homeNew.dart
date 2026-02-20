@@ -11,6 +11,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:airotrackgit/controller/home_controller.dart';
+import 'package:airotrackgit/Model/home_model.dart';
 import '../../assets/resources/strings.dart';
 import '../utils/utils.dart';
 import 'home.dart';
@@ -120,12 +121,13 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
                     child: CircularProgressIndicator(color: colorPrimary),
                   );
                 } else {
-                  var upcomingWorks =
-                      controller.homeData?.data?.upcomingWorks ?? [];
-                  var pendingWorks =
-                      controller.homeData?.data?.pendingWorks ?? [];
-                  var ongoingWorks =
-                      controller.homeData?.data?.ongoingWorks ?? [];
+                  List<UpcomingWorks> upcomingWorks =
+                      controller.homeData?.data?.upcomingWorks ??
+                          <UpcomingWorks>[];
+                  List<Work> pendingWorks =
+                      controller.homeData?.data?.pendingWorks ?? <Work>[];
+                  List<Work> ongoingWorks =
+                      controller.homeData?.data?.ongoingWorks ?? <Work>[];
                   return RefreshIndicator(
                     color: colorPrimary,
                     backgroundColor: Colors.white,
@@ -191,7 +193,6 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
                                                                 .id
                                                                 .toString()))
                                                     : Get.to(() => JobDetails(
-                                                        
                                                           isOngoing: true,
                                                           jobDetails:
                                                               ongoingWorks[
@@ -212,6 +213,9 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
                                                         .totalAmount ??
                                                     "",
                                                 isUpcoming: true,
+                                                createdDate: ongoingWorks[index]
+                                                        .convertedCreatedAt ??
+                                                    "",
                                               ),
                                             )),
                                   ),
@@ -258,6 +262,10 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
                                                         .totalAmount ??
                                                     "",
                                                 isUpcoming: true,
+                                                createdDate: upcomingWorks[
+                                                            index]
+                                                        .convertedCreatedAt ??
+                                                    "",
                                               ),
                                             )),
                                   ),

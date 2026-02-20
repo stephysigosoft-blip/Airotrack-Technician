@@ -39,16 +39,17 @@ class Data {
           ? Technician.fromJson(json['technician'])
           : null,
       pendingWorks: (json['pending_works'] as List? ?? [])
-          .map((e) => Work.fromJson(e))
+          .map<Work>((e) => Work.fromJson(e as Map<String, dynamic>))
           .toList(),
       ongoingWorks: (json['ongoing_works'] as List? ?? [])
-          .map((e) => Work.fromJson(e))
+          .map<Work>((e) => Work.fromJson(e as Map<String, dynamic>))
           .toList(),
       completedWorks: (json['completed_works'] as List? ?? [])
-          .map((e) => Work.fromJson(e))
+          .map<Work>((e) => Work.fromJson(e as Map<String, dynamic>))
           .toList(),
       upcomingWorks: (json['upcoming_works'] as List? ?? [])
-          .map((e) => UpcomingWorks.fromJson(e))
+          .map<UpcomingWorks>(
+              (e) => UpcomingWorks.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
   }
@@ -133,6 +134,7 @@ class Work {
   final String? technicianName;
   final String? productName;
   final String? remarks;
+  final String? convertedCreatedAt;
 
   Work({
     this.id,
@@ -160,6 +162,7 @@ class Work {
     this.technicianName,
     this.productName,
     this.remarks,
+    this.convertedCreatedAt,
   });
 
   factory Work.fromJson(Map<String, dynamic> json) {
@@ -189,6 +192,7 @@ class Work {
       technicianName: json['technician_name'] ?? '',
       productName: json['product_name'] ?? '',
       remarks: json['remarks'] ?? '',
+      convertedCreatedAt: json['converted_created_at'] ?? '',
     );
   }
 }
@@ -241,6 +245,7 @@ class UpcomingWorks {
   final String? updatedAt;
   final String? technicianName;
   final String? productName;
+  final String? convertedCreatedAt;
 
   const UpcomingWorks({
     this.id,
@@ -290,6 +295,7 @@ class UpcomingWorks {
     this.updatedAt,
     this.technicianName,
     this.productName,
+    this.convertedCreatedAt,
   });
 
   /// Factory constructor with null-aware operators
@@ -343,6 +349,7 @@ class UpcomingWorks {
       updatedAt: json['updated_at'] as String?,
       technicianName: json['technician_name'] as String?,
       productName: json['product_name'] as String?,
+      convertedCreatedAt: json['converted_created_at'] as String?,
     );
   }
 
@@ -394,5 +401,6 @@ class UpcomingWorks {
         'updated_at': updatedAt,
         'technician_name': technicianName,
         'product_name': productName,
+        'converted_created_at': convertedCreatedAt,
       };
 }
