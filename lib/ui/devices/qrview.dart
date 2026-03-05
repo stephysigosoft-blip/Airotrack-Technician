@@ -36,17 +36,26 @@ class _QRViewExampleState extends State<QRViewExample> {
       if (!_isProcessing) {
         _isProcessing = true;
         for (final barcode in barcodeCapture.barcodes) {
+          if (barcode.rawValue == null || barcode.rawValue!.isEmpty) continue;
+
           showToast('Barcode Code Found: ${barcode.rawValue}');
-          if (widget.fromCheckinForm != null &&
-              widget.fromCheckinForm == true) {
+          if (widget.fromCheckinForm == true) {
             Get.back(result: barcode.rawValue.toString());
           } else {
             debugPrint("Barcode: ${barcode.rawValue}");
             debugPrint("Navigating to Device Detail");
-            Get.to(() => DeviceDetail(imei: barcode.rawValue.toString()));
+            Get.to(() => DeviceDetail(imei: barcode.rawValue.toString()))
+                ?.then((_) {
+              setState(() {
+                _isProcessing = false;
+              });
+              controller.start();
+            });
           }
           return;
         }
+        // If the loop finishes without returning, it means no valid barcode was found
+        _isProcessing = false;
       }
     });
   }

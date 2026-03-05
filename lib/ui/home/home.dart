@@ -396,6 +396,26 @@ class _UserDrawerState extends State<UserDrawer> {
           ),
           widget.role_id == "10"
               ? TitleTile(
+                  img: 'lib/assets/images/scandevice_icon.svg',
+                  title: Strings.scanDevice,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const QRViewExample()));
+                  },
+                )
+              : Container(),
+          widget.role_id == "10"
+              ? Container(
+                  margin: const EdgeInsets.all(10),
+                  height: 1,
+                  color: greyline,
+                )
+              : Container(),
+          widget.role_id == "10"
+              ? TitleTile(
                   img: 'lib/assets/images/earnings_icon.svg',
                   title: Strings.earnings,
                   onTap: () {
