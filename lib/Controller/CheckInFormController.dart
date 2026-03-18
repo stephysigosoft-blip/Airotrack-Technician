@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:airotrackgit/Model/work_details_model.dart';
 import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/config/api_config.dart';
-import 'package:airotrackgit/ui/home/homeNew.dart';
 import 'package:airotrackgit/controller/home_controller.dart';
 import 'package:airotrackgit/ui/job_details/job_details.dart';
 import 'package:airotrackgit/ui/utils/Functions/network_testing.dart';
@@ -137,7 +136,9 @@ class CheckInFormController extends GetxController {
       if (cameraStatus == PermissionStatus.granted) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.camera,
-          imageQuality: 80,
+          imageQuality: 25,
+          maxWidth: 720,
+          maxHeight: 720,
           preferredCameraDevice: CameraDevice.rear,
         );
         if (image != null) {
@@ -165,7 +166,9 @@ class CheckInFormController extends GetxController {
       if (photosStatus == PermissionStatus.granted) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.gallery,
-          imageQuality: 80,
+          imageQuality: 25,
+          maxWidth: 720,
+          maxHeight: 720,
         );
         if (image != null) {
           selectedImage = image;
@@ -189,7 +192,9 @@ class CheckInFormController extends GetxController {
       if (cameraStatus == PermissionStatus.granted) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.camera,
-          imageQuality: 80,
+          imageQuality: 25,
+          maxWidth: 720,
+          maxHeight: 720,
           preferredCameraDevice: CameraDevice.rear,
         );
         if (image != null) {
@@ -215,7 +220,9 @@ class CheckInFormController extends GetxController {
       if (photosStatus == PermissionStatus.granted) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.gallery,
-          imageQuality: 80,
+          imageQuality: 25,
+          maxWidth: 720,
+          maxHeight: 720,
         );
         if (image != null) {
           selectedRcImage = image;
@@ -374,6 +381,8 @@ class CheckInFormController extends GetxController {
       if (deviceImage.isNotEmpty && !deviceImage.startsWith('http')) {
         File imageFile = File(deviceImage);
         if (await imageFile.exists()) {
+          // Compress image before upload
+          imageFile = await _compressImage(imageFile);
           formFields["device_image"] = await MultipartFile.fromFile(
             imageFile.path,
             filename:
@@ -391,6 +400,8 @@ class CheckInFormController extends GetxController {
       if (rcImage.isNotEmpty && !rcImage.startsWith('http')) {
         File imageFile = File(rcImage);
         if (await imageFile.exists()) {
+          // Compress RC image before upload
+          imageFile = await _compressImage(imageFile);
           formFields["rc_image"] = await MultipartFile.fromFile(
             imageFile.path,
             filename: "rc_image_${DateTime.now().millisecondsSinceEpoch}.jpg",
@@ -643,7 +654,7 @@ class CheckInFormController extends GetxController {
       }
       img.Image resizedImage =
           img.copyResize(originalImage, width: width, height: height);
-      List<int> compressedBytes = img.encodeJpg(resizedImage, quality: 85);
+      List<int> compressedBytes = img.encodeJpg(resizedImage, quality: 30);
       String compressedPath =
           imageFile.path.replaceAll('.jpg', '_compressed.jpg');
       File compressedFile = File(compressedPath);

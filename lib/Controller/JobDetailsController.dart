@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:image/image.dart' as img;
 import 'package:airotrackgit/Model/speed_governor_model.dart';
 import 'package:airotrackgit/Model/work_details_model.dart';
 import 'package:airotrackgit/config/api_config.dart';
@@ -288,7 +290,9 @@ class JobDetailsController extends GetxController {
       if (cameraStatus == PermissionStatus.granted) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.camera,
-          imageQuality: 80,
+          imageQuality: 25,
+          maxWidth: 720,
+          maxHeight: 720,
           preferredCameraDevice: CameraDevice.rear,
         );
         if (image != null) {
@@ -319,7 +323,9 @@ class JobDetailsController extends GetxController {
       if (photosStatus == PermissionStatus.granted) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.gallery,
-          imageQuality: 80,
+          imageQuality: 25,
+          maxWidth: 720,
+          maxHeight: 720,
         );
         if (image != null) {
           selectedVehicleImage = image;
@@ -348,7 +354,9 @@ class JobDetailsController extends GetxController {
       if (cameraStatus == PermissionStatus.granted) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.camera,
-          imageQuality: 80,
+          imageQuality: 25,
+          maxWidth: 720,
+          maxHeight: 720,
           preferredCameraDevice: CameraDevice.rear,
         );
         if (image != null) {
@@ -379,7 +387,9 @@ class JobDetailsController extends GetxController {
       if (photosStatus == PermissionStatus.granted) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.gallery,
-          imageQuality: 80,
+          imageQuality: 25,
+          maxWidth: 720,
+          maxHeight: 720,
         );
         if (image != null) {
           selectedCameraImage = image;
@@ -604,8 +614,10 @@ class JobDetailsController extends GetxController {
               : value;
           final bool existsLocally = File(normalized).existsSync();
           if (existsLocally) {
-            return await MultipartFile.fromFile(normalized,
-                filename: fileNameFromPath(normalized));
+            File imageFile = File(normalized);
+            imageFile = await _compressImage(imageFile);
+            return await MultipartFile.fromFile(imageFile.path,
+                filename: fileNameFromPath(imageFile.path));
           }
           // Treat as remote/server path. Build full URL if it's relative.
           final bool isAbsoluteUrl = normalized.startsWith('http://') ||
@@ -620,8 +632,11 @@ class JobDetailsController extends GetxController {
           final String tmpPath = '${tmpDir.path}/$fileName';
           final imgResp = await dio.get<List<int>>(fullUrl,
               options: Options(responseType: ResponseType.bytes));
-          await File(tmpPath).writeAsBytes(imgResp.data ?? <int>[]);
-          return await MultipartFile.fromFile(tmpPath, filename: fileName);
+          File tempFile = File(tmpPath);
+          await tempFile.writeAsBytes(imgResp.data ?? <int>[]);
+          tempFile = await _compressImage(tempFile);
+          return await MultipartFile.fromFile(tempFile.path,
+              filename: fileNameFromPath(tempFile.path));
         } catch (_) {
           return null;
         }
@@ -763,6 +778,37 @@ class JobDetailsController extends GetxController {
     } finally {
       isLoading = false;
       update();
+    }
+  }
+
+  Future<File> _compressImage(File imageFile) async {
+    try {
+      Uint8List imageBytes = await imageFile.readAsBytes();
+      // Decode image
+      img.Image? originalImage = img.decodeImage(imageBytes);
+      if (originalImage == null) {
+        debugPrint("Failed to decode image");
+        return imageFile;
+      }
+      int width = originalImage.width;
+      int height = originalImage.height;
+      if (width > 1080) {
+        height = (height * 1080 / width).round();
+        width = 1080;
+      }
+      img.Image resizedImage =
+          img.copyResize(originalImage, width: width, height: height);
+      List<int> compressedBytes = img.encodeJpg(resizedImage, quality: 30);
+      String compressedPath =
+          imageFile.path.replaceAll('.jpg', '_compressed.jpg');
+      File compressedFile = File(compressedPath);
+      await compressedFile.writeAsBytes(compressedBytes);
+      debugPrint(
+          "Image compressed from ${imageBytes.length} to ${compressedBytes.length} bytes");
+      return compressedFile;
+    } catch (e) {
+      debugPrint("Error compressing image: ${e.toString()}");
+      return imageFile; // Return original if compression fails
     }
   }
 }
