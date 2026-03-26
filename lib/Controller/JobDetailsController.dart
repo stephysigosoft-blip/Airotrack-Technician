@@ -20,6 +20,7 @@ import 'package:get/route_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../assets/resources/colors.dart';
 import '../assets/resources/strings.dart';
@@ -104,7 +105,8 @@ class JobDetailsController extends GetxController {
     return [value.toString()];
   }
 
-  showConfirmCheckIn(BuildContext context, dynamic jobDetails, dynamic ongoingWorks) {
+  showConfirmCheckIn(
+      BuildContext context, dynamic jobDetails, dynamic ongoingWorks) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -137,23 +139,28 @@ class JobDetailsController extends GetxController {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  YesButtonWidget(
-                      onTap: () => Get.back(),
-                      media: media,
-                      text: Strings.no,
-                      textColor: Colors.black,
-                      buttonColor: lightBlue),
-                  YesButtonWidget(
-                      onTap: () => Get.off(CheckInFormScreen(
-                        ongoingWorks: ongoingWorks,
-                            jobId: jobDetails.id.toString(),
-                            productId: jobDetails.productId.toString(),
-                            serviceType: jobDetails.serviceType.toString(),
-                          )),
-                      media: media,
-                      text: Strings.yes,
-                      textColor: Colors.white,
-                      buttonColor: colorPrimary),
+                  Expanded(
+                    child: YesButtonWidget(
+                        onTap: () => Get.back(),
+                        media: media,
+                        text: Strings.no,
+                        textColor: Colors.black,
+                        buttonColor: lightBlue),
+                  ),
+                  SizedBox(width: media.width * 0.03),
+                  Expanded(
+                    child: YesButtonWidget(
+                        onTap: () => Get.to(CheckInFormScreen(
+                              ongoingWorks: ongoingWorks,
+                              jobId: jobDetails.id.toString(),
+                              productId: jobDetails.productId.toString(),
+                              serviceType: jobDetails.serviceType.toString(),
+                            )),
+                        media: media,
+                        text: Strings.yes,
+                        textColor: Colors.white,
+                        buttonColor: colorPrimary),
+                  ),
                 ],
               ),
             ),
@@ -729,10 +736,41 @@ class JobDetailsController extends GetxController {
           ? pickedCameraImage
           : (cameraImages.isNotEmpty ? cameraImages[0] : "");
 
+      String currentLat = workDetails?.data?.details?.latitude ?? "";
+      String currentLong = workDetails?.data?.details?.longitude ?? "";
+
+      try {
+        bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+        if (serviceEnabled) {
+          LocationPermission permission = await Geolocator.checkPermission();
+          if (permission == LocationPermission.denied) {
+            permission = await Geolocator.requestPermission();
+          }
+
+          if (permission == LocationPermission.always ||
+              permission == LocationPermission.whileInUse) {
+            Position position = await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high);
+            currentLat = position.latitude.toString();
+            currentLong = position.longitude.toString();
+            debugPrint(
+                "Using current location for checkout: $currentLat, $currentLong");
+          } else {
+            debugPrint(
+                "Location permission denied. Using default/job location.");
+          }
+        } else {
+          debugPrint("Location service disabled. Using default/job location.");
+        }
+      } catch (e) {
+        debugPrint(
+            "Error fetching current location: $e. Using default/job location.");
+      }
+
       postCheckout(
           jobId,
-          workDetails?.data?.details?.latitude ?? "",
-          workDetails?.data?.details?.longitude ?? "",
+          currentLat,
+          currentLong,
           engineNumberController.text,
           chassisNumberController.text,
           deviceSerialNumberController.text,

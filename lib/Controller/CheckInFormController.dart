@@ -5,9 +5,12 @@ import 'package:airotrackgit/assets/resources/strings.dart';
 import 'package:airotrackgit/config/api_config.dart';
 import 'package:airotrackgit/controller/home_controller.dart';
 import 'package:airotrackgit/ui/job_details/job_details.dart';
+import 'package:airotrackgit/ui/home/homeNew.dart';
+import 'package:airotrackgit/ui/home/home.dart';
 import 'package:airotrackgit/ui/utils/Functions/network_testing.dart';
 import 'package:airotrackgit/ui/utils/Functions/on_dio_exception.dart';
 import 'package:airotrackgit/ui/utils/Widgets/BoldTextPoppins.dart';
+import 'package:airotrackgit/ui/utils/Widgets/NormalTextPoppins.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -16,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../assets/resources/colors.dart';
 import '../ui/CheckInForm/widgets/choose_image_widget.dart';
@@ -159,11 +163,26 @@ class CheckInFormController extends GetxController {
 
   Future<void> openGallery() async {
     try {
-      // For Android 13+ use photos permission, for older versions use storage
-      Permission permission = Permission.photos;
+      PermissionStatus status;
+      if (Platform.isAndroid) {
+        // For Android 13+ check photos permission, for older versions check storage
+        status = await Permission.photos.status;
+        if (status.isDenied || status.isPermanentlyDenied) {
+          status = await Permission.photos.request();
+        }
 
-      photosStatus = await permission.request();
-      if (photosStatus == PermissionStatus.granted) {
+        // If photos is still not granted (might be on older Android), try storage
+        if (!status.isGranted && !status.isLimited) {
+          status = await Permission.storage.status;
+          if (status.isDenied || status.isPermanentlyDenied) {
+            status = await Permission.storage.request();
+          }
+        }
+      } else {
+        status = await Permission.photos.request();
+      }
+
+      if (status.isGranted || status.isLimited) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.gallery,
           imageQuality: 25,
@@ -173,12 +192,14 @@ class CheckInFormController extends GetxController {
         if (image != null) {
           selectedImage = image;
           debugPrint("Image selected from gallery: ${image.path}");
-          Get.back();
+          Get.back(); // Close existing dialog
           pickedImage = image.path;
           update();
         }
+      } else if (status.isPermanentlyDenied) {
+        _showPermissionSettingsDialog("Gallery");
       } else {
-        showToast("Permission is required to access photos from gallery");
+        showToast("Permission is required to access gallery");
       }
     } catch (e) {
       debugPrint("Error selecting image: $e");
@@ -215,9 +236,24 @@ class CheckInFormController extends GetxController {
 
   Future<void> openGalleryForRc() async {
     try {
-      Permission permission = Permission.photos;
-      photosStatus = await permission.request();
-      if (photosStatus == PermissionStatus.granted) {
+      PermissionStatus status;
+      if (Platform.isAndroid) {
+        status = await Permission.photos.status;
+        if (status.isDenied || status.isPermanentlyDenied) {
+          status = await Permission.photos.request();
+        }
+
+        if (!status.isGranted && !status.isLimited) {
+          status = await Permission.storage.status;
+          if (status.isDenied || status.isPermanentlyDenied) {
+            status = await Permission.storage.request();
+          }
+        }
+      } else {
+        status = await Permission.photos.request();
+      }
+
+      if (status.isGranted || status.isLimited) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.gallery,
           imageQuality: 25,
@@ -227,17 +263,50 @@ class CheckInFormController extends GetxController {
         if (image != null) {
           selectedRcImage = image;
           debugPrint("RC Image selected from gallery: ${image.path}");
-          Get.back();
+          Get.back(); // Close existing dialog
           pickedRcImage = image.path;
           update();
         }
+      } else if (status.isPermanentlyDenied) {
+        _showPermissionSettingsDialog("Gallery");
       } else {
-        showToast("Permission is required to access photos from gallery");
+        showToast("Permission is required to access gallery for RC");
       }
     } catch (e) {
       debugPrint("Error selecting RC image: $e");
       showToast("Failed to open gallery: ${e.toString()}");
     }
+  }
+
+  void _showPermissionSettingsDialog(String permissionName) {
+    Get.dialog(
+      AlertDialog(
+        title: BoldTextPoppins(
+          text: "$permissionName Permission Required",
+          color: Colors.black,
+          fontSize: 18,
+        ),
+        content: NormalTextPoppins(
+          text:
+              "Permission for $permissionName is permanently denied. Please enable it in the app settings to continue.",
+          color: Colors.black,
+          fontSize: 14,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text("CANCEL"),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.back();
+              openAppSettings();
+            },
+            child: const Text("OPEN SETTINGS"),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildImageBox(Size media, String imageUrl, bool isPicked) {
@@ -602,10 +671,42 @@ class CheckInFormController extends GetxController {
         return;
       }
       debugPrint("All required fields validated successfully");
+
+      String currentLat = workDetails?.data?.details?.latitude ?? "";
+      String currentLong = workDetails?.data?.details?.longitude ?? "";
+
+      try {
+        bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+        if (serviceEnabled) {
+          LocationPermission permission = await Geolocator.checkPermission();
+          if (permission == LocationPermission.denied) {
+            permission = await Geolocator.requestPermission();
+          }
+
+          if (permission == LocationPermission.always ||
+              permission == LocationPermission.whileInUse) {
+            Position position = await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high);
+            currentLat = position.latitude.toString();
+            currentLong = position.longitude.toString();
+            debugPrint(
+                "Using current location for check-in: $currentLat, $currentLong");
+          } else {
+            debugPrint(
+                "Location permission denied. Using default/job location.");
+          }
+        } else {
+          debugPrint("Location service disabled. Using default/job location.");
+        }
+      } catch (e) {
+        debugPrint(
+            "Error fetching current location: $e. Using default/job location.");
+      }
+
       final result = await postCheckinData(
         jobId: jobId,
-        latitude: workDetails?.data?.details?.latitude ?? "",
-        longitude: workDetails?.data?.details?.longitude ?? "",
+        latitude: currentLat,
+        longitude: currentLong,
         imei: _getSafeImei(),
         deviceImage: _getSafeDeviceImage(),
         rcImage: _getSafeRcImage(),
@@ -621,10 +722,18 @@ class CheckInFormController extends GetxController {
         } catch (e) {
           debugPrint("Error refreshing home data: $e");
         }
-        Get.offAll(() => JobDetails(
-              jobDetails: jobDetails,
-              isOngoing: true,
-            ));
+        var role_id = await getSavedObject("role_id");
+        if (role_id.toString() == "3") {
+          Get.offAll(() => const Home());
+        } else {
+          Get.offAll(() => const HomeNew());
+        }
+        Future.delayed(Duration.zero, () {
+          Get.to(() => JobDetails(
+                jobDetails: jobDetails,
+                isOngoing: true,
+              ));
+        });
       } else {
         debugPrint("Unable to check in. Please try again.");
         isCheckInLoading = false;

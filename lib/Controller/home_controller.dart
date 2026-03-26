@@ -17,6 +17,7 @@ import 'package:airotrackgit/ui/no_internet/no_internet.dart';
 import 'package:airotrackgit/ui/update/force_update.dart';
 import 'package:airotrackgit/ui/utils/utils.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../assets/resources/strings.dart';
 import '../ui/utils/Widgets/NormalTextPoppins.dart';
@@ -25,8 +26,29 @@ import '../ui/utils/Widgets/YesButtonWidget.dart';
 class HomeController extends GetxController {
   @override
   void onInit() {
+    _requestLocationPermission();
     getMaintenanceAPI();
     super.onInit();
+  }
+
+  Future<void> _requestLocationPermission() async {
+    try {
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      
+      if (permission == LocationPermission.deniedForever) {
+        debugPrint('Location permissions are permanently denied');
+      }
+      
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        debugPrint('Location services are disabled.');
+      }
+    } catch (e) {
+      debugPrint('Error requesting location permission: $e');
+    }
   }
 
   // declare all the variable only here

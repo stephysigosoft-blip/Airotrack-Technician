@@ -42,17 +42,52 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
 
   Future<void> _getCurrentLocation() async {
     try {
+      bool serviceEnabled;
+      LocationPermission permission;
+
+      // Test if location services are enabled.
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Location services are not enabled.
+        debugPrint('Location services are disabled.');
+        _handleDefaultLocation();
+        return;
+      }
+
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          // Permissions are denied.
+          debugPrint('Location permissions are denied');
+          _handleDefaultLocation();
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        // Permissions are denied forever.
+        debugPrint('Location permissions are permanently denied');
+        _handleDefaultLocation();
+        return;
+      }
+
       Position position = await Geolocator.getCurrentPosition();
       setState(() {
         selectedLocation = LatLng(position.latitude, position.longitude);
         isLoading = false;
       });
     } catch (e) {
-      setState(() {
-        selectedLocation = const LatLng(9.9312, 76.2673);
-        isLoading = false;
-      });
+      debugPrint('Error getting location: $e');
+      _handleDefaultLocation();
     }
+  }
+
+  void _handleDefaultLocation() {
+    setState(() {
+      selectedLocation = const LatLng(9.9312, 76.2673);
+      isLoading = false;
+    });
   }
 
   void _onMapTap(LatLng position) {
