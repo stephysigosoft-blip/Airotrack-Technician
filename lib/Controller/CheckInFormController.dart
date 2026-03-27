@@ -51,7 +51,8 @@ class CheckInFormController extends GetxController {
   String pickedImage = "";
   String pickedRcImage = "";
   RxString qrCode = "".obs;
-  // varibales must be declared below this line
+  final TextEditingController imeiController = TextEditingController();
+  // variables must be declared below this line
 
   // Helper functions should be declared here
 
@@ -63,8 +64,21 @@ class CheckInFormController extends GetxController {
   }
 
   String _getSafeImei() {
-    final imei = workDetails?.data?.details?.imei?.toString();
-    return _getSafeString(imei, qrCode.value);
+    final imeiFromServer = workDetails?.data?.details?.imei?.toString();
+
+    // Priority: Typed -> Scanned -> Server
+    if (imeiController.text.isNotEmpty) {
+      return imeiController.text;
+    }
+    if (qrCode.value.isNotEmpty) {
+      return qrCode.value;
+    }
+    if (imeiFromServer != null &&
+        imeiFromServer != "null" &&
+        imeiFromServer.isNotEmpty) {
+      return imeiFromServer;
+    }
+    return "";
   }
 
   String _getSafeDeviceImage() {
@@ -165,21 +179,27 @@ class CheckInFormController extends GetxController {
     try {
       PermissionStatus status;
       if (Platform.isAndroid) {
-        // For Android 13+ check photos permission, for older versions check storage
-        status = await Permission.photos.status;
-        if (status.isDenied || status.isPermanentlyDenied) {
-          status = await Permission.photos.request();
-        }
+        // Check if either Photos or Storage permission is already granted
+        var photosStatusCheck = await Permission.photos.status;
+        var storageStatusCheck = await Permission.storage.status;
 
-        // If photos is still not granted (might be on older Android), try storage
-        if (!status.isGranted && !status.isLimited) {
-          status = await Permission.storage.status;
-          if (status.isDenied || status.isPermanentlyDenied) {
+        if (photosStatusCheck.isGranted ||
+            photosStatusCheck.isLimited ||
+            storageStatusCheck.isGranted) {
+          status = PermissionStatus.granted;
+        } else {
+          // Request Photos first (Android 13+)
+          status = await Permission.photos.request();
+          // If still not granted, request Storage
+          if (!status.isGranted && !status.isLimited) {
             status = await Permission.storage.request();
           }
         }
       } else {
-        status = await Permission.photos.request();
+        status = await Permission.photos.status;
+        if (!status.isGranted && !status.isLimited) {
+          status = await Permission.photos.request();
+        }
       }
 
       if (status.isGranted || status.isLimited) {
@@ -238,19 +258,25 @@ class CheckInFormController extends GetxController {
     try {
       PermissionStatus status;
       if (Platform.isAndroid) {
-        status = await Permission.photos.status;
-        if (status.isDenied || status.isPermanentlyDenied) {
-          status = await Permission.photos.request();
-        }
+        // Check if either Photos or Storage permission is already granted
+        var photosStatusCheck = await Permission.photos.status;
+        var storageStatusCheck = await Permission.storage.status;
 
-        if (!status.isGranted && !status.isLimited) {
-          status = await Permission.storage.status;
-          if (status.isDenied || status.isPermanentlyDenied) {
+        if (photosStatusCheck.isGranted ||
+            photosStatusCheck.isLimited ||
+            storageStatusCheck.isGranted) {
+          status = PermissionStatus.granted;
+        } else {
+          status = await Permission.photos.request();
+          if (!status.isGranted && !status.isLimited) {
             status = await Permission.storage.request();
           }
         }
       } else {
-        status = await Permission.photos.request();
+        status = await Permission.photos.status;
+        if (!status.isGranted && !status.isLimited) {
+          status = await Permission.photos.request();
+        }
       }
 
       if (status.isGranted || status.isLimited) {
@@ -446,6 +472,7 @@ class CheckInFormController extends GetxController {
         "latitude": latitude,
         "longitude": longitude,
         "imei": imei,
+        "device_serial_no": imei,
       };
       if (deviceImage.isNotEmpty && !deviceImage.startsWith('http')) {
         File imageFile = File(deviceImage);

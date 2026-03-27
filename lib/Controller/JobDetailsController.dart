@@ -325,9 +325,32 @@ class JobDetailsController extends GetxController {
 
   Future<void> openGalleryForVehicle() async {
     try {
-      Permission permission = Permission.photos;
-      photosStatus = await permission.request();
-      if (photosStatus == PermissionStatus.granted) {
+      PermissionStatus status;
+      if (Platform.isAndroid) {
+        // Check if either Photos or Storage permission is already granted
+        var photosStatusCheck = await Permission.photos.status;
+        var storageStatusCheck = await Permission.storage.status;
+
+        if (photosStatusCheck.isGranted ||
+            photosStatusCheck.isLimited ||
+            storageStatusCheck.isGranted) {
+          status = PermissionStatus.granted;
+        } else {
+          // Request Photos first (Android 13+)
+          status = await Permission.photos.request();
+          // If still not granted, request Storage
+          if (!status.isGranted && !status.isLimited) {
+            status = await Permission.storage.request();
+          }
+        }
+      } else {
+        status = await Permission.photos.status;
+        if (!status.isGranted && !status.isLimited) {
+          status = await Permission.photos.request();
+        }
+      }
+
+      if (status.isGranted || status.isLimited) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.gallery,
           imageQuality: 25,
@@ -389,9 +412,30 @@ class JobDetailsController extends GetxController {
 
   Future<void> openGalleryForCamera() async {
     try {
-      Permission permission = Permission.photos;
-      photosStatus = await permission.request();
-      if (photosStatus == PermissionStatus.granted) {
+      PermissionStatus status;
+      if (Platform.isAndroid) {
+        // Check if either Photos or Storage permission is already granted
+        var photosStatusCheck = await Permission.photos.status;
+        var storageStatusCheck = await Permission.storage.status;
+
+        if (photosStatusCheck.isGranted ||
+            photosStatusCheck.isLimited ||
+            storageStatusCheck.isGranted) {
+          status = PermissionStatus.granted;
+        } else {
+          status = await Permission.photos.request();
+          if (!status.isGranted && !status.isLimited) {
+            status = await Permission.storage.request();
+          }
+        }
+      } else {
+        status = await Permission.photos.status;
+        if (!status.isGranted && !status.isLimited) {
+          status = await Permission.photos.request();
+        }
+      }
+
+      if (status.isGranted || status.isLimited) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.gallery,
           imageQuality: 25,
@@ -593,6 +637,10 @@ class JobDetailsController extends GetxController {
       debugPrint("Token: $token");
       String url = APIConfig.BASE_URL + APIEndpoints.checkout;
       dio.options.headers["Authorization"] = "Bearer $token";
+      dio.options.headers["Content-Type"] = "multipart/form-data";
+      dio.options.headers["Accept"] = "application/json";
+      dio.options.queryParameters =
+          {}; // Clear existing query parameters from other calls
       debugPrint("URL: $url");
       String fileNameFromPath(String path) {
         if (path.isEmpty) return "";
@@ -601,8 +649,10 @@ class JobDetailsController extends GetxController {
         return parts.isNotEmpty ? parts.last : "";
       }
 
+      final int? jobIdInt = int.tryParse(id.toString());
+
       Map<String, dynamic> formMap = {
-        "job_id": id,
+        "job_id": jobIdInt ?? id,
         "latitude": latitude,
         "longitude": longitude,
         "engine_no": engineNo,
@@ -767,13 +817,17 @@ class JobDetailsController extends GetxController {
             "Error fetching current location: $e. Using default/job location.");
       }
 
+      final serialNo = deviceSerialNumberController.text.isNotEmpty
+          ? deviceSerialNumberController.text
+          : ((productId == "1" || productId == "3") ? imeiController.text : "");
+
       postCheckout(
           jobId,
           currentLat,
           currentLong,
           engineNumberController.text,
           chassisNumberController.text,
-          deviceSerialNumberController.text,
+          serialNo,
           vehicleImage,
           cameraImage,
           cameraNameController.text,

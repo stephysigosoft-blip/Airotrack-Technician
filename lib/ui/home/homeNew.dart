@@ -173,7 +173,7 @@ class _HomeNewState extends State<HomeNew> with SingleTickerProviderStateMixin {
                                 ? const SizedBox.shrink()
                                 : Column(
                                     children: List.generate(
-                                        1,
+                                        ongoingWorks.length,
                                         (index) => Padding(
                                               padding: EdgeInsets.only(
                                                   bottom: media.height * 0.015),

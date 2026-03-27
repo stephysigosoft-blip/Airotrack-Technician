@@ -177,9 +177,32 @@ class CreateNewWorkController extends GetxController {
 
   Future<void> openGalleryForRc() async {
     try {
-      Permission permission = Permission.photos;
-      photosStatus = await permission.request();
-      if (photosStatus == PermissionStatus.granted) {
+      PermissionStatus status;
+      if (Platform.isAndroid) {
+        // Check if either Photos or Storage permission is already granted
+        var photosStatusCheck = await Permission.photos.status;
+        var storageStatusCheck = await Permission.storage.status;
+
+        if (photosStatusCheck.isGranted ||
+            photosStatusCheck.isLimited ||
+            storageStatusCheck.isGranted) {
+          status = PermissionStatus.granted;
+        } else {
+          // Request Photos first (Android 13+)
+          status = await Permission.photos.request();
+          // If still not granted, request Storage
+          if (!status.isGranted && !status.isLimited) {
+            status = await Permission.storage.request();
+          }
+        }
+      } else {
+        status = await Permission.photos.status;
+        if (!status.isGranted && !status.isLimited) {
+          status = await Permission.photos.request();
+        }
+      }
+
+      if (status.isGranted || status.isLimited) {
         final XFile? image = await imagePicker.pickImage(
           source: ImageSource.gallery,
           imageQuality: 80,
